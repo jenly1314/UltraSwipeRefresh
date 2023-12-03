@@ -13,7 +13,7 @@
 
 > **UltraSwipeRefresh** 的设计之初，主要参考了谷歌官方的[SwipeRefresh](https://github.com/google/accompanist/tree/main/swiperefresh) 和第三方的[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) ，吸取了其优秀的设计思想；致力于打造一个极致体验的 **Compose** 刷新组件。
 
-> 这里概括下其主要的功能特点：支持多种滑动方式：平移、固定内容、固定在背后、固定在前面； **headerIndicator** 和 **footerIndicator** 可随意定制，并且 **Header** 和 **Footer** 的样式与滑动模式可随意组合。
+> 简单的概括下 **UltraSwipeRefresh** 主要的功能特色：支持多种滑动方式：平移、固定内容、固定在背后、固定在前面； **headerIndicator** 和 **footerIndicator** 可随意定制，并且 **Header** 和 **Footer** 的样式与滑动模式可随意组合。
 
 
 ## Gif 展示
