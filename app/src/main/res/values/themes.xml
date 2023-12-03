@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.UltraSwipeRefresh" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/teal</item>
+        <item name="android:statusBarColor">@color/teal</item>
+        <item name="android:navigationBarColor">@color/white</item>
+    </style>
+</resources>

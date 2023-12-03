@@ -1,0 +1,210 @@
+# UltraSwipeRefresh
+
+[![Download](https://img.shields.io/badge/download-App-blue.svg)](https://raw.githubusercontent.com/jenly1314/UltraSwipeRefresh/master/app/release/app-release.apk)
+[![MavenCentral](https://img.shields.io/maven-central/v/com.github.jenly1314.UltraSwipeRefresh/refresh)](https://repo1.maven.org/maven2/com/github/jenly1314/UltraSwipeRefresh)
+[![JitPack](https://jitpack.io/v/jenly1314/UltraSwipeRefresh.svg)](https://jitpack.io/#jenly1314/UltraSwipeRefresh)
+[![CircleCI](https://circleci.com/gh/jenly1314/UltraSwipeRefresh.svg?style=svg)](https://circleci.com/gh/jenly1314/UltraSwipeRefresh)
+[![API](https://img.shields.io/badge/API-21%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=21)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/mit-license.php)
+[![Blog](https://img.shields.io/badge/blog-Jenly-9933CC.svg)](https://jenly1314.github.io/)
+[![QQGroup](https://img.shields.io/badge/QQGroup-20867961-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=8fcc6a2f88552ea44b1.1.982c94fd124f7bb3ec227e2a400dbbfaad3dc2f5ad)
+
+**UltraSwipeRefresh**：一个可带来极致体验的 **Compose** 刷新组件；支持下拉刷新和上拉加载，可完美替代官方的 **SwipeRefresh**；并且支持的功能更多，可扩展性更强。
+
+> **UltraSwipeRefresh** 的设计之初，主要参考了谷歌官方的[SwipeRefresh](https://github.com/google/accompanist/tree/main/swiperefresh) 和第三方的[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) ，吸取了其优秀的设计思想；致力于打造一个极致体验的 **Compose** 刷新组件。
+
+> 这里概括下其主要的功能特点：支持多种滑动方式：平移、固定内容、固定在背后、固定在前面； **headerIndicator** 和 **footerIndicator** 可随意定制，并且 **Header** 和 **Footer** 的样式与滑动模式可随意组合。
+
+
+## Gif 展示
+
+![Image](art/UltraSwipeRefresh.gif)
+
+> 你也可以直接下载 [演示App](https://raw.githubusercontent.com/jenly1314/UltraSwipeRefresh/master/app/release/app-release.apk) 体验效果
+
+## 引入
+
+### Gradle:
+
+1. 在Project的 **build.gradle** 或 **setting.gradle** 中添加远程仓库
+
+    ```gradle
+    repositories {
+        //...
+        mavenCentral()
+    }
+    ```
+
+2. 在Module的 **build.gradle** 里面添加引入依赖项
+
+    ```gradle
+    // 极致体验的Compose刷新组件 (*必须)
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.0.0'
+   
+    // 经典样式的指示器 (可选)
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.0.0'
+    // Lottie动画指示器 (可选)
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.0.0'
+    // 进度条样式的指示器 (可选)
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.0.0'
+    ```
+
+## 使用说明
+
+**Composable** 组件的使用大都比较直观，一般只需看一下 **Composable** 函数对应的参数说明基本就会使用了。
+
+#### UltraSwipeRefresh参数说明
+
+```kotlin
+/**
+ * UltraSwipeRefresh：一个可带来极致体验的Compose刷新组件；支持下拉刷新和上拉加载，可完美替代官方的SwipeRefresh；并且支持的功能更多，可扩展性更强。
+ *
+ * @param state 状态：主要用于控制和观察[UltraSwipeRefresh]；比如：控制下拉刷新和上拉加载和观察其状态。
+ * @param onRefresh 在完成滑动刷新手势时触发调用
+ * @param onLoadMore 在完成滑动加载手势时触发调用
+ * @param modifier 修饰符：用于装饰或添加Compose UI元素的行为。具体更详细的说明可查看[Modifier]
+ * @param headerScrollMode 在进行滑动刷新时Header的滑动模式；具体更详细的样式说明可查看[NestedScrollMode]
+ * @param footerScrollMode 在进行滑动加载更多时Footer的滑动模式；具体更详细的样式说明可查看[NestedScrollMode]
+ * @param refreshEnabled 是否启用下拉刷新
+ * @param loadMoreEnabled 是否启用上拉加载
+ * @param refreshTriggerRate 触发滑动刷新的最小滑动比例；比例基于[headerIndicator]的高度；默认为：1
+ * @param loadMoreTriggerRate 触发滑动加载更多最小滑动比例；比例基于[footerIndicator]的高度；默认为：1
+ * @param headerMaxOffsetRate 向下滑动时[headerIndicator]可滑动的最大偏移比例；比例基于[headerIndicator]的高度；默认为：2
+ * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：2
+ * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
+ * @param headerIndicator 下拉刷新时顶部显示的Header指示器
+ * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
+ * @param content 可进行滑动刷新或加载更多包含的内容
+ */
+```
+
+#### 完整代码示例
+
+```kotlin
+/**
+ * 代码示例
+ */
+@Composable
+fun UltraSwipeRefreshSample() {
+
+   val state = rememberUltraSwipeRefreshState()
+
+   var itemCount by remember { mutableIntStateOf(20) }
+
+   LaunchedEffect(state.isRefreshing) {
+      if (state.isRefreshing) {
+         // TODO 刷新的逻辑处理，此处的延时只是为了演示效果
+         delay(2000)
+         itemCount = 20
+         state.isRefreshing = false
+      }
+   }
+
+   LaunchedEffect(state.isLoading) {
+      if (state.isLoading) {
+         // TODO 加载更多的逻辑处理，此处的延时只是为了演示效果
+         delay(2000)
+         itemCount += 20
+         state.isLoading = false
+      }
+   }
+
+   UltraSwipeRefresh(
+      state = state,
+      onRefresh = {
+         state.isRefreshing = true
+      },
+      onLoadMore = {
+         state.isLoading = true
+      },
+      modifier = Modifier.background(color = Color(0x7FEEEEEE)),
+      headerScrollMode = NestedScrollMode.Translate,
+      footerScrollMode = NestedScrollMode.Translate,
+      headerIndicator = {
+         ClassicRefreshHeader(it)
+      },
+      footerIndicator = {
+         ClassicRefreshFooter(it)
+      }
+   ) {
+      LazyColumn(Modifier.background(color = Color.White)) {
+         repeat(itemCount) {
+            item {
+               val title = "UltraSwipeRefresh列表Item${it + 1}"
+               Text(
+                  text = title,
+                  color = Color(0xFF333333),
+                  fontSize = 16.sp,
+               )
+               Divider(
+                  modifier = Modifier.padding(horizontal = 16.dp),
+                  color = Color(0xFFF2F3F6)
+               )
+            }
+         }
+      }
+   }
+}
+
+```
+
+### 提供的指示器样式
+
+这里罗列一下目前 **UltraSwipeRefresh** 所包含的一些指示器样式与示例，方便快速查找与参考。
+
+| 默认官方样式                                                                                                                          | 经典样式                                                                                                                              | 
+|:--------------------------------------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------|
+| SwipeRefreshHeader                                                                                                              | ClassicRefreshHeader                                                                                                              | 
+| ![Image](art/SwipeRefreshIndicatorSample.gif)                                                                                   | ![Image](art/ClassicRefreshIndicatorSample.gif)                                                                                   | 
+| SwipeRefreshFooter                                                                                                              | ClassicRefreshFooter                                                                                                              | 
+| 默认官方样式代码示例[SwipeRefreshIndicatorSample](app/src/main/java/com/king/ultraswiperefresh/app/sample/SwipeRefreshIndicatorSample.kt) | 经典样式代码示例[ClassicRefreshIndicatorSample](app/src/main/java/com/king/ultraswiperefresh/app/sample/ClassicRefreshIndicatorSample.kt) | 
+
+| 进度条样式                                                                                                                                | Lottie动画样式（可支持任何Lottie动画）                                                                                                             | 
+|:-------------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------|
+| ProgressRefreshHeader                                                                                                                | LottieRefreshHeader                                                                                                                   | 
+| ![Image](art/ProgressRefreshIndicatorSample.gif)                                                                                     | ![Image](art/LottieRefreshIndicatorSample.gif)                                                                                        | 
+| ProgressRefreshFooter                                                                                                                | LottieRefreshFooter                                                                                                                   | 
+| 进度条样式代码示例[ProgressRefreshIndicatorSample](app/src/main/java/com/king/ultraswiperefresh/app/sample/ProgressRefreshIndicatorSample.kt) | Lottie动画样式代码示例[LottieRefreshIndicatorSample](app/src/main/java/com/king/ultraswiperefresh/app/sample/LottieRefreshIndicatorSample.kt) | 
+
+
+> 如果以上的指示器效果都不满足你的需求，你也可以自定义去实现Header和Footer的指示器，也可以直接使用Lottie动画样式的指示器来可快速接入任何Lottie动画。
+
+更多使用详情，请查看[app](app)中的源码使用示例或直接查看 [API帮助文档](https://jitpack.io/com/github/jenly1314/UltraSwipeRefresh/latest/javadoc/)
+
+## 版本记录
+
+#### v1.0.0：2023-12-3
+
+* UltraSwipeRefresh初始版本
+
+## 赞赏
+
+如果您喜欢UltraSwipeRefresh，或感觉UltraSwipeRefresh帮助到了您，可以点右上角“Star”支持一下，您的支持就是我的动力，谢谢 :
+smiley:<p>
+您也可以扫描下面的二维码，请作者喝杯咖啡 :coffee:
+<div>
+<img src="https://jenly1314.github.io/image/pay/sponsor.png" width="98%">
+</div>
+
+## 关于我
+
+Name: <a title="关于作者" href="https://jenly1314.github.io" target="_blank">Jenly</a>
+
+Email: <a title="欢迎邮件与我交流" href="mailto:jenly1314@gmail.com" target="_blank">
+jenly1314#gmail.com</a> / <a title="给我发邮件" href="mailto:jenly1314@vip.qq.com" target="_blank">
+jenly1314#vip.qq.com</a>
+
+CSDN: <a title="CSDN博客" href="http://blog.csdn.net/jenly121" target="_blank">jenly121</a>
+
+CNBlogs: <a title="博客园" href="https://www.cnblogs.com/jenly" target="_blank">jenly</a>
+
+GitHub: <a title="GitHub开源项目" href="https://github.com/jenly1314" target="_blank">jenly1314</a>
+
+Gitee: <a title="Gitee开源项目" href="https://gitee.com/jenly1314" target="_blank">jenly1314</a>
+
+加入QQ群: <a title="点击加入QQ群" href="http://shang.qq.com/wpa/qunwpa?idkey=8fcc6a2f88552ea44b1411582c94fd124f7bb3ec227e2a400dbbfaad3dc2f5ad" target="_blank">
+20867961</a>
+   <div>
+       <img src="https://jenly1314.github.io/image/jenly666.png">
+       <img src="https://jenly1314.github.io/image/qqgourp.png">
+   </div>

@@ -1,0 +1,35 @@
+// App
+def app_version = [:]
+app_version.versionCode = 1
+app_version.versionName = "1.0.0"
+ext.app_version = app_version
+
+// build version
+def build_versions = [:]
+build_versions.minSdk = 21
+build_versions.targetSdk = 34
+build_versions.compileSdk = 34
+build_versions.buildTools = "34.0.0"
+ext.build_versions = build_versions
+
+ext.deps = [:]
+
+// App dependencies
+def versions = [:]
+// AndroidX
+versions.core_ktx = "1.10.1"
+versions.compose_bom = "2023.08.00"
+versions.activity_compose = "1.7.2"
+versions.foundation = "1.5.0"
+versions.compose_ui = "1.5.0"
+versions.material = "1.5.0"
+versions.lifecycle_runtime_ktx = "2.6.2"
+versions.navigation_compose = "2.6.0"
+versions.lottie_compose = "6.1.0"
+
+// Test
+versions.junit = "4.13.2"
+versions.android_ext_junit = "1.1.5"
+versions.espresso = "3.5.1"
+
+ext.versions = versions
