@@ -13,7 +13,7 @@
 
 > **UltraSwipeRefresh** 的设计之初，主要参考了谷歌官方的[SwipeRefresh](https://github.com/google/accompanist/tree/main/swiperefresh) 和第三方的[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) ，吸取了其优秀的设计思想；致力于打造一个极致体验的 **Compose** 刷新组件。
 
-> 简单的概括下 **UltraSwipeRefresh** 主要的功能特色：支持多种滑动方式：平移、固定内容、固定在背后、固定在前面； **headerIndicator** 和 **footerIndicator** 可随意定制，并且 **Header** 和 **Footer** 的样式与滑动模式可随意组合。
+> 这里简单的概括下 **UltraSwipeRefresh** 主要的一些功能特色：支持多种滑动方式：平移、固定内容、固定在背后、固定在前面； **headerIndicator** 和 **footerIndicator** 可随意定制，并且 **Header** 和 **Footer** 的样式与滑动模式可随意组合。
 
 
 ## Gif 展示
@@ -49,7 +49,7 @@
     implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.0.0'
     ```
 
-## 使用说明
+## 使用
 
 **Compose** 组件的使用大都比较直观，一般只需看一下 **Composable** 函数对应的参数说明基本就会使用了。
 
@@ -78,11 +78,11 @@
  */
 ```
 
-### 完整代码示例
+### 代码示例
 
 ```kotlin
 /**
- * 代码示例
+ * 完整代码示例
  */
 @Composable
 fun UltraSwipeRefreshSample() {
@@ -150,7 +150,7 @@ fun UltraSwipeRefreshSample() {
 
 > 使用小提示：**headerIndicator/footerIndicator** 与 **headerScrollMode/footerScrollMode** 组合使用才更配哦。
 
-### 提供的指示器样式
+### 指示器样式
 
 这里罗列一下目前 **UltraSwipeRefresh** 所包含的一些Header和Footer指示器样式，方便快速查找与参考。
 
@@ -185,9 +185,9 @@ fun UltraSwipeRefreshSample() {
 
 ## 赞赏
 
-如果您喜欢UltraSwipeRefresh，或感觉UltraSwipeRefresh帮助到了您，可以点右上角“Star”支持一下，您的支持就是我的动力，谢谢 :
-smiley:<p>
-您也可以扫描下面的二维码，请作者喝杯咖啡 :coffee:
+如果您喜欢UltraSwipeRefresh，或感觉UltraSwipeRefresh帮助到了您，可以点右上角“Star”支持一下，您的支持就是我的动力，谢谢 :smiley:
+<p>您也可以扫描下面的二维码，请作者喝杯咖啡 :coffee:
+
 <div>
 <img src="https://jenly1314.github.io/image/pay/sponsor.png" width="98%">
 </div>
