@@ -96,7 +96,7 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
  */
 ```
 
-#### UltraSwipeRefresh代码示例
+#### UltraSwipeRefresh使用示例
 
 ```kotlin
 /**
