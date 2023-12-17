@@ -51,9 +51,25 @@
 
 ## 使用
 
-**Compose** 组件的使用大都比较直观，一般只需看一下 **Composable** 函数对应的参数说明基本就会使用了。
+### UltraSwipeRefreshTheme（v1.1.0新增）
 
-### UltraSwipeRefresh参数说明
+UltraSwipeRefreshTheme：主要用于统一管理全局默认配置。
+
+> 通常情况下，一个App使用的刷新样式是统一的，如果你需要进行全局统一刷新组件的样式时，可以通过`UltraSwipeRefreshTheme.config`来动态修改`UltraSwipeRefresh`的全局默认配置。
+
+#### UltraSwipeRefreshTheme使用示例
+
+```kotlin
+// 全局设置默认的滑动模式
+UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
+   headerScrollMode = NestedScrollMode.Translate, 
+   footerScrollMode = NestedScrollMode.Translate,
+)
+```
+
+### UltraSwipeRefresh
+
+**Compose** 组件的使用大都比较直观，一般只需看一下 **Composable** 函数对应的参数说明基本就会使用了。
 
 ```kotlin
 /**
@@ -80,7 +96,7 @@
  */
 ```
 
-### 代码示例
+#### UltraSwipeRefresh代码示例
 
 ```kotlin
 /**
@@ -172,13 +188,6 @@ fun UltraSwipeRefreshSample() {
 
 
 > 如果以上的指示器效果都不满足你的需求，你也可以自定义去实现Header和Footer的指示器，也可以直接使用Lottie动画样式的指示器来可快速接入任何Lottie动画。
-
-### UltraSwipeRefreshTheme
-
-UltraSwipeRefreshTheme：主要用于统一管理全局默认配置。
-
-> 通常情况下，一个App使用的刷新样式是统一的，如果你需要进行全局统一刷新组件的样式时，可以通过`UltraSwipeRefreshTheme.config`来动态修改`UltraSwipeRefresh`的全局默认配置。
-
 
 更多使用详情，请查看[app](app)中的源码使用示例或直接查看 [API帮助文档](https://jitpack.io/com/github/jenly1314/UltraSwipeRefresh/latest/javadoc/)
 
