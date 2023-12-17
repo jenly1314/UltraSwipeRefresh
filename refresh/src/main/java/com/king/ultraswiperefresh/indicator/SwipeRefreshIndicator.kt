@@ -47,8 +47,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.king.ultraswiperefresh.UltraSwipeRefreshState
+import com.king.ultraswiperefresh.UltraSwipeFooterState
+import com.king.ultraswiperefresh.UltraSwipeHeaderState
 import com.king.ultraswiperefresh.UltraSwipeRefresh
+import com.king.ultraswiperefresh.UltraSwipeRefreshState
 
 /**
  * A class to encapsulate details of different indicator sizes.
@@ -71,7 +73,7 @@ private data class SwipeIndicatorSizes(
 /**
  * The default/normal size values for [SwipeRefreshIndicator].
  */
-private val DefaultSizes = SwipeIndicatorSizes(
+private val defaultSizes = SwipeIndicatorSizes(
     size = 40.dp,
     arcRadius = 7.5.dp,
     strokeWidth = 2.5.dp,
@@ -82,7 +84,7 @@ private val DefaultSizes = SwipeIndicatorSizes(
 /**
  * The 'large' size values for [SwipeRefreshIndicator].
  */
-private val LargeSizes = SwipeIndicatorSizes(
+private val largeSizes = SwipeIndicatorSizes(
     size = 56.dp,
     arcRadius = 11.dp,
     strokeWidth = 3.dp,
@@ -120,6 +122,7 @@ internal fun SwipeRefreshIndicator(
     paddingValues: PaddingValues = PaddingValues(12.dp),
     largeIndication: Boolean = false,
     elevation: Dp = 6.dp,
+    label: String = "Indicator"
 ) {
     val adjustedElevation = if (isFooter) {
         when {
@@ -134,7 +137,7 @@ internal fun SwipeRefreshIndicator(
             else -> 0.dp
         }
     }
-    val sizes = if (largeIndication) LargeSizes else DefaultSizes
+    val sizes = if (largeIndication) largeSizes else defaultSizes
     val indicatorHeight = with(LocalDensity.current) { sizes.size.roundToPx() }
 
     val slingshot = if (isFooter) {
@@ -173,15 +176,16 @@ internal fun SwipeRefreshIndicator(
                 .size(size = sizes.size)
                 .graphicsLayer {
                     if (isFooter) {
-                        val scaleFraction = if (scale && !state.isLoading) {
-                            val progress =
-                                state.indicatorOffset / state.loadMoreTrigger.coerceAtMost(-1f)
+                        val scaleFraction =
+                            if (scale && state.footerState != UltraSwipeFooterState.Loading) {
+                                val progress =
+                                    state.indicatorOffset / state.loadMoreTrigger.coerceAtMost(-1f)
 
-                            // We use LinearOutSlowInEasing to speed up the scale in
-                            LinearOutSlowInEasing
-                                .transform(progress)
-                                .coerceIn(0f, 1f)
-                        } else 1f
+                                // We use LinearOutSlowInEasing to speed up the scale in
+                                LinearOutSlowInEasing
+                                    .transform(progress)
+                                    .coerceIn(0f, 1f)
+                            } else 1f
 
                         scaleX = scaleFraction
                         scaleY = scaleFraction
@@ -190,21 +194,21 @@ internal fun SwipeRefreshIndicator(
                         // Translate the indicator according to the slingshot
                         translationY = 0f
 
-                        val scaleFraction = if (scale && !state.isRefreshing) {
-                            val progress =
-                                state.indicatorOffset / state.refreshTrigger.coerceAtLeast(1f)
+                        val scaleFraction =
+                            if (scale && state.headerState != UltraSwipeHeaderState.Refreshing) {
+                                val progress =
+                                    state.indicatorOffset / state.refreshTrigger.coerceAtLeast(1f)
 
-                            // We use LinearOutSlowInEasing to speed up the scale in
-                            LinearOutSlowInEasing
-                                .transform(progress)
-                                .coerceIn(0f, 1f)
-                        } else 1f
+                                // We use LinearOutSlowInEasing to speed up the scale in
+                                LinearOutSlowInEasing
+                                    .transform(progress)
+                                    .coerceIn(0f, 1f)
+                            } else 1f
 
                         scaleX = scaleFraction
                         scaleY = scaleFraction
                     }
                 },
-
             shape = shape,
             color = backgroundColor,
             elevation = adjustedElevation
@@ -216,7 +220,8 @@ internal fun SwipeRefreshIndicator(
             painter.arrowHeight = sizes.arrowHeight
             painter.color = contentColor
             if (isFooter) {
-                painter.arrowEnabled = arrowEnabled && !state.isLoading
+                painter.arrowEnabled =
+                    arrowEnabled && state.footerState != UltraSwipeFooterState.Loading
                 val alpha = if (fade) {
                     (state.indicatorOffset / state.loadMoreTrigger).coerceIn(0f, 1f)
                 } else {
@@ -224,7 +229,8 @@ internal fun SwipeRefreshIndicator(
                 }
                 painter.alpha = alpha
             } else {
-                painter.arrowEnabled = arrowEnabled && !state.isRefreshing
+                painter.arrowEnabled =
+                    arrowEnabled && state.headerState != UltraSwipeHeaderState.Refreshing
                 val alpha = if (fade) {
                     (state.indicatorOffset / state.refreshTrigger).coerceIn(0f, 1f)
                 } else {
@@ -241,8 +247,13 @@ internal fun SwipeRefreshIndicator(
             // This shows either an Image with CircularProgressPainter or a CircularProgressIndicator,
             // depending on refresh state
             Crossfade(
-                targetState = if (isFooter) state.isLoading else state.isRefreshing,
-                animationSpec = tween(durationMillis = CrossfadeDurationMs)
+                targetState = if (isFooter) {
+                    state.footerState == UltraSwipeFooterState.Loading
+                } else {
+                    state.headerState == UltraSwipeHeaderState.Refreshing
+                },
+                animationSpec = tween(durationMillis = CrossfadeDurationMs),
+                label = label
             ) { refreshing ->
                 Box(
                     modifier = Modifier.fillMaxSize(),

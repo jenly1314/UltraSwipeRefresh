@@ -12,7 +12,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -22,6 +21,8 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.king.ultraswiperefresh.UltraSwipeFooterState
+import com.king.ultraswiperefresh.UltraSwipeHeaderState
 import com.king.ultraswiperefresh.UltraSwipeRefreshState
 
 /**
@@ -46,7 +47,11 @@ internal fun LottieRefreshIndicator(
 
     var isPlaying by remember { mutableStateOf(false) }
 
-    isPlaying = if (isFooter) state.isLoading else state.isRefreshing
+    isPlaying = if (isFooter) {
+        state.footerState == UltraSwipeFooterState.Loading
+    } else {
+        state.headerState == UltraSwipeHeaderState.Refreshing
+    }
 
     val progress by animateLottieCompositionAsState(
         composition = composition,

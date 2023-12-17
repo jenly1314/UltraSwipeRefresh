@@ -44,5 +44,6 @@ fun SwipeRefreshHeader(
         paddingValues = paddingValues,
         largeIndication = largeIndication,
         elevation = elevation,
+        label = "HeaderIndicator"
     )
 }

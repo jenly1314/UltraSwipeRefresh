@@ -16,26 +16,20 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -43,8 +37,6 @@ import androidx.compose.ui.unit.sp
 import com.king.ultraswiperefresh.UltraSwipeFooterState
 import com.king.ultraswiperefresh.UltraSwipeHeaderState
 import com.king.ultraswiperefresh.UltraSwipeRefreshState
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 /**
  * 经典样式的指示器
@@ -57,6 +49,8 @@ import java.util.Locale
 internal fun ClassicRefreshIndicator(
     state: UltraSwipeRefreshState,
     isFooter: Boolean,
+    tipContent: String,
+    tipTime: String,
     modifier: Modifier = Modifier,
     tipContentStyle: TextStyle = TextStyle.Default.copy(
         fontSize = 15.sp,
@@ -72,29 +66,8 @@ internal fun ClassicRefreshIndicator(
     loadingIconPainter: Painter = painterResource(id = R.drawable.usr_classic_refreshing),
     iconSize: Dp = 24.dp,
     iconColorFilter: ColorFilter? = null,
+    label: String = "Indicator"
 ) {
-
-    var lastRefreshTime by remember("lastRefreshTime") {
-        mutableStateOf(System.currentTimeMillis())
-    }
-    var lastLoadTime by remember("lastLoadTime") {
-        mutableStateOf(System.currentTimeMillis())
-    }
-
-    val textRes = if (isFooter) {
-        when (state.footerState) {
-            UltraSwipeFooterState.PullUpToLoad -> R.string.usr_pull_up_to_load
-            UltraSwipeFooterState.ReleaseToLoad -> R.string.usr_release_to_load
-            UltraSwipeFooterState.Loading -> R.string.usr_loading
-        }
-    } else {
-        when (state.headerState) {
-            UltraSwipeHeaderState.PullDownToRefresh -> R.string.usr_pull_down_to_refresh
-            UltraSwipeHeaderState.ReleaseToRefresh -> R.string.usr_release_to_refresh
-            UltraSwipeHeaderState.Refreshing -> R.string.usr_refreshing
-        }
-    }
-
     val arrowDegrees = remember { Animatable(0f) }
 
     if (isFooter) {
@@ -108,8 +81,8 @@ internal fun ClassicRefreshIndicator(
                     arrowDegrees.animateTo(0f)
                 }
 
-                UltraSwipeFooterState.Loading -> {
-                    lastLoadTime = System.currentTimeMillis()
+                else -> {
+
                 }
             }
         }
@@ -124,8 +97,8 @@ internal fun ClassicRefreshIndicator(
                     arrowDegrees.animateTo(180f)
                 }
 
-                UltraSwipeHeaderState.Refreshing -> {
-                    lastRefreshTime = System.currentTimeMillis()
+                else -> {
+
                 }
             }
         }
@@ -151,13 +124,8 @@ internal fun ClassicRefreshIndicator(
             modifier = Modifier.alpha(alphaState.value),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (if (isFooter) {
-                    state.footerState == UltraSwipeFooterState.Loading
-                } else {
-                    state.headerState == UltraSwipeHeaderState.Refreshing
-                }
-            ) {
-                val transition = rememberInfiniteTransition()
+            if (if (isFooter) state.isLoading else state.isRefreshing) {
+                val transition = rememberInfiniteTransition(label)
                 val rotate by transition.animateFloat(
                     initialValue = 0f,
                     targetValue = 360f,
@@ -166,7 +134,8 @@ internal fun ClassicRefreshIndicator(
                             durationMillis = 1000,
                             easing = LinearEasing
                         )
-                    )
+                    ),
+                    label = label
                 )
                 Image(
                     painter = loadingIconPainter,
@@ -192,35 +161,15 @@ internal fun ClassicRefreshIndicator(
                 verticalArrangement = Arrangement.Center
             ) {
                 BasicText(
-                    text = stringResource(id = textRes),
+                    text = tipContent,
                     style = tipContentStyle,
                 )
                 if (tipTimeVisible) {
                     Spacer(modifier = Modifier.size(2.dp))
-                    val context = LocalContext.current
-                    if (isFooter) {
-                        val dateFormat = remember {
-                            SimpleDateFormat(
-                                context.getString(R.string.usr_last_load_time),
-                                Locale.getDefault()
-                            )
-                        }
-                        BasicText(
-                            text = dateFormat.format(lastLoadTime),
-                            style = tipTimeStyle,
-                        )
-                    } else {
-                        val dateFormat = remember {
-                            SimpleDateFormat(
-                                context.getString(R.string.usr_last_refresh_time),
-                                Locale.getDefault()
-                            )
-                        }
-                        BasicText(
-                            text = dateFormat.format(lastRefreshTime),
-                            style = tipTimeStyle,
-                        )
-                    }
+                    BasicText(
+                        text = tipTime,
+                        style = tipTimeStyle,
+                    )
                 }
             }
         }

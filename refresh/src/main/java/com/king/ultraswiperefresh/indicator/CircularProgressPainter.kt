@@ -16,6 +16,7 @@
 package com.king.ultraswiperefresh.indicator
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
@@ -40,21 +41,21 @@ import kotlin.math.min
  */
 internal class CircularProgressPainter : Painter() {
     var color by mutableStateOf(Color.Unspecified)
-    var alpha by mutableStateOf(1f)
+    var alpha by mutableFloatStateOf(1f)
     var arcRadius by mutableStateOf(0.dp)
     var strokeWidth by mutableStateOf(5.dp)
     var arrowEnabled by mutableStateOf(false)
     var arrowWidth by mutableStateOf(0.dp)
     var arrowHeight by mutableStateOf(0.dp)
-    var arrowScale by mutableStateOf(1f)
+    var arrowScale by mutableFloatStateOf(1f)
 
     private val arrow: Path by lazy {
         Path().apply { fillType = PathFillType.EvenOdd }
     }
 
-    var startTrim by mutableStateOf(0f)
-    var endTrim by mutableStateOf(0f)
-    var rotation by mutableStateOf(0f)
+    var startTrim by mutableFloatStateOf(0f)
+    var endTrim by mutableFloatStateOf(0f)
+    var rotation by mutableFloatStateOf(0f)
 
     override val intrinsicSize: Size
         get() = Size.Unspecified

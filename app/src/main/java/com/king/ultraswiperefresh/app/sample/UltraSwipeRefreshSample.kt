@@ -24,6 +24,7 @@ import com.king.ultraswiperefresh.app.navigation.NavRoute
 import com.king.ultraswiperefresh.indicator.SwipeRefreshFooter
 import com.king.ultraswiperefresh.indicator.SwipeRefreshHeader
 import com.king.ultraswiperefresh.rememberUltraSwipeRefreshState
+import com.king.ultraswiperefresh.theme.UltraSwipeRefreshTheme
 import kotlinx.coroutines.delay
 
 /**
@@ -112,7 +113,15 @@ fun UltraSwipeRefreshSample(navController: NavController) {
                 ColumnItem(
                     title = "UltraSwipeRefresh：一个可带来极致体验的Compose刷新组件；支持下拉刷新和上拉加载，可完美替代官方的SwipeRefresh；并且支持的功能更多，可扩展性更强。",
                     content = "[headerIndicator] 和 [footerIndicator]可随意定制，并且[Header]和[Footer]样式与滑动模式可随意组合。"
-                )
+                ) {
+                    val vibrateEnabled = !UltraSwipeRefreshTheme.config.vibrateEnabled
+                    UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(vibrateEnabled = vibrateEnabled)
+                    if(vibrateEnabled) {
+                        context.showToast("已全局启用振动效果")
+                    } else {
+                        context.showToast("已全局关闭振动效果")
+                    }
+                }
                 Divider(modifier = Modifier.padding(horizontal = 16.dp), color = Color(0xFFF2F3F6))
             }
 

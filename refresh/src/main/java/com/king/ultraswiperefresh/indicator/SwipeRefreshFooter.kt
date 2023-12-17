@@ -44,5 +44,6 @@ fun SwipeRefreshFooter(
         paddingValues = paddingValues,
         largeIndication = largeIndication,
         elevation = elevation,
+        label = "FooterIndicator"
     )
 }

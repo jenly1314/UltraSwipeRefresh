@@ -3,11 +3,13 @@
     <string name="usr_pull_down_to_refresh">下拉可以刷新</string>
     <string name="usr_release_to_refresh">释放立即刷新</string>
     <string name="usr_refreshing">正在刷新…</string>
+    <string name="usr_refresh_completed">刷新完成</string>
     <string name="usr_last_refresh_time">上次刷新：MM-dd HH:mm</string>
 
     <string name="usr_pull_up_to_load">上拉可以加载</string>
     <string name="usr_release_to_load">释放立即加载</string>
     <string name="usr_loading">正在加载…</string>
+    <string name="usr_load_completed">加载完成</string>
     <string name="usr_last_load_time">上次加载：MM-dd HH:mm</string>
 
 </resources>

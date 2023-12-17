@@ -19,7 +19,8 @@ package com.king.ultraswiperefresh.indicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import kotlin.math.abs
@@ -53,9 +54,9 @@ internal fun rememberUpdatedSlingshot(
         0f, min(extraOffset, slingshotDistance * 2) / slingshotDistance
     )
     val tensionPercent = (
-        (tensionSlingshotPercent / 4) -
-            (tensionSlingshotPercent / 4).pow(2)
-        ) * 2
+            (tensionSlingshotPercent / 4) -
+                    (tensionSlingshotPercent / 4).pow(2)
+            ) * 2
     val extraMove = slingshotDistance * tensionPercent * 2
     val targetY = height + ((slingshotDistance * offsetPercent) + extraMove).toInt()
     val offset = targetY - height
@@ -78,11 +79,11 @@ internal fun rememberUpdatedSlingshot(
 
 @Stable
 internal class Slingshot {
-    var offset: Int by mutableStateOf(0)
-    var startTrim: Float by mutableStateOf(0f)
-    var endTrim: Float by mutableStateOf(0f)
-    var rotation: Float by mutableStateOf(0f)
-    var arrowScale: Float by mutableStateOf(0f)
+    var offset: Int by mutableIntStateOf(0)
+    var startTrim: Float by mutableFloatStateOf(0f)
+    var endTrim: Float by mutableFloatStateOf(0f)
+    var rotation: Float by mutableFloatStateOf(0f)
+    var arrowScale: Float by mutableFloatStateOf(0f)
 }
 
 internal const val MaxProgressArc = 0.8f

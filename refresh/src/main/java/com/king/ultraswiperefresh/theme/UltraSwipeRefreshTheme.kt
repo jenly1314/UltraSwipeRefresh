@@ -1,0 +1,66 @@
+package com.king.ultraswiperefresh.theme
+
+import androidx.annotation.FloatRange
+import androidx.annotation.IntRange
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.king.ultraswiperefresh.NestedScrollMode
+import com.king.ultraswiperefresh.UltraSwipeRefresh
+import com.king.ultraswiperefresh.UltraSwipeRefreshState
+import com.king.ultraswiperefresh.indicator.SwipeRefreshFooter
+import com.king.ultraswiperefresh.indicator.SwipeRefreshHeader
+
+/**
+ * UltraSwipeRefresh主题：主要用于统一管理全局默认配置。
+ * 通常情况下，一个App使用的刷新样式是统一的，如果你需要进行全局统一刷新组件的样式时，
+ * 可以通过[UltraSwipeRefreshTheme.config]来动态修改[UltraSwipeRefresh]的全局默认配置。
+ *
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * <p>
+ * <a href="https://github.com/jenly1314">Follow me</a>
+ */
+object UltraSwipeRefreshTheme {
+    /**
+     * [UltraSwipeRefresh]的配置，此配置可动态修改[UltraSwipeRefresh]的全局默认配置
+     */
+    var config by mutableStateOf(UltraSwipeRefreshConfig())
+}
+
+/**
+ * [UltraSwipeRefresh] 的配置
+ *
+ * @param headerScrollMode 在进行滑动刷新时Header的滑动模式；具体更详细的样式说明可查看[NestedScrollMode]
+ * @param footerScrollMode 在进行滑动加载更多时Footer的滑动模式；具体更详细的样式说明可查看[NestedScrollMode]
+ * @param refreshEnabled 是否启用下拉刷新
+ * @param loadMoreEnabled 是否启用上拉加载
+ * @param refreshTriggerRate 触发滑动刷新的最小滑动比例；比例基于[headerIndicator]的高度；默认为：1
+ * @param loadMoreTriggerRate 触发滑动加载更多最小滑动比例；比例基于[footerIndicator]的高度；默认为：1
+ * @param headerMaxOffsetRate 向下滑动时[headerIndicator]可滑动的最大偏移比例；比例基于[headerIndicator]的高度；默认为：2
+ * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：2
+ * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
+ * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
+ * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param headerIndicator 下拉刷新时顶部显示的Header指示器
+ * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
+ */
+data class UltraSwipeRefreshConfig(
+    val headerScrollMode: NestedScrollMode = NestedScrollMode.Translate,
+    val footerScrollMode: NestedScrollMode = NestedScrollMode.Translate,
+    val refreshEnabled: Boolean = true,
+    val loadMoreEnabled: Boolean = true,
+    @FloatRange(from = 0.0, fromInclusive = false) val refreshTriggerRate: Float = 1f,
+    @FloatRange(from = 0.0, fromInclusive = false) val loadMoreTriggerRate: Float = 1f,
+    @FloatRange(from = 1.0) val headerMaxOffsetRate: Float = 2f,
+    @FloatRange(from = 1.0) val footerMaxOffsetRate: Float = 2f,
+    @FloatRange(from = 0.0, to = 1.0, fromInclusive = false) val dragMultiplier: Float = 0.5f,
+    @IntRange(from = 0, to = 2000) val finishDelayMillis: Long = 500,
+    val vibrateEnabled: Boolean = false,
+    val headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = {
+        SwipeRefreshHeader(it)
+    },
+    val footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = {
+        SwipeRefreshFooter(it)
+    },
+)

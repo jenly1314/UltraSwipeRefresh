@@ -39,14 +39,14 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.0.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.1.0'
    
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.0.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.1.0'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.0.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.1.0'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.0.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.1.0'
     ```
 
 ## 使用
@@ -72,9 +72,11 @@
  * @param headerMaxOffsetRate 向下滑动时[headerIndicator]可滑动的最大偏移比例；比例基于[headerIndicator]的高度；默认为：2
  * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：2
  * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
+ * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
+ * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
- * @param content 可进行滑动刷新或加载更多包含的内容
+ * @param content 可进行滑动刷新或加载更多所包含的内容
  */
 ```
 
@@ -171,6 +173,13 @@ fun UltraSwipeRefreshSample() {
 
 > 如果以上的指示器效果都不满足你的需求，你也可以自定义去实现Header和Footer的指示器，也可以直接使用Lottie动画样式的指示器来可快速接入任何Lottie动画。
 
+### UltraSwipeRefreshTheme
+
+UltraSwipeRefreshTheme：主要用于统一管理全局默认配置。
+
+> 通常情况下，一个App使用的刷新样式是统一的，如果你需要进行全局统一刷新组件的样式时，可以通过`UltraSwipeRefreshTheme.config`来动态修改`UltraSwipeRefresh`的全局默认配置。
+
+
 更多使用详情，请查看[app](app)中的源码使用示例或直接查看 [API帮助文档](https://jitpack.io/com/github/jenly1314/UltraSwipeRefresh/latest/javadoc/)
 
 ### 相关推荐
@@ -178,6 +187,12 @@ fun UltraSwipeRefreshSample() {
 #### [compose-component](https://github.com/jenly1314/compose-component) 一个Jetpack Compose的组件库；主要提供了一些小组件，便于快速使用。
 
 ## 版本记录
+
+#### v1.1.0 2023-12-17
+
+* 新增`UltraSwipeRefreshTheme`：用于统一管理全局默认配置
+* 新增参数`finishDelayMillis`：完成时延时时间（可用于定格展示提示内容）
+* 新增参数`vibrateEnabled`：是否启用振动（当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果）
 
 #### v1.0.0：2023-12-3
 

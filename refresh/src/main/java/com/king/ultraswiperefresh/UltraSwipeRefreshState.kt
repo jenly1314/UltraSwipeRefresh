@@ -6,6 +6,7 @@ import androidx.compose.foundation.MutatorMutex
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -87,25 +88,25 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
     /**
      * 触发滑动刷新的最小距离
      */
-    var refreshTrigger: Float by mutableStateOf(Float.MAX_VALUE)
+    var refreshTrigger: Float by mutableFloatStateOf(Float.MAX_VALUE)
         internal set
 
     /**
      * 触发加载更多的最小距离
      */
-    var loadMoreTrigger: Float by mutableStateOf(Float.MIN_VALUE)
+    var loadMoreTrigger: Float by mutableFloatStateOf(Float.MIN_VALUE)
         internal set
 
     /**
      * Header可滑动的最大偏移量
      */
-    var headerMaxOffset by mutableStateOf(0f)
+    var headerMaxOffset by mutableFloatStateOf(0f)
         internal set
 
     /**
      * Footer可滑动的最小偏移量
      */
-    var footerMinOffset by mutableStateOf(0f)
+    var footerMinOffset by mutableFloatStateOf(0f)
         internal set
 
     /**
@@ -122,19 +123,18 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
      * 动画的方式更新指示器的偏移量
      */
     internal suspend fun animateOffsetTo(offset: Float) {
-        if ((headerState == UltraSwipeHeaderState.Refreshing && !isRefreshing) ||
-            (footerState == UltraSwipeFooterState.Loading && !isLoading)
-        ) {
-            isFinishing = true
-        }
         mutatorMutex.mutate {
             _indicatorOffset.animateTo(offset) {
                 if (indicatorOffset == 0f && isFinishing) {
                     isFinishing = false
+                    updateHeaderState()
+                    updateFooterState()
                 }
             }
-            updateHeaderState()
-            updateFooterState()
+            if(!isFinishing) {
+                updateHeaderState()
+                updateFooterState()
+            }
         }
     }
 
@@ -152,8 +152,10 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
                     indicatorOffset.plus(delta)
                 }
             )
-            updateHeaderState()
-            updateFooterState()
+            if(!isFinishing) {
+                updateHeaderState()
+                updateFooterState()
+            }
         }
     }
 

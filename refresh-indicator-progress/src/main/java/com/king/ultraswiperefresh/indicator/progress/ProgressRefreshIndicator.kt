@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.king.ultraswiperefresh.UltraSwipeFooterState
+import com.king.ultraswiperefresh.UltraSwipeHeaderState
 import com.king.ultraswiperefresh.UltraSwipeRefreshState
 import com.king.ultraswiperefresh.indicator.LinearProgressIndicator
 
@@ -65,7 +67,7 @@ internal fun ProgressRefreshIndicator(
     Box(modifier = modifier) {
         Box(
             Modifier
-                .alpha(if(progressState.value == 0f) 0f else 1f)
+                .alpha(if (progressState.value == 0f) 0f else 1f)
                 .fillMaxWidth()
                 .height(height)
                 .drawWithCache {
@@ -80,7 +82,12 @@ internal fun ProgressRefreshIndicator(
                 },
             contentAlignment = if (isFooter) Alignment.BottomCenter else Alignment.TopCenter
         ) {
-            if (if (isFooter) state.isLoading else state.isRefreshing) {
+            if (if (isFooter) {
+                    state.footerState == UltraSwipeFooterState.Loading
+                } else {
+                    state.headerState == UltraSwipeHeaderState.Refreshing
+                }
+            ) {
                 LinearProgressIndicator(
                     modifier = Modifier.fillMaxWidth(),
                     color = color

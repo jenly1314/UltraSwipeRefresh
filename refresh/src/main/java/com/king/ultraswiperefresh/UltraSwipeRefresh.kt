@@ -1,9 +1,16 @@
 package com.king.ultraswiperefresh
 
+import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.annotation.FloatRange
+import androidx.annotation.IntRange
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
@@ -13,10 +20,11 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.zIndex
-import com.king.ultraswiperefresh.indicator.SwipeRefreshFooter
-import com.king.ultraswiperefresh.indicator.SwipeRefreshHeader
+import com.king.ultraswiperefresh.theme.UltraSwipeRefreshTheme
+import kotlinx.coroutines.delay
 
 /**
  * UltraSwipeRefresh：一个可带来极致体验的Compose刷新组件；支持下拉刷新和上拉加载，可完美替代官方的SwipeRefresh；并且支持的功能更多，可扩展性更强。
@@ -34,9 +42,11 @@ import com.king.ultraswiperefresh.indicator.SwipeRefreshHeader
  * @param headerMaxOffsetRate 向下滑动时[headerIndicator]可滑动的最大偏移比例；比例基于[headerIndicator]的高度；默认为：2
  * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：2
  * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
+ * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
+ * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
- * @param content 可进行滑动刷新或加载更多包含的内容
+ * @param content 可进行滑动刷新或加载更多所包含的内容
  *
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  * <p>
@@ -48,21 +58,25 @@ fun UltraSwipeRefresh(
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
-    headerScrollMode: NestedScrollMode = NestedScrollMode.Translate,
-    footerScrollMode: NestedScrollMode = NestedScrollMode.Translate,
-    refreshEnabled: Boolean = true,
-    loadMoreEnabled: Boolean = true,
-    @FloatRange(from = 0.0, fromInclusive = false) refreshTriggerRate: Float = 1f,
-    @FloatRange(from = 0.0, fromInclusive = false) loadMoreTriggerRate: Float = 1f,
-    @FloatRange(from = 1.0) headerMaxOffsetRate: Float = 2f,
-    @FloatRange(from = 1.0) footerMaxOffsetRate: Float = 2f,
-    @FloatRange(from = 0.0, to = 1.0, fromInclusive = false) dragMultiplier: Float = 0.5f,
-    headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = {
-        SwipeRefreshHeader(it)
-    },
-    footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = {
-        SwipeRefreshFooter(it)
-    },
+    headerScrollMode: NestedScrollMode = UltraSwipeRefreshTheme.config.headerScrollMode,
+    footerScrollMode: NestedScrollMode = UltraSwipeRefreshTheme.config.footerScrollMode,
+    refreshEnabled: Boolean = UltraSwipeRefreshTheme.config.refreshEnabled,
+    loadMoreEnabled: Boolean = UltraSwipeRefreshTheme.config.loadMoreEnabled,
+    @FloatRange(from = 0.0, fromInclusive = false)
+    refreshTriggerRate: Float = UltraSwipeRefreshTheme.config.refreshTriggerRate,
+    @FloatRange(from = 0.0, fromInclusive = false)
+    loadMoreTriggerRate: Float = UltraSwipeRefreshTheme.config.loadMoreTriggerRate,
+    @FloatRange(from = 1.0)
+    headerMaxOffsetRate: Float = UltraSwipeRefreshTheme.config.headerMaxOffsetRate,
+    @FloatRange(from = 1.0)
+    footerMaxOffsetRate: Float = UltraSwipeRefreshTheme.config.footerMaxOffsetRate,
+    @FloatRange(from = 0.0, to = 1.0, fromInclusive = false)
+    dragMultiplier: Float = UltraSwipeRefreshTheme.config.dragMultiplier,
+    @IntRange(from = 0, to = 2000)
+    finishDelayMillis: Long = UltraSwipeRefreshTheme.config.finishDelayMillis,
+    vibrateEnabled: Boolean = UltraSwipeRefreshTheme.config.vibrateEnabled,
+    headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
+    footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
     content: @Composable () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -111,7 +125,29 @@ fun UltraSwipeRefresh(
                     when {
                         state.isRefreshing -> state.animateOffsetTo(headerHeight.toFloat())
                         state.isLoading -> state.animateOffsetTo(-footerHeight.toFloat())
+                        state.headerState == UltraSwipeHeaderState.Refreshing || state.footerState == UltraSwipeFooterState.Loading -> {
+                            state.isFinishing = true
+                            delay(finishDelayMillis)
+                            state.animateOffsetTo(0f)
+                        }
+
                         else -> state.animateOffsetTo(0f)
+                    }
+                }
+            }
+
+            if (vibrateEnabled) {
+                val vibrator = rememberVibrator()
+                if (vibrator.hasVibrator()) {
+                    val vibrateState = remember {
+                        derivedStateOf {
+                            state.headerState == UltraSwipeHeaderState.ReleaseToRefresh || state.footerState == UltraSwipeFooterState.ReleaseToLoad
+                        }
+                    }
+                    LaunchedEffect(vibrateState.value) {
+                        if (vibrateState.value) {
+                            vibrator.vibrate()
+                        }
                     }
                 }
             }
@@ -166,9 +202,11 @@ fun UltraSwipeRefresh(
  * @param headerMaxOffsetRate 向下滑动时[headerIndicator]可滑动的最大偏移比例；比例基于[headerIndicator]的高度；默认为：2
  * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：2
  * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
+ * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
+ * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
- * @param content 可进行滑动刷新或加载更多包含的内容
+ * @param content 可进行滑动刷新或加载更多所包含的内容
  */
 @Composable
 fun UltraSwipeRefresh(
@@ -177,21 +215,25 @@ fun UltraSwipeRefresh(
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
-    headerScrollMode: NestedScrollMode = NestedScrollMode.Translate,
-    footerScrollMode: NestedScrollMode = NestedScrollMode.Translate,
-    refreshEnabled: Boolean = true,
-    loadMoreEnabled: Boolean = true,
-    @FloatRange(from = 0.0, fromInclusive = false) refreshTriggerRate: Float = 1f,
-    @FloatRange(from = 0.0, fromInclusive = false) loadMoreTriggerRate: Float = 1f,
-    @FloatRange(from = 1.0) headerMaxOffsetRate: Float = 2f,
-    @FloatRange(from = 1.0) footerMaxOffsetRate: Float = 2f,
-    @FloatRange(from = 0.0, to = 1.0, fromInclusive = false) dragMultiplier: Float = 0.5f,
-    headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = {
-        SwipeRefreshHeader(it)
-    },
-    footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = {
-        SwipeRefreshFooter(it)
-    },
+    headerScrollMode: NestedScrollMode = UltraSwipeRefreshTheme.config.headerScrollMode,
+    footerScrollMode: NestedScrollMode = UltraSwipeRefreshTheme.config.footerScrollMode,
+    refreshEnabled: Boolean = UltraSwipeRefreshTheme.config.refreshEnabled,
+    loadMoreEnabled: Boolean = UltraSwipeRefreshTheme.config.loadMoreEnabled,
+    @FloatRange(from = 0.0, fromInclusive = false)
+    refreshTriggerRate: Float = UltraSwipeRefreshTheme.config.refreshTriggerRate,
+    @FloatRange(from = 0.0, fromInclusive = false)
+    loadMoreTriggerRate: Float = UltraSwipeRefreshTheme.config.loadMoreTriggerRate,
+    @FloatRange(from = 1.0)
+    headerMaxOffsetRate: Float = UltraSwipeRefreshTheme.config.headerMaxOffsetRate,
+    @FloatRange(from = 1.0)
+    footerMaxOffsetRate: Float = UltraSwipeRefreshTheme.config.footerMaxOffsetRate,
+    @FloatRange(from = 0.0, to = 1.0, fromInclusive = false)
+    dragMultiplier: Float = UltraSwipeRefreshTheme.config.dragMultiplier,
+    @IntRange(from = 0, to = 2000)
+    finishDelayMillis: Long = UltraSwipeRefreshTheme.config.finishDelayMillis,
+    vibrateEnabled: Boolean = UltraSwipeRefreshTheme.config.vibrateEnabled,
+    headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
+    footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
     content: @Composable () -> Unit,
 ) {
     val state = rememberUltraSwipeRefreshState(isRefreshing = isRefreshing, isLoading = isLoading)
@@ -209,6 +251,8 @@ fun UltraSwipeRefresh(
         headerMaxOffsetRate = headerMaxOffsetRate,
         footerMaxOffsetRate = footerMaxOffsetRate,
         dragMultiplier = dragMultiplier,
+        finishDelayMillis = finishDelayMillis,
+        vibrateEnabled = vibrateEnabled,
         headerIndicator = headerIndicator,
         footerIndicator = footerIndicator,
         content = content
@@ -309,5 +353,35 @@ private fun RefreshSubComposeLayout(
         layout(width = contentMeasurable.width, height = contentMeasurable.height) {
             contentMeasurable.placeRelative(0, 0)
         }
+    }
+}
+
+/**
+ * Vibrator
+ */
+@Suppress("DEPRECATION")
+@Composable
+private fun rememberVibrator(): Vibrator {
+    val context = LocalContext.current
+    return remember("Vibrator") {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            (context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
+        } else {
+            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+    }
+}
+
+/**
+ * 振动
+ */
+@Suppress("DEPRECATION")
+private fun Vibrator.vibrate() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        this.vibrate(
+            VibrationEffect.createOneShot(20, VibrationEffect.DEFAULT_AMPLITUDE)
+        )
+    } else {
+        this.vibrate(20)
     }
 }
