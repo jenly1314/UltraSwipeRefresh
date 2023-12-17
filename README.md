@@ -148,11 +148,11 @@ fun UltraSwipeRefreshSample() {
       LazyColumn(Modifier.background(color = Color.White)) {
          repeat(itemCount) {
             item {
-               val title = "UltraSwipeRefresh列表Item${it + 1}"
                Text(
-                  text = title,
+                  text = "UltraSwipeRefresh列表Item${it + 1}",
+                  modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
                   color = Color(0xFF333333),
-                  fontSize = 16.sp,
+                  fontSize = 16.sp
                )
                Divider(
                   modifier = Modifier.padding(horizontal = 16.dp),
