@@ -199,7 +199,7 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 ## 版本记录
 
 #### v1.1.1 2024-4-20
-* 修复BUG：刷新状态变化太快时，导致”完成时的定格提示动画”不执行的问题。（[#4]）
+* 修复BUG：刷新状态变化太快时，导致”完成时的定格提示动画”不执行的问题。（#4）
 * 优化一些细节
 
 #### v1.1.0 2023-12-17
