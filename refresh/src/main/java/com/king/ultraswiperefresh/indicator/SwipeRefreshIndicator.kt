@@ -156,7 +156,7 @@ internal fun SwipeRefreshIndicator(
 
     val alphaState = remember {
         derivedStateOf {
-            if ((state.indicatorOffset > 0f && !isFooter) || (state.indicatorOffset < 0f && isFooter)) {
+            if ((!isFooter && state.indicatorOffset > 0f) || (isFooter && state.indicatorOffset < 0f)) {
                 1f
             } else {
                 0f
@@ -175,39 +175,29 @@ internal fun SwipeRefreshIndicator(
                 .alpha(alphaState.value)
                 .size(size = sizes.size)
                 .graphicsLayer {
-                    if (isFooter) {
-                        val scaleFraction =
-                            if (scale && state.footerState != UltraSwipeFooterState.Loading) {
-                                val progress =
-                                    state.indicatorOffset / state.loadMoreTrigger.coerceAtMost(-1f)
+                    val scaleFraction = when {
+                        !scale -> 1f
+                        !isFooter && state.headerState != UltraSwipeHeaderState.Refreshing -> {
+                            LinearOutSlowInEasing
+                                .transform(
+                                    state.indicatorOffset.div(state.refreshTrigger.coerceAtLeast(1f))
+                                )
+                                .coerceIn(0f, 1f)
+                        }
 
-                                // We use LinearOutSlowInEasing to speed up the scale in
-                                LinearOutSlowInEasing
-                                    .transform(progress)
-                                    .coerceIn(0f, 1f)
-                            } else 1f
+                        isFooter && state.footerState != UltraSwipeFooterState.Loading -> {
+                            LinearOutSlowInEasing
+                                .transform(
+                                    state.indicatorOffset.div(state.loadMoreTrigger.coerceAtMost(-1f))
+                                )
+                                .coerceIn(0f, 1f)
+                        }
 
-                        scaleX = scaleFraction
-                        scaleY = scaleFraction
-
-                    } else {
-                        // Translate the indicator according to the slingshot
-                        translationY = 0f
-
-                        val scaleFraction =
-                            if (scale && state.headerState != UltraSwipeHeaderState.Refreshing) {
-                                val progress =
-                                    state.indicatorOffset / state.refreshTrigger.coerceAtLeast(1f)
-
-                                // We use LinearOutSlowInEasing to speed up the scale in
-                                LinearOutSlowInEasing
-                                    .transform(progress)
-                                    .coerceIn(0f, 1f)
-                            } else 1f
-
-                        scaleX = scaleFraction
-                        scaleY = scaleFraction
+                        else -> 1f
                     }
+
+                    scaleX = scaleFraction
+                    scaleY = scaleFraction
                 },
             shape = shape,
             color = backgroundColor,
@@ -267,10 +257,7 @@ internal fun SwipeRefreshIndicator(
                             modifier = Modifier.size(circleSize),
                         )
                     } else {
-                        Image(
-                            painter = painter,
-                            contentDescription = "Indicator"
-                        )
+                        Image(painter = painter, contentDescription = "Indicator")
                     }
                 }
             }

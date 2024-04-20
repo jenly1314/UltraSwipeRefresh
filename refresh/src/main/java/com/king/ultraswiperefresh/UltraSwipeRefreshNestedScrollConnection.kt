@@ -73,16 +73,23 @@ internal class UltraSwipeRefreshNestedScrollConnection(
     }
 
     override suspend fun onPreFling(available: Velocity): Velocity {
-        if (!(state.isRefreshing || state.isLoading || state.isFinishing)) {
-            when {
-                refreshEnabled && state.isExceededRefreshTrigger() -> onRefresh()
-                loadMoreEnabled && state.isExceededLoadMoreTrigger() -> onLoadMore()
-                state.indicatorOffset != 0f && !state.isSwipeInProgress -> state.animateOffsetTo(0f)
-            }
+        if (state.isRefreshing || state.isLoading || state.isFinishing) {
+            state.isSwipeInProgress = false
+            return available
         }
-
+        when {
+            refreshEnabled && state.isExceededRefreshTrigger() -> onRefresh()
+            loadMoreEnabled && state.isExceededLoadMoreTrigger() -> onLoadMore()
+            state.indicatorOffset != 0f && !state.isSwipeInProgress -> state.animateOffsetTo(0f)
+        }
         state.isSwipeInProgress = false
-        return super.onPreFling(available)
+        return Velocity.Zero
     }
 
+    override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+        if (state.isRefreshing || state.isLoading || state.isFinishing) {
+            return available
+        }
+        return Velocity.Zero
+    }
 }

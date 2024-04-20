@@ -73,40 +73,28 @@ internal fun ClassicRefreshIndicator(
     if (isFooter) {
         LaunchedEffect(state.footerState) {
             when (state.footerState) {
-                UltraSwipeFooterState.PullUpToLoad -> {
-                    arrowDegrees.animateTo(180f)
-                }
-
                 UltraSwipeFooterState.ReleaseToLoad -> {
                     arrowDegrees.animateTo(0f)
                 }
 
-                else -> {
-
-                }
+                else -> arrowDegrees.animateTo(180f)
             }
         }
     } else {
         LaunchedEffect(state.headerState) {
             when (state.headerState) {
-                UltraSwipeHeaderState.PullDownToRefresh -> {
-                    arrowDegrees.animateTo(0f)
-                }
-
                 UltraSwipeHeaderState.ReleaseToRefresh -> {
                     arrowDegrees.animateTo(180f)
                 }
 
-                else -> {
-
-                }
+                else -> arrowDegrees.animateTo(0f)
             }
         }
     }
 
     val alphaState = remember {
         derivedStateOf {
-            if ((state.indicatorOffset > 0f && !isFooter) || (state.indicatorOffset < 0f && isFooter)) {
+            if ((!isFooter && state.indicatorOffset > 0f) || (isFooter && state.indicatorOffset < 0f)) {
                 1f
             } else {
                 0f

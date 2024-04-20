@@ -38,14 +38,20 @@ internal fun ProgressRefreshIndicator(
 
     val progressState = remember {
         derivedStateOf {
-            if (isFooter) {
-                state.indicatorOffset.div(
-                    state.loadMoreTrigger.coerceAtMost(-1f)
-                ).coerceIn(0f, 1f)
-            } else {
-                state.indicatorOffset.div(
-                    state.refreshTrigger.coerceAtLeast(1f)
-                ).coerceIn(0f, 1f)
+            when {
+                !isFooter && state.indicatorOffset > 0f -> {
+                    state.indicatorOffset.div(
+                        state.refreshTrigger.coerceAtLeast(1f)
+                    ).coerceIn(0f, 1f)
+                }
+
+                isFooter && state.indicatorOffset < 0f -> {
+                    state.indicatorOffset.div(
+                        state.loadMoreTrigger.coerceAtMost(-1f)
+                    ).coerceIn(0f, 1f)
+                }
+
+                else -> 0f
             }
         }
     }
@@ -67,7 +73,7 @@ internal fun ProgressRefreshIndicator(
     Box(modifier = modifier) {
         Box(
             Modifier
-                .alpha(if (progressState.value == 0f) 0f else 1f)
+                .alpha(if (progressState.value > 0f) 1f else 0f)
                 .fillMaxWidth()
                 .height(height)
                 .drawWithCache {

@@ -37,33 +37,17 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.1.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.1.1'
    
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.1.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.1.1'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.1.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.1.1'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.1.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.1.1'
     ```
 
 ## 使用
-
-### UltraSwipeRefreshTheme（v1.1.0新增）
-
-UltraSwipeRefreshTheme：主要用于统一管理全局默认配置。
-
-> 通常情况下，一个App使用的刷新样式是统一的，如果你需要进行全局统一刷新组件的样式时，可以通过`UltraSwipeRefreshTheme.config`来动态修改`UltraSwipeRefresh`的全局默认配置。
-
-#### UltraSwipeRefreshTheme使用示例
-
-```kotlin
-// 全局设置默认的滑动模式
-UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
-   headerScrollMode = NestedScrollMode.Translate, 
-   footerScrollMode = NestedScrollMode.Translate,
-)
-```
 
 ### UltraSwipeRefresh
 
@@ -168,6 +152,22 @@ fun UltraSwipeRefreshSample() {
 
 > 使用小提示：**headerIndicator/footerIndicator** 与 **headerScrollMode/footerScrollMode** 组合使用才更配哦。
 
+### UltraSwipeRefreshTheme（v1.1.0新增）
+
+UltraSwipeRefreshTheme：主要用于统一管理全局默认配置。
+
+> 通常情况下，一个App使用的刷新样式是统一的，如果你需要进行全局统一刷新组件的样式时，可以通过`UltraSwipeRefreshTheme.config`来动态修改`UltraSwipeRefresh`的全局默认配置。
+
+#### UltraSwipeRefreshTheme使用示例
+
+```kotlin
+// 全局设置默认的滑动模式
+UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
+   headerScrollMode = NestedScrollMode.Translate, 
+   footerScrollMode = NestedScrollMode.Translate,
+)
+```
+
 ### 指示器样式
 
 这里罗列一下目前 **UltraSwipeRefresh** 所包含的一些Header和Footer指示器样式，方便快速查找与参考。
@@ -197,6 +197,10 @@ fun UltraSwipeRefreshSample() {
 #### [compose-component](https://github.com/jenly1314/compose-component) 一个Jetpack Compose的组件库；主要提供了一些小组件，便于快速使用。
 
 ## 版本记录
+
+#### v1.1.1 2024-4-20
+* 修复BUG：刷新状态变化太快时，导致”完成时的定格提示动画”不执行的问题。（[#4]）
+* 优化一些细节
 
 #### v1.1.0 2023-12-17
 

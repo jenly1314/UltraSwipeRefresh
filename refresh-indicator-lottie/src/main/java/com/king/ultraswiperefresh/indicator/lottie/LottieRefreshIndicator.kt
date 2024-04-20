@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -45,12 +43,14 @@ internal fun LottieRefreshIndicator(
 ) {
     val composition by rememberLottieComposition(spec = spec)
 
-    var isPlaying by remember { mutableStateOf(false) }
-
-    isPlaying = if (isFooter) {
-        state.footerState == UltraSwipeFooterState.Loading
-    } else {
-        state.headerState == UltraSwipeHeaderState.Refreshing
+    val isPlaying by remember {
+        derivedStateOf {
+            if (isFooter) {
+                state.footerState == UltraSwipeFooterState.Loading
+            } else {
+                state.headerState == UltraSwipeHeaderState.Refreshing
+            }
+        }
     }
 
     val progress by animateLottieCompositionAsState(
@@ -64,7 +64,7 @@ internal fun LottieRefreshIndicator(
 
     val alphaState = remember {
         derivedStateOf {
-            if ((state.indicatorOffset > 0f && !isFooter) || (state.indicatorOffset < 0f && isFooter)) {
+            if ((!isFooter && state.indicatorOffset > 0f) || (isFooter && state.indicatorOffset < 0f)) {
                 1f
             } else {
                 0f

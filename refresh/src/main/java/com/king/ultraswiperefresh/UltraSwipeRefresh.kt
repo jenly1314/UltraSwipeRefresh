@@ -83,16 +83,16 @@ fun UltraSwipeRefresh(
     val updatedOnRefresh = rememberUpdatedState(onRefresh)
     val updateOnLoadMore = rememberUpdatedState(onLoadMore)
 
-    Box(modifier.clipToBounds()) {
+    Box(modifier) {
         RefreshSubComposeLayout(
+            refreshEnabled = refreshEnabled,
+            loadMoreEnabled = loadMoreEnabled,
             headerIndicator = {
                 headerIndicator(state)
             },
             footerIndicator = {
                 footerIndicator(state)
             },
-            refreshEnabled = refreshEnabled,
-            loadMoreEnabled = loadMoreEnabled,
         ) { headerHeight, footerHeight ->
 
             val nestedScrollConnection = remember(state, coroutineScope) {
@@ -127,6 +127,11 @@ fun UltraSwipeRefresh(
                         state.isLoading -> state.animateOffsetTo(-footerHeight.toFloat())
                         state.headerState == UltraSwipeHeaderState.Refreshing || state.footerState == UltraSwipeFooterState.Loading -> {
                             state.isFinishing = true
+                            if (state.indicatorOffset > headerHeight) {
+                                state.animateOffsetTo(headerHeight.toFloat())
+                            } else if (state.indicatorOffset < -footerHeight) {
+                                state.animateOffsetTo(-footerHeight.toFloat())
+                            }
                             delay(finishDelayMillis)
                             state.animateOffsetTo(0f)
                         }
@@ -152,13 +157,14 @@ fun UltraSwipeRefresh(
                 }
             }
 
-            Box(modifier = Modifier.nestedScroll(nestedScrollConnection)) {
+            Box(modifier = Modifier.nestedScroll(nestedScrollConnection).clipToBounds()) {
                 Box(modifier = Modifier
                     .align(Alignment.TopCenter)
                     .graphicsLayer {
                         translationY = obtainHeaderOffset(state, headerScrollMode, headerHeight)
                     }
                     .zIndex(obtainZIndex(headerScrollMode))
+
                 ) {
                     if (refreshEnabled) {
                         headerIndicator(state)
@@ -378,10 +384,8 @@ private fun rememberVibrator(): Vibrator {
 @Suppress("DEPRECATION")
 private fun Vibrator.vibrate() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        this.vibrate(
-            VibrationEffect.createOneShot(20, VibrationEffect.DEFAULT_AMPLITUDE)
-        )
+        vibrate(VibrationEffect.createOneShot(20, VibrationEffect.DEFAULT_AMPLITUDE))
     } else {
-        this.vibrate(20)
+        vibrate(20)
     }
 }

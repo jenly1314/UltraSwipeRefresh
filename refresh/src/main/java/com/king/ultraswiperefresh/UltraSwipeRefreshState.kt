@@ -124,16 +124,16 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
      */
     internal suspend fun animateOffsetTo(offset: Float) {
         mutatorMutex.mutate {
+            if(!isFinishing) {
+                updateHeaderState()
+                updateFooterState()
+            }
             _indicatorOffset.animateTo(offset) {
                 if (indicatorOffset == 0f && isFinishing) {
                     isFinishing = false
                     updateHeaderState()
                     updateFooterState()
                 }
-            }
-            if(!isFinishing) {
-                updateHeaderState()
-                updateFooterState()
             }
         }
     }
