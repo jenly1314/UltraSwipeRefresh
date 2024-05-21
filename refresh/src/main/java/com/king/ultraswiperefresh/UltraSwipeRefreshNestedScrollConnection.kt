@@ -49,8 +49,8 @@ internal class UltraSwipeRefreshNestedScrollConnection(
         !(refreshEnabled || loadMoreEnabled) -> Offset.Zero
         // 当正在刷新或正在加载或处理正在完成时，则不进行消费，直接拦截
         state.isRefreshing || state.isLoading || state.isFinishing -> Offset.Zero
-        // 当前如果正在拖动并且节点所消耗的量consumed为0时，则进行滚动处理
-        source == NestedScrollSource.Drag && consumed.y == 0f -> onScroll(available)
+        // 当正在拖动时，则进行滚动处理
+        source == NestedScrollSource.Drag -> onScroll(available)
         else -> Offset.Zero
     }
 
