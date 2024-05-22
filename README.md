@@ -198,20 +198,20 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 ## 版本记录
 
-#### v1.1.2 2024-5-22
+#### v1.1.2 ：2024-5-22
 * 修复BUG：部分机型在某些特定场景下，出现“无法再次触发下拉刷新”的问题。（[#7](https://github.com/jenly1314/UltraSwipeRefresh/issues/7)）
 
-#### v1.1.1 2024-4-20
+#### v1.1.1 ：2024-4-20
 * 修复BUG：刷新状态变化太快时，导致”完成时的定格提示动画”不执行的问题。（[#4](https://github.com/jenly1314/UltraSwipeRefresh/issues/4)）
 * 优化一些细节
 
-#### v1.1.0 2023-12-17
+#### v1.1.0 ：2023-12-17
 
 * 新增`UltraSwipeRefreshTheme`：用于统一管理全局默认配置
 * 新增参数`finishDelayMillis`：完成时延时时间（可用于定格展示提示内容）
 * 新增参数`vibrateEnabled`：是否启用振动（当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果）
 
-#### v1.0.0：2023-12-3
+#### v1.0.0 ：2023-12-3
 
 * UltraSwipeRefresh初始版本
 
