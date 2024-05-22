@@ -11,7 +11,7 @@
 
 > **UltraSwipeRefresh** 的设计之初，主要参考了谷歌官方的[SwipeRefresh](https://github.com/google/accompanist/tree/main/swiperefresh) 和第三方的[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) ，吸取了其优秀的设计思想；致力于打造一个极致体验的 **Compose** 刷新组件。
 
-> 这里简单的概括下 **UltraSwipeRefresh** 主要的一些功能特色：支持多种滑动方式：平移、固定内容、固定在背后、固定在前面； **headerIndicator** 和 **footerIndicator** 可随意定制，并且 **Header** 和 **Footer** 的样式与滑动模式可随意组合。
+> 这里简单的概括下 **UltraSwipeRefresh** 主要的一些功能特色：支持多种滑动方式：平移、固定内容、固定在背后、固定在前面； **headerIndicator** 和 **footerIndicator** 可任意定制，并且 **Header** 和 **Footer** 的样式与滑动模式可随意组合。
 
 
 ## Gif 展示
@@ -37,14 +37,14 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.1.1'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.1.2'
    
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.1.1'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.1.2'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.1.1'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.1.2'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.1.1'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.1.2'
     ```
 
 ## 使用
@@ -197,6 +197,9 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 #### [compose-component](https://github.com/jenly1314/compose-component) 一个Jetpack Compose的组件库；主要提供了一些小组件，便于快速使用。
 
 ## 版本记录
+
+#### v1.1.2 2024-5-22
+* 修复BUG：部分机型在某些特定场景下，出现“无法再次触发下拉刷新”的问题。（[#7](https://github.com/jenly1314/UltraSwipeRefresh/issues/7)）
 
 #### v1.1.1 2024-4-20
 * 修复BUG：刷新状态变化太快时，导致”完成时的定格提示动画”不执行的问题。（[#4](https://github.com/jenly1314/UltraSwipeRefresh/issues/4)）
