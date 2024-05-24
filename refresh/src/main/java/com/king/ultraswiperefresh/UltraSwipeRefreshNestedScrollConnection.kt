@@ -56,18 +56,20 @@ internal class UltraSwipeRefreshNestedScrollConnection(
 
     private fun onScroll(available: Offset): Offset {
         if (available.y != 0f) {
-            if (available.y < 0f && !loadMoreEnabled) {
+
+            if (state.indicatorOffset <= 0f && available.y < 0f && !loadMoreEnabled) {
                 return Offset.Zero
             }
-            if (available.y > 0f && !refreshEnabled) {
+            if (state.indicatorOffset >= 0f && available.y > 0f && !refreshEnabled) {
                 return Offset.Zero
             }
+
             state.isSwipeInProgress = true
             val dragConsumed = available.y * dragMultiplier
             coroutineScope.launch {
                 state.dispatchScrollDelta(dragConsumed)
             }
-            return available
+            return available.copy(x = 0f)
         }
         return Offset.Zero
     }

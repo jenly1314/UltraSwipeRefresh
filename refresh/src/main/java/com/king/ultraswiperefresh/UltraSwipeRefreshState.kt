@@ -149,7 +149,7 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
                 } else if (indicatorOffset < 0f) {
                     indicatorOffset.plus(delta).coerceIn(footerMinOffset, 0f)
                 } else {
-                    indicatorOffset.plus(delta)
+                    indicatorOffset.plus(delta).coerceIn(footerMinOffset, headerMaxOffset)
                 }
             )
             if(!isFinishing) {
