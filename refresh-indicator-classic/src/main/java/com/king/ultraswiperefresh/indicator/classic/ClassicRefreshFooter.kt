@@ -108,9 +108,9 @@ private fun obtainLastLoadTime(state: UltraSwipeRefreshState): String {
     val context = LocalContext.current
     val dateFormat = remember {
         SimpleDateFormat(
-            context.getString(R.string.usr_last_load_time),
+            context.getString(R.string.usr_time_format_pattern),
             Locale.getDefault()
         )
     }
-    return dateFormat.format(lastLoadTime)
+    return "${context.getString(R.string.usr_last_load_time)}${dateFormat.format(lastLoadTime)}"
 }
