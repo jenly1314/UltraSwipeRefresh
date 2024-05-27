@@ -243,7 +243,7 @@ internal fun SwipeRefreshIndicator(
                     state.headerState == UltraSwipeHeaderState.Refreshing
                 },
                 animationSpec = tween(durationMillis = CrossfadeDurationMs),
-                label = label
+//                label = label
             ) { refreshing ->
                 Box(
                     modifier = Modifier.fillMaxSize(),

@@ -115,7 +115,7 @@ fun LinearProgressIndicator(
                 1f at FirstLineHeadDuration + FirstLineHeadDelay
             }
         ),
-        label = "firstLineHead"
+//        label = "firstLineHead"
     )
     val firstLineTail by infiniteTransition.animateFloat(
         0f,
@@ -127,7 +127,7 @@ fun LinearProgressIndicator(
                 1f at FirstLineTailDuration + FirstLineTailDelay
             }
         ),
-        label = "firstLineTail"
+//        label = "firstLineTail"
     )
     val secondLineHead by infiniteTransition.animateFloat(
         0f,
@@ -139,7 +139,7 @@ fun LinearProgressIndicator(
                 1f at SecondLineHeadDuration + SecondLineHeadDelay
             }
         ),
-        label = "secondLineHead"
+//        label = "secondLineHead"
     )
     val secondLineTail by infiniteTransition.animateFloat(
         0f,
@@ -151,7 +151,7 @@ fun LinearProgressIndicator(
                 1f at SecondLineTailDuration + SecondLineTailDelay
             }
         ),
-        label = "secondLineTail"
+//        label = "secondLineTail"
     )
     Canvas(
         modifier

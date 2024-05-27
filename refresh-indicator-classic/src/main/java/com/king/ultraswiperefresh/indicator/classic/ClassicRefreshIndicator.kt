@@ -113,7 +113,7 @@ internal fun ClassicRefreshIndicator(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (if (isFooter) state.isLoading else state.isRefreshing) {
-                val transition = rememberInfiniteTransition(label)
+                val transition = rememberInfiniteTransition()
                 val rotate by transition.animateFloat(
                     initialValue = 0f,
                     targetValue = 360f,
@@ -123,7 +123,7 @@ internal fun ClassicRefreshIndicator(
                             easing = LinearEasing
                         )
                     ),
-                    label = label
+//                    label = label
                 )
                 Image(
                     painter = loadingIconPainter,

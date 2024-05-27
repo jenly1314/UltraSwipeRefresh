@@ -6,7 +6,6 @@ import androidx.compose.foundation.MutatorMutex
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -88,25 +87,25 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
     /**
      * 触发滑动刷新的最小距离
      */
-    var refreshTrigger: Float by mutableFloatStateOf(Float.MAX_VALUE)
+    var refreshTrigger: Float by mutableStateOf(Float.MAX_VALUE)
         internal set
 
     /**
      * 触发加载更多的最小距离
      */
-    var loadMoreTrigger: Float by mutableFloatStateOf(Float.MIN_VALUE)
+    var loadMoreTrigger: Float by mutableStateOf(Float.MIN_VALUE)
         internal set
 
     /**
      * Header可滑动的最大偏移量
      */
-    var headerMaxOffset by mutableFloatStateOf(0f)
+    var headerMaxOffset by mutableStateOf(0f)
         internal set
 
     /**
      * Footer可滑动的最小偏移量
      */
-    var footerMinOffset by mutableFloatStateOf(0f)
+    var footerMinOffset by mutableStateOf(0f)
         internal set
 
     /**

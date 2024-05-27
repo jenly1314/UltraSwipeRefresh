@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -98,7 +98,7 @@ private fun obtainHeaderTipContent(state: UltraSwipeRefreshState): String {
 @Composable
 private fun obtainLastRefreshTime(state: UltraSwipeRefreshState): String {
     var lastRefreshTime by remember("lastRefreshTime") {
-        mutableLongStateOf(System.currentTimeMillis())
+        mutableStateOf(System.currentTimeMillis())
     }
     LaunchedEffect(state.headerState) {
         if (state.headerState == UltraSwipeHeaderState.Refreshing) {
