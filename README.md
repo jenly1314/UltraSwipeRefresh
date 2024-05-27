@@ -199,6 +199,8 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 ## 版本记录
 
 #### 待发布版本 （[提前体验](test.md)）
+* 修复BUG：禁用下拉刷新或上拉加载时，上下滑动的边界值判定问题。（[#8](https://github.com/jenly1314/UltraSwipeRefresh/issues/8)）
+* 优化一些细节
 
 #### v1.1.2 ：2024-5-22
 * 修复BUG：部分机型在某些特定场景下，出现“无法再次触发下拉刷新”的问题。（[#7](https://github.com/jenly1314/UltraSwipeRefresh/issues/7)）
