@@ -46,7 +46,7 @@ import kotlinx.coroutines.delay
  * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
- * @param content 可进行滑动刷新或加载更多所包含的内容
+ * @param content 可进行刷新或加载更多所包含的内容
  *
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  * <p>
@@ -212,7 +212,7 @@ fun UltraSwipeRefresh(
  * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
- * @param content 可进行滑动刷新或加载更多所包含的内容
+ * @param content 可进行刷新或加载更多所包含的内容
  */
 @Composable
 fun UltraSwipeRefresh(

@@ -37,14 +37,14 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.1.2'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.1.3'
    
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.1.2'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.1.3'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.1.2'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.1.3'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.1.2'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.1.3'
     ```
 
 ## 使用
@@ -76,7 +76,7 @@
  * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
- * @param content 可进行滑动刷新或加载更多所包含的内容
+ * @param content 可进行刷新或加载更多所包含的内容
  */
 ```
 
@@ -198,7 +198,7 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 ## 版本记录
 
-#### 待发布版本 （[提前体验](test.md)）
+#### v1.1.3 ：2024-6-2
 * 修复BUG：禁用下拉刷新或上拉加载时，上下滑动的边界值判定问题。（[#8](https://github.com/jenly1314/UltraSwipeRefresh/issues/8)）
 * 优化一些细节
 
