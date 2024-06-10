@@ -6,6 +6,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.unit.Velocity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
 
 /**
  * 主要用于处理和协调Header或Footer与内容多个元素之间的滚动事件。
@@ -55,7 +56,7 @@ internal class UltraSwipeRefreshNestedScrollConnection(
     }
 
     private fun onScroll(available: Offset): Offset {
-        if (available.y != 0f) {
+        if (available.y.absoluteValue > 0.5f) {
 
             if (state.indicatorOffset <= 0f && available.y < 0f && !loadMoreEnabled) {
                 return Offset.Zero
