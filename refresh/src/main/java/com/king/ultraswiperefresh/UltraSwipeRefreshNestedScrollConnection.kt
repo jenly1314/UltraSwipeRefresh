@@ -6,7 +6,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.unit.Velocity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.math.absoluteValue
 
 /**
  * 主要用于处理和协调Header或Footer与内容多个元素之间的滚动事件。
@@ -26,10 +25,7 @@ internal class UltraSwipeRefreshNestedScrollConnection(
     var refreshEnabled: Boolean = false
     var loadMoreEnabled: Boolean = false
 
-    override fun onPreScroll(
-        available: Offset,
-        source: NestedScrollSource
-    ): Offset = when {
+    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset = when {
         // 当下拉刷新和上拉加载都未启用时，则不进行消费，直接拦截
         !(refreshEnabled || loadMoreEnabled) -> Offset.Zero
         // 当正在刷新或正在加载或处理正在完成时，交由[onPostScroll]去处理
@@ -49,15 +45,14 @@ internal class UltraSwipeRefreshNestedScrollConnection(
         // 当下拉刷新和上拉加载都未启用时，则不进行消费，直接拦截
         !(refreshEnabled || loadMoreEnabled) -> Offset.Zero
         // 当正在刷新或正在加载或处理正在完成时，则不进行消费，直接拦截
-        state.isRefreshing || state.isLoading || state.isFinishing -> Offset.Zero
+        state.isRefreshing || state.isLoading || state.isFinishing -> available
         // 当正在拖动时，则进行滚动处理
         source == NestedScrollSource.Drag -> onScroll(available)
         else -> Offset.Zero
     }
 
     private fun onScroll(available: Offset): Offset {
-        if (available.y.absoluteValue > 0.5f) {
-
+        if (available.y != 0f) {
             if (state.indicatorOffset <= 0f && available.y < 0f && !loadMoreEnabled) {
                 return Offset.Zero
             }
@@ -65,13 +60,18 @@ internal class UltraSwipeRefreshNestedScrollConnection(
                 return Offset.Zero
             }
 
-            state.isSwipeInProgress = true
-            val dragConsumed = available.y * dragMultiplier
-            coroutineScope.launch {
-                state.dispatchScrollDelta(dragConsumed)
+            if (state.headerState != UltraSwipeHeaderState.Refreshing && state.footerState != UltraSwipeFooterState.Loading) {
+                coroutineScope.launch {
+                    state.isSwipeInProgress = true
+                    val dragConsumed = available.y * dragMultiplier
+                    state.dispatchScrollDelta(dragConsumed)
+
+                }
             }
+
             return available.copy(x = 0f)
         }
+
         return Offset.Zero
     }
 

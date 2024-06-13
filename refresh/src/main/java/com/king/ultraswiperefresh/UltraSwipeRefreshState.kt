@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlin.math.absoluteValue
 
 /**
  * 创建一个[UltraSwipeRefreshState]，该状态在重组时会被记住。
@@ -68,7 +69,7 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
         internal set
 
     /**
-     * 当前是否正在滑动（仅在单次滑动操作中，仅会记录[_indicatorOffset]的值不为0时的状态，即：需要触发至少显示一次Header或Footer时，才会被判定为正在滑动）
+     * 当前是否正在滑动（仅在单次滑动操作中，仅会记录[_indicatorOffset]的值增量不为0时的状态
      */
     var isSwipeInProgress: Boolean by mutableStateOf(false)
         internal set
@@ -124,22 +125,22 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
      */
     internal suspend fun animateOffsetTo(offset: Float) {
         mutatorMutex.mutate {
-            if(!isFinishing) {
+            if (!isFinishing) {
                 updateHeaderState()
                 updateFooterState()
             }
-            _indicatorOffset.animateTo(offset) {
-                if (indicatorOffset == 0f && isFinishing) {
-                    isFinishing = false
-                    updateHeaderState()
-                    updateFooterState()
-                }
+            _indicatorOffset.animateTo(offset)
+
+            if (isFinishing && indicatorOffset == 0f) {
+                isFinishing = false
+                updateHeaderState()
+                updateFooterState()
             }
         }
     }
 
     /**
-     * Dispatch scroll delta in pixels from touch events.
+     * 调度触摸事件滚动增量
      */
     internal suspend fun dispatchScrollDelta(delta: Float) {
         mutatorMutex.mutate(MutatePriority.UserInput) {
@@ -150,9 +151,9 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
                     indicatorOffset.plus(delta).coerceIn(footerMinOffset, 0f)
                 } else {
                     indicatorOffset.plus(delta).coerceIn(footerMinOffset, headerMaxOffset)
-                }
+                }.takeIf { it.absoluteValue >= 0.5f } ?: 0f
             )
-            if(!isFinishing) {
+            if (!isFinishing) {
                 updateHeaderState()
                 updateFooterState()
             }
