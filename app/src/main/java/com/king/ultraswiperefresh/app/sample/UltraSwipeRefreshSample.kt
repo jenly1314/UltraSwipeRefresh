@@ -101,6 +101,10 @@ fun UltraSwipeRefreshSample(navController: NavController) {
                 NavRoute.CustomLottieRefreshIndicatorSample,
                 "自定义Lottie动画刷新样式示例" to "随机切换滑动模式，Header与Footer与内容的联动效果由滑动模式[NestedScrollMode]来决定"
             )
+            put(
+                NavRoute.SwipeRefreshSample,
+                "Google官方的SwipeRefresh示例" to "只支持下拉刷新，此示例主要用于与UltraSwipeRefresh进行效果对比（后续可能会移除）"
+            )
         }
 
         LazyColumn(

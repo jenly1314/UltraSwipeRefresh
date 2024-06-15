@@ -22,4 +22,6 @@ enum class NavRoute {
     LottieRefreshIndicatorSample,
 
     CustomLottieRefreshIndicatorSample,
+
+    SwipeRefreshSample,
 }
