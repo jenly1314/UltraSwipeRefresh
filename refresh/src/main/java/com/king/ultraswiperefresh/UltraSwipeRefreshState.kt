@@ -69,7 +69,7 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
         internal set
 
     /**
-     * 当前是否正在滑动（仅在单次滑动操作中，仅会记录[_indicatorOffset]的值增量不为0时的状态
+     * 当前是否正在滑动（在单次滑动操作中，会记录[_indicatorOffset]的值发生增量变化时的状态）
      */
     var isSwipeInProgress: Boolean by mutableStateOf(false)
         internal set

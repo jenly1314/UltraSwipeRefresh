@@ -6,6 +6,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.unit.Velocity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 /**
  * 主要用于处理和协调Header或Footer与内容多个元素之间的滚动事件。
@@ -26,13 +27,13 @@ internal class UltraSwipeRefreshNestedScrollConnection(
     var loadMoreEnabled: Boolean = false
 
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset = when {
-        // 当下拉刷新和上拉加载都未启用时，则不进行消费，直接拦截
+        // 当下拉刷新和上拉加载都未启用时，则直接返回：Offset.Zero
         !(refreshEnabled || loadMoreEnabled) -> Offset.Zero
-        // 当正在刷新或正在加载或处理正在完成时，交由[onPostScroll]去处理
+        // 当正在刷新或正在加载或处理正在完成时，则直接返回：available（禁止滚动）
         state.isRefreshing || state.isLoading || state.isFinishing -> available
-        // 当都Header和Footer都未显示时，则不进行消费，直接拦截
+        // 当都Header和Footer都未显示时，则直接返回：Offset.Zero
         state.indicatorOffset == 0f -> Offset.Zero
-        // 当正在拖动时，则进行滚动处理
+        // 当正在滑动时，则进行处理
         source == NestedScrollSource.Drag -> onScroll(available)
         else -> Offset.Zero
     }
@@ -42,11 +43,11 @@ internal class UltraSwipeRefreshNestedScrollConnection(
         available: Offset,
         source: NestedScrollSource
     ): Offset = when {
-        // 当下拉刷新和上拉加载都未启用时，则不进行消费，直接拦截
+        // 当下拉刷新和上拉加载都未启用时，则直接返回：Offset.Zero
         !(refreshEnabled || loadMoreEnabled) -> Offset.Zero
-        // 当正在刷新或正在加载或处理正在完成时，则不进行消费，直接拦截
+        // 当正在刷新或正在加载或处理正在完成时，则直接返回：available（禁止滚动）
         state.isRefreshing || state.isLoading || state.isFinishing -> available
-        // 当正在拖动时，则进行滚动处理
+        // 当正在滑动时，则进行处理
         source == NestedScrollSource.Drag -> onScroll(available)
         else -> Offset.Zero
     }
@@ -65,11 +66,13 @@ internal class UltraSwipeRefreshNestedScrollConnection(
                     state.isSwipeInProgress = true
                     val dragConsumed = available.y * dragMultiplier
                     state.dispatchScrollDelta(dragConsumed)
-
                 }
             }
 
             return available.copy(x = 0f)
+
+        } else if (state.indicatorOffset.roundToInt() == 0) {
+            state.isSwipeInProgress = false
         }
 
         return Offset.Zero
