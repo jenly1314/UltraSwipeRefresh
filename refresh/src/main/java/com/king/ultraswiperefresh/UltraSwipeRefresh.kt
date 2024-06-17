@@ -7,8 +7,12 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.annotation.FloatRange
 import androidx.annotation.IntRange
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
@@ -133,7 +137,7 @@ fun UltraSwipeRefresh(
                                 state.animateOffsetTo(-footerHeight.toFloat())
                             }
                             delay(finishDelayMillis)
-                            state.animateOffsetTo(0f)
+                            state.animateOffsetTo(0f, MutatePriority.PreventUserInput)
                         }
 
                         else -> state.animateOffsetTo(0f)
@@ -157,7 +161,11 @@ fun UltraSwipeRefresh(
                 }
             }
 
-            Box(modifier = Modifier.nestedScroll(nestedScrollConnection).clipToBounds()) {
+            Box(
+                modifier = Modifier
+                    .nestedScroll(nestedScrollConnection)
+                    .clipToBounds()
+            ) {
                 Box(modifier = Modifier
                     .align(Alignment.TopCenter)
                     .graphicsLayer {
@@ -184,7 +192,10 @@ fun UltraSwipeRefresh(
                 Box(modifier = Modifier.graphicsLayer {
                     translationY = obtainContentOffset(state, headerScrollMode, footerScrollMode)
                 }) {
-                    content()
+                    @OptIn(ExperimentalFoundationApi::class)
+                    CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
+                        content()
+                    }
                 }
             }
         }

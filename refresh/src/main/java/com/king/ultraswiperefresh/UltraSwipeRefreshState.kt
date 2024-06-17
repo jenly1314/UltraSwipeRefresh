@@ -123,8 +123,11 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
     /**
      * 动画的方式更新指示器的偏移量
      */
-    internal suspend fun animateOffsetTo(offset: Float) {
-        mutatorMutex.mutate {
+    internal suspend fun animateOffsetTo(
+        offset: Float,
+        priority: MutatePriority = MutatePriority.Default
+    ) {
+        mutatorMutex.mutate(priority) {
             if (!isFinishing) {
                 updateHeaderState()
                 updateFooterState()
