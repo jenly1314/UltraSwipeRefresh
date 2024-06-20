@@ -11,7 +11,7 @@
 
 > **UltraSwipeRefresh** 的设计之初，主要参考了谷歌官方的[SwipeRefresh](https://github.com/google/accompanist/tree/main/swiperefresh) 和第三方的[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) ，吸取了其优秀的设计思想；致力于打造一个极致体验的 **Compose** 刷新组件。
 
-> 这里简单的概括下 **UltraSwipeRefresh** 主要的一些功能特色：支持多种滑动方式：平移、固定内容、固定在背后、固定在前面； **headerIndicator** 和 **footerIndicator** 可任意定制，并且 **Header** 和 **Footer** 的样式与滑动模式可随意组合。
+> 这里简单的概括下 **UltraSwipeRefresh** 主要的一些功能特色：刷新指示器支持多种滑动方式：平移、固定内容、固定在背后、固定在前面； **headerIndicator** 和 **footerIndicator** 可任意定制，并且 **Header** 和 **Footer** 的样式与滑动模式可随意组合。
 
 
 ## Gif 展示
@@ -51,7 +51,7 @@
 
 ### UltraSwipeRefresh
 
-**Compose** 组件的使用大都比较直观，一般只需看一下 **Composable** 函数对应的参数说明基本就会使用了。
+**Compose** 组件的使用大都比较直观，一般看一下 **Composable** 函数对应的参数说明基本就会使用了。
 
 #### UltraSwipeRefresh参数说明
 
@@ -82,10 +82,10 @@
 
 #### UltraSwipeRefresh使用示例
 
+比如：使用`UltraSwipeRefresh`实现一个经典样式的下拉刷新与上拉加载示例：
+
 ```kotlin
-/**
- * 完整代码示例
- */
+
 @Composable
 fun UltraSwipeRefreshSample() {
 
@@ -167,10 +167,11 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
    footerScrollMode = NestedScrollMode.Translate,
 )
 ```
+> 更多参数配置可查看：`UltraSwipeRefreshTheme.config` 的定义，这里就不一一举例了。
 
 ### 指示器样式
 
-这里罗列一下目前 **UltraSwipeRefresh** 所包含的一些Header和Footer指示器样式，方便快速查找与参考。
+这里罗列一下目前 **UltraSwipeRefresh** 所提供的一些Header和Footer指示器样式，方便快速查找与参考。
 
 | 默认官方样式                                                                                                                          | 经典样式                                                                                                                              | 
 |:--------------------------------------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------|
@@ -187,7 +188,7 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 | [对应的代码示例](app/src/main/java/com/king/ultraswiperefresh/app/sample/ProgressRefreshIndicatorSample.kt) | [对应的代码示例](app/src/main/java/com/king/ultraswiperefresh/app/sample/LottieRefreshIndicatorSample.kt) | 
 
 
-> 如果以上的指示器效果都不满足你的需求，你也可以自定义去实现Header和Footer的指示器，也可以直接使用Lottie动画样式的指示器来可快速接入任何Lottie动画。
+> 如果以上的指示器效果都不满足你的需求，你可以自定义去实现Header和Footer的指示器，也可以直接使用Lottie动画样式的指示器来可快速接入任何Lottie动画。
 
 更多使用详情，请查看[app](app)中的源码使用示例或直接查看 [API帮助文档](https://jitpack.io/com/github/jenly1314/UltraSwipeRefresh/latest/javadoc/)
 
