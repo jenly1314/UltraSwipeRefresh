@@ -115,8 +115,8 @@ fun UltraSwipeRefresh(
             }
 
             LaunchedEffect(headerHeight, footerHeight, refreshTriggerRate, loadMoreTriggerRate) {
-                state.refreshTrigger = headerHeight.times(refreshTriggerRate)
-                state.loadMoreTrigger = -footerHeight.times(loadMoreTriggerRate)
+                state.refreshTrigger = headerHeight.times(refreshTriggerRate).coerceAtLeast(1f)
+                state.loadMoreTrigger = -(footerHeight.times(loadMoreTriggerRate).coerceAtLeast(1f))
             }
 
             LaunchedEffect(headerHeight, footerHeight, headerMaxOffsetRate, footerMaxOffsetRate) {
