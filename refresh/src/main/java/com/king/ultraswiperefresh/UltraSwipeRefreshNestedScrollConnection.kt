@@ -62,8 +62,8 @@ internal class UltraSwipeRefreshNestedScrollConnection(
             }
 
             if (state.headerState != UltraSwipeHeaderState.Refreshing && state.footerState != UltraSwipeFooterState.Loading) {
+                state.isSwipeInProgress = true
                 coroutineScope.launch {
-                    state.isSwipeInProgress = true
                     val dragConsumed = available.y * dragMultiplier
                     state.dispatchScrollDelta(dragConsumed)
                 }

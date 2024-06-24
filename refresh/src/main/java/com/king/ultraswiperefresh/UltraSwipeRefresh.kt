@@ -5,14 +5,12 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.util.Log
 import androidx.annotation.FloatRange
 import androidx.annotation.IntRange
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
@@ -158,6 +156,8 @@ fun UltraSwipeRefresh(
                             vibrator.vibrate()
                         }
                     }
+                } else {
+                    Log.w(TAG, "hasVibrator: false")
                 }
             }
 
@@ -192,10 +192,7 @@ fun UltraSwipeRefresh(
                 Box(modifier = Modifier.graphicsLayer {
                     translationY = obtainContentOffset(state, headerScrollMode, footerScrollMode)
                 }) {
-                    @OptIn(ExperimentalFoundationApi::class)
-                    CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
-                        content()
-                    }
+                    content()
                 }
             }
         }
@@ -395,8 +392,10 @@ private fun rememberVibrator(): Vibrator {
 @Suppress("DEPRECATION")
 private fun Vibrator.vibrate() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        vibrate(VibrationEffect.createOneShot(20, VibrationEffect.DEFAULT_AMPLITUDE))
+        vibrate(VibrationEffect.createOneShot(40, VibrationEffect.DEFAULT_AMPLITUDE))
     } else {
-        vibrate(20)
+        vibrate(40)
     }
 }
+
+internal const val TAG = "UltraSwipeRefresh"
