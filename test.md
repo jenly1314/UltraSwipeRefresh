@@ -21,12 +21,12 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:e321cef04f'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:8e4c92baf3'
    
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:e321cef04f'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:8e4c92baf3'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:e321cef04f'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:8e4c92baf3'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:e321cef04f'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:8e4c92baf3'
     ```
