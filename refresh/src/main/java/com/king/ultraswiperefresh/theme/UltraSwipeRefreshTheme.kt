@@ -2,7 +2,10 @@ package com.king.ultraswiperefresh.theme
 
 import androidx.annotation.FloatRange
 import androidx.annotation.IntRange
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -22,6 +25,7 @@ import com.king.ultraswiperefresh.indicator.SwipeRefreshHeader
  * <a href="https://github.com/jenly1314">Follow me</a>
  */
 object UltraSwipeRefreshTheme {
+
     /**
      * [UltraSwipeRefresh]的配置，此配置可动态修改[UltraSwipeRefresh]的全局默认配置
      */
@@ -44,6 +48,7 @@ object UltraSwipeRefreshTheme {
  * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
+ * @param contentContainer 内容的父容器，便于统一管理
  */
 data class UltraSwipeRefreshConfig(
     val headerScrollMode: NestedScrollMode = NestedScrollMode.Translate,
@@ -63,4 +68,16 @@ data class UltraSwipeRefreshConfig(
     val footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = {
         SwipeRefreshFooter(it)
     },
+    val contentContainer: @Composable (@Composable () -> Unit) -> Unit = {
+        NoOverscrollEffect(it)
+    }
 )
+
+/**
+ * 无过度滚动效果
+ */
+@Composable
+@OptIn(ExperimentalFoundationApi::class)
+private fun NoOverscrollEffect(content: @Composable () -> Unit) {
+    CompositionLocalProvider(LocalOverscrollConfiguration provides null, content = content)
+}

@@ -200,6 +200,7 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 ## 版本记录
 
 #### 待发布版本（[提前体验](test.md)）
+* 新增参数`contentContainer`：内容的父容器，便于统一管理
 * 修复了一些已知问题
 
 #### v1.1.3 ：2024-6-2

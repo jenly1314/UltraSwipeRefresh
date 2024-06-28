@@ -8,12 +8,9 @@ import android.os.VibratorManager
 import android.util.Log
 import androidx.annotation.FloatRange
 import androidx.annotation.IntRange
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +48,7 @@ import kotlinx.coroutines.delay
  * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
+ * @param contentContainer [content]的父容器，便于统一管理
  * @param content 可进行刷新或加载更多所包含的内容
  *
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
@@ -82,6 +80,7 @@ fun UltraSwipeRefresh(
     vibrateEnabled: Boolean = UltraSwipeRefreshTheme.config.vibrateEnabled,
     headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
     footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
+    contentContainer: @Composable (@Composable () -> Unit) -> Unit = UltraSwipeRefreshTheme.config.contentContainer,
     content: @Composable () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -195,10 +194,7 @@ fun UltraSwipeRefresh(
                 Box(modifier = Modifier.graphicsLayer {
                     translationY = obtainContentOffset(state, headerScrollMode, footerScrollMode)
                 }) {
-                    @OptIn(ExperimentalFoundationApi::class)
-                    CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
-                        content()
-                    }
+                    contentContainer(content)
                 }
             }
         }
@@ -226,6 +222,7 @@ fun UltraSwipeRefresh(
  * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
+ * @param contentContainer [content]的父容器，便于统一管理
  * @param content 可进行刷新或加载更多所包含的内容
  */
 @Composable
@@ -254,6 +251,7 @@ fun UltraSwipeRefresh(
     vibrateEnabled: Boolean = UltraSwipeRefreshTheme.config.vibrateEnabled,
     headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
     footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
+    contentContainer: @Composable (@Composable () -> Unit) -> Unit = UltraSwipeRefreshTheme.config.contentContainer,
     content: @Composable () -> Unit,
 ) {
     val state = rememberUltraSwipeRefreshState(isRefreshing = isRefreshing, isLoading = isLoading)
@@ -275,6 +273,7 @@ fun UltraSwipeRefresh(
         vibrateEnabled = vibrateEnabled,
         headerIndicator = headerIndicator,
         footerIndicator = footerIndicator,
+        contentContainer = contentContainer,
         content = content
     )
 }
@@ -398,10 +397,12 @@ private fun rememberVibrator(): Vibrator {
 @Suppress("DEPRECATION")
 private fun Vibrator.vibrate() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        vibrate(VibrationEffect.createOneShot(40, VibrationEffect.DEFAULT_AMPLITUDE))
+        vibrate(VibrationEffect.createOneShot(VibrationDurationMs, VibrationEffect.DEFAULT_AMPLITUDE))
     } else {
-        vibrate(40)
+        vibrate(VibrationDurationMs)
     }
 }
+
+private const val VibrationDurationMs = 40L
 
 internal const val TAG = "UltraSwipeRefresh"
