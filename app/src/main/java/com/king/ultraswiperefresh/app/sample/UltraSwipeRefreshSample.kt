@@ -103,7 +103,11 @@ fun UltraSwipeRefreshSample(navController: NavController) {
             )
             put(
                 NavRoute.SwipeRefreshSample,
-                "Google官方的SwipeRefresh示例" to "只支持下拉刷新，此示例主要用于与UltraSwipeRefresh进行效果对比（后续可能会移除）"
+                "Accompanist中的SwipeRefresh示例" to "只支持下拉刷新，此示例主要用于与UltraSwipeRefresh进行效果对比（后续可能会移除）"
+            )
+            put(
+                NavRoute.PullRefreshSample,
+                "Material中的Modifier.pullRefresh示例" to "只支持下拉刷新，此示例主要用于与UltraSwipeRefresh进行效果对比（后续可能会移除）"
             )
         }
 

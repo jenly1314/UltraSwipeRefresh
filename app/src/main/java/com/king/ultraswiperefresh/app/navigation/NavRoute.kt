@@ -24,4 +24,6 @@ enum class NavRoute {
     CustomLottieRefreshIndicatorSample,
 
     SwipeRefreshSample,
+
+    PullRefreshSample,
 }

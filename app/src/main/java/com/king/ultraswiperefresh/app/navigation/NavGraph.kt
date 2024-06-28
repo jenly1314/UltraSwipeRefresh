@@ -8,9 +8,10 @@ import com.king.ultraswiperefresh.app.sample.ClassicRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.CustomLottieRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.LottieRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.ProgressRefreshIndicatorSample
-import com.king.ultraswiperefresh.app.sample.UltraSwipeRefreshSample
+import com.king.ultraswiperefresh.app.sample.PullRefreshSample
 import com.king.ultraswiperefresh.app.sample.SwipeRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.SwipeRefreshSample
+import com.king.ultraswiperefresh.app.sample.UltraSwipeRefreshSample
 
 /**
  * 导航图
@@ -20,7 +21,6 @@ import com.king.ultraswiperefresh.app.sample.SwipeRefreshSample
  * <a href="https://github.com/jenly1314">Follow me</a>
  */
 fun NavGraphBuilder.noteNavGraph(navController: NavController) {
-
     navigation(
         startDestination = NavRoute.UltraSwipeRefreshSample.name,
         route = NavRoute.Root.name
@@ -45,6 +45,9 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
         }
         composable(route = NavRoute.SwipeRefreshSample.name) {
             SwipeRefreshSample()
+        }
+        composable(route = NavRoute.PullRefreshSample.name) {
+            PullRefreshSample()
         }
     }
 }
