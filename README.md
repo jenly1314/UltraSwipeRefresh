@@ -37,14 +37,14 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.1.3'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.2.0'
    
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.1.3'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.2.0'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.1.3'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.2.0'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.1.3'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.2.0'
     ```
 
 ## 使用
@@ -76,13 +76,14 @@
  * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
+ * @param contentContainer 内容的父容器，便于统一管理
  * @param content 可进行刷新或加载更多所包含的内容
  */
 ```
 
 #### UltraSwipeRefresh使用示例
 
-比如：使用`UltraSwipeRefresh`实现一个经典样式的下拉刷新与上拉加载示例：
+比如：使用`UltraSwipeRefresh`实现一个经典样式的刷新与加载示例：
 
 ```kotlin
 
@@ -199,7 +200,7 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 ## 版本记录
 
-#### 待发布版本（[提前体验](test.md)）
+#### v1.2.0 ：2024-7-1
 * 新增参数`contentContainer`：内容的父容器，便于统一管理
 * 修复了一些已知问题
 
