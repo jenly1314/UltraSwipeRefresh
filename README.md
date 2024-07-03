@@ -162,7 +162,7 @@ UltraSwipeRefreshTheme：主要用于统一管理全局默认配置。
 #### UltraSwipeRefreshTheme使用示例
 
 ```kotlin
-// 全局设置默认的滑动模式
+// 全局设置默认的滑动模式 （建议在Application的onCreate中进行配置）
 UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
    headerScrollMode = NestedScrollMode.Translate, 
    footerScrollMode = NestedScrollMode.Translate,
@@ -199,6 +199,9 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 #### [compose-component](https://github.com/jenly1314/compose-component) 一个Jetpack Compose的组件库；主要提供了一些小组件，便于快速使用。
 
 ## 版本记录
+
+#### 待发布版本（[提前体验](test.md)）
+* 更新compose至v1.6.0 (v1.5.0 -> v1.6.0) （[#13](https://github.com/jenly1314/UltraSwipeRefresh/issues/13)）
 
 #### v1.2.0 ：2024-7-1
 * 新增参数`contentContainer`：内容的父容器，便于统一管理

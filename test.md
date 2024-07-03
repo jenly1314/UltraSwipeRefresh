@@ -1,5 +1,5 @@
 
-## 待发布版本（已发布：v1.2.0）
+## 待发布版本
 
 待发布版本暂使用 **Jit Pack** 仓库；待收集的一些问题测试稳定后，再统一发布正式版本至 **Maven Central** 仓库。
 
@@ -21,12 +21,12 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:8e4c92baf3'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:b3de8ae904'
    
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:8e4c92baf3'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:b3de8ae904'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:8e4c92baf3'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:b3de8ae904'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:8e4c92baf3'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:b3de8ae904'
     ```
