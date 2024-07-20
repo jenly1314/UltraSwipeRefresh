@@ -5,14 +5,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +31,7 @@ import com.king.ultraswiperefresh.indicator.lottie.LottieRefreshFooter
 import com.king.ultraswiperefresh.indicator.lottie.LottieRefreshHeader
 import com.king.ultraswiperefresh.rememberUltraSwipeRefreshState
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * 自定义Lottie动画刷新样式示例
@@ -42,33 +44,9 @@ import kotlinx.coroutines.delay
 fun CustomLottieRefreshIndicatorSample() {
 
     val state = rememberUltraSwipeRefreshState()
-
     var itemCount by remember { mutableIntStateOf(20) }
-
     var hasMoreData by remember { mutableStateOf(true) }
-
-    LaunchedEffect(state.isRefreshing) {
-        if (state.isRefreshing) {
-            delay(2000)
-            itemCount = 20
-            hasMoreData = true
-            state.isRefreshing = false
-        }
-    }
-
-    LaunchedEffect(state.isLoading) {
-        if (state.isLoading) {
-            delay(2000)
-            itemCount += 20
-            state.isLoading = false
-        }
-    }
-
-    LaunchedEffect(state.isFinishing) {
-        if (itemCount > 50 && !state.isFinishing) {
-            hasMoreData = false
-        }
-    }
+    val coroutineScope = rememberCoroutineScope()
 
     var headerScrollMode by remember {
         mutableStateOf(NestedScrollMode.FixedBehind)
@@ -77,20 +55,39 @@ fun CustomLottieRefreshIndicatorSample() {
         mutableStateOf(NestedScrollMode.FixedBehind)
     }
 
+    LaunchedEffect(state.isFinishing) {
+        if (itemCount >= 60 && !state.isFinishing) {
+            hasMoreData = false
+        }
+    }
+
     val context = LocalContext.current
 
     UltraSwipeRefresh(
         state = state,
         onRefresh = {
-            state.isRefreshing = true
+            coroutineScope.launch {
+                state.isRefreshing = true
+                // TODO 刷新的逻辑处理，此处的延时只是为了演示效果
+                delay(2000)
+                itemCount = 20
+                hasMoreData = true
+                state.isRefreshing = false
+            }
         },
         onLoadMore = {
-            state.isLoading = true
+            coroutineScope.launch {
+                state.isLoading = true
+                // TODO 加载更多的逻辑处理，此处的延时只是为了演示效果
+                delay(2000)
+                itemCount += 20
+                state.isLoading = false
+            }
         },
+        modifier = Modifier.background(color = Color(0x7FEEEEEE)),
         headerScrollMode = headerScrollMode,
         footerScrollMode = footerScrollMode,
         loadMoreEnabled = hasMoreData,
-        modifier = Modifier.background(color = Color(0x7FEEEEEE)),
         headerIndicator = {
             LottieRefreshHeader(
                 state = it,
@@ -117,14 +114,17 @@ fun CustomLottieRefreshIndicatorSample() {
                     footerScrollMode = nestedScrollModes.random()
                     context.showToast("滑动模式已随机")
                 }
-                Divider(modifier = Modifier.padding(horizontal = 16.dp), color = Color(0xFFF2F3F6))
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    color = Color(0xFFF2F3F6)
+                )
             }
             repeat(itemCount) {
                 item {
                     val title = "UltraSwipeRefresh列表标题${it + 1}"
                     val content = "UltraSwipeRefresh列表内容${it + 1}"
                     ColumnItem(title = title, content = content)
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         color = Color(0xFFF2F3F6)
                     )

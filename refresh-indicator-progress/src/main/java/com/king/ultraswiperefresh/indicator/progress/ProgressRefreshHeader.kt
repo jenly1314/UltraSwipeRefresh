@@ -26,6 +26,7 @@ fun ProgressRefreshHeader(
         isFooter = false,
         modifier = modifier,
         height = height,
-        color = color
+        color = color,
+        label = "HeaderIndicator"
     )
 }

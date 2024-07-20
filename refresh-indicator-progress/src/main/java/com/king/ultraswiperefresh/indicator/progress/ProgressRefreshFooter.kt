@@ -26,6 +26,7 @@ fun ProgressRefreshFooter(
         isFooter = true,
         modifier = modifier,
         height = height,
-        color = color
+        color = color,
+        label = "FooterIndicator"
     )
 }

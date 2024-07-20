@@ -3,13 +3,13 @@ package com.king.ultraswiperefresh.app.sample
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,6 +18,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.king.ultraswiperefresh.app.component.ColumnItem
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * SwipeRefresh示例
@@ -31,21 +32,19 @@ import kotlinx.coroutines.delay
 fun SwipeRefreshSample() {
 
     var isRefreshing by remember { mutableStateOf(false) }
-
     var itemCount by remember { mutableIntStateOf(20) }
-
-    LaunchedEffect(isRefreshing) {
-        if (isRefreshing) {
-            delay(2000)
-            itemCount = 20
-            isRefreshing = false
-        }
-    }
+    val coroutineScope = rememberCoroutineScope()
 
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing),
         onRefresh = {
-            isRefreshing = true
+            coroutineScope.launch {
+                isRefreshing = true
+                // TODO 刷新的逻辑处理，此处的延时只是为了演示效果
+                delay(2000)
+                itemCount = 20
+                isRefreshing = false
+            }
         }
     ) {
         LazyColumn(Modifier.background(color = Color.White)) {
@@ -54,7 +53,7 @@ fun SwipeRefreshSample() {
                     val title = "SwipeRefresh列表标题${it + 1}"
                     val content = "SwipeRefresh列表内容${it + 1}"
                     ColumnItem(title = title, content = content)
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         color = Color(0xFFF2F3F6)
                     )

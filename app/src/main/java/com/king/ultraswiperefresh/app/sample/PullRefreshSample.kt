@@ -4,17 +4,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.king.ultraswiperefresh.app.component.ColumnItem
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * PullRefresh示例
@@ -35,21 +36,19 @@ import kotlinx.coroutines.delay
 fun PullRefreshSample() {
 
     var isRefreshing by remember { mutableStateOf(false) }
-
     var itemCount by remember { mutableIntStateOf(20) }
-
-    LaunchedEffect(isRefreshing) {
-        if (isRefreshing) {
-            delay(2000)
-            itemCount = 20
-            isRefreshing = false
-        }
-    }
+    val coroutineScope = rememberCoroutineScope()
 
     val state = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = {
-            isRefreshing = true
+            coroutineScope.launch {
+                isRefreshing = true
+                // TODO 刷新的逻辑处理，此处的延时只是为了演示效果
+                delay(2000)
+                itemCount = 20
+                isRefreshing = false
+            }
         }
     )
 
@@ -60,7 +59,7 @@ fun PullRefreshSample() {
                     val title = "PullRefresh列表标题${it + 1}"
                     val content = "PullRefresh列表内容${it + 1}"
                     ColumnItem(title = title, content = content)
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         color = Color(0xFFF2F3F6)
                     )

@@ -46,6 +46,7 @@ import kotlinx.coroutines.delay
  * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
  * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
  * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
  * @param contentContainer [content]的父容器，便于统一管理
@@ -78,6 +79,7 @@ fun UltraSwipeRefresh(
     @IntRange(from = 0, to = 2000)
     finishDelayMillis: Long = UltraSwipeRefreshTheme.config.finishDelayMillis,
     vibrateEnabled: Boolean = UltraSwipeRefreshTheme.config.vibrateEnabled,
+    alwaysScrollable: Boolean = UltraSwipeRefreshTheme.config.alwaysScrollable,
     headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
     footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
     contentContainer: @Composable (@Composable () -> Unit) -> Unit = UltraSwipeRefreshTheme.config.contentContainer,
@@ -109,9 +111,10 @@ fun UltraSwipeRefresh(
                         updateOnLoadMore.value.invoke()
                     })
             }.apply {
+                this.dragMultiplier = dragMultiplier
                 this.refreshEnabled = refreshEnabled
                 this.loadMoreEnabled = loadMoreEnabled
-                this.dragMultiplier = dragMultiplier
+                this.alwaysScrollable = alwaysScrollable
             }
 
             LaunchedEffect(headerHeight, footerHeight, refreshTriggerRate, loadMoreTriggerRate) {
@@ -145,23 +148,7 @@ fun UltraSwipeRefresh(
                 }
             }
 
-            if (vibrateEnabled) {
-                val vibrator = rememberVibrator()
-                if (vibrator.hasVibrator()) {
-                    val vibrateState = remember {
-                        derivedStateOf {
-                            state.headerState == UltraSwipeHeaderState.ReleaseToRefresh || state.footerState == UltraSwipeFooterState.ReleaseToLoad
-                        }
-                    }
-                    LaunchedEffect(vibrateState.value) {
-                        if (vibrateState.value) {
-                            vibrator.vibrate()
-                        }
-                    }
-                } else {
-                    Log.w(TAG, "hasVibrator: false")
-                }
-            }
+            VibrationLaunchedEffect(vibrateEnabled, state)
 
             Box(
                 modifier = Modifier
@@ -220,6 +207,7 @@ fun UltraSwipeRefresh(
  * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
  * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
  * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
  * @param contentContainer [content]的父容器，便于统一管理
@@ -249,6 +237,7 @@ fun UltraSwipeRefresh(
     @IntRange(from = 0, to = 2000)
     finishDelayMillis: Long = UltraSwipeRefreshTheme.config.finishDelayMillis,
     vibrateEnabled: Boolean = UltraSwipeRefreshTheme.config.vibrateEnabled,
+    alwaysScrollable: Boolean = UltraSwipeRefreshTheme.config.alwaysScrollable,
     headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
     footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
     contentContainer: @Composable (@Composable () -> Unit) -> Unit = UltraSwipeRefreshTheme.config.contentContainer,
@@ -271,6 +260,7 @@ fun UltraSwipeRefresh(
         dragMultiplier = dragMultiplier,
         finishDelayMillis = finishDelayMillis,
         vibrateEnabled = vibrateEnabled,
+        alwaysScrollable = alwaysScrollable,
         headerIndicator = headerIndicator,
         footerIndicator = footerIndicator,
         contentContainer = contentContainer,
@@ -376,6 +366,30 @@ private fun RefreshSubComposeLayout(
 }
 
 /**
+ * 振动效果反馈
+ */
+@Composable
+private fun VibrationLaunchedEffect(vibrateEnabled: Boolean, state: UltraSwipeRefreshState) {
+    if (vibrateEnabled) {
+        val vibrator = rememberVibrator()
+        if (vibrator.hasVibrator()) {
+            val vibrateState = remember {
+                derivedStateOf {
+                    state.headerState == UltraSwipeHeaderState.ReleaseToRefresh || state.footerState == UltraSwipeFooterState.ReleaseToLoad
+                }
+            }
+            LaunchedEffect(vibrateState.value) {
+                if (vibrateState.value) {
+                    vibrator.vibrate()
+                }
+            }
+        } else {
+            Log.w(TAG, "hasVibrator: false")
+        }
+    }
+}
+
+/**
  * Vibrator
  */
 @Suppress("DEPRECATION")
@@ -397,7 +411,12 @@ private fun rememberVibrator(): Vibrator {
 @Suppress("DEPRECATION")
 private fun Vibrator.vibrate() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        vibrate(VibrationEffect.createOneShot(VibrationDurationMs, VibrationEffect.DEFAULT_AMPLITUDE))
+        vibrate(
+            VibrationEffect.createOneShot(
+                VibrationDurationMs,
+                VibrationEffect.DEFAULT_AMPLITUDE
+            )
+        )
     } else {
         vibrate(VibrationDurationMs)
     }

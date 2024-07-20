@@ -32,6 +32,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -124,17 +125,13 @@ internal fun SwipeRefreshIndicator(
     elevation: Dp = 6.dp,
     label: String = "Indicator"
 ) {
-    val adjustedElevation = if (isFooter) {
-        when {
-            state.isLoading -> elevation
-            state.indicatorOffset < -0.5f -> elevation
-            else -> 0.dp
-        }
-    } else {
-        when {
-            state.isRefreshing -> elevation
-            state.indicatorOffset > 0.5f -> elevation
-            else -> 0.dp
+    val showElevation by remember(isFooter, state) {
+        derivedStateOf {
+            if(isFooter) {
+                state.isLoading || state.indicatorOffset < 0f
+            } else {
+                state.isRefreshing || state.indicatorOffset > 0f
+            }
         }
     }
     val sizes = if (largeIndication) largeSizes else defaultSizes
@@ -201,7 +198,7 @@ internal fun SwipeRefreshIndicator(
                 },
             shape = shape,
             color = backgroundColor,
-            elevation = adjustedElevation
+            elevation = if(showElevation) elevation else 0.dp
         ) {
             val painter = remember { CircularProgressPainter() }
             painter.arcRadius = sizes.arcRadius
@@ -242,7 +239,7 @@ internal fun SwipeRefreshIndicator(
                 } else {
                     state.headerState == UltraSwipeHeaderState.Refreshing
                 },
-                animationSpec = tween(durationMillis = CrossfadeDurationMs),
+                animationSpec = tween(durationMillis = CrossFadeDurationMs),
                 label = label
             ) { refreshing ->
                 Box(
@@ -301,4 +298,4 @@ private fun Modifier.surface(
     .background(color = backgroundColor, shape = shape)
     .clip(shape)
 
-private const val CrossfadeDurationMs = 100
+const val CrossFadeDurationMs = 100

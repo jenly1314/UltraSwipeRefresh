@@ -37,14 +37,14 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.2.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.3.0'
    
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.2.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.3.0'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.2.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.3.0'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.2.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.3.0'
     ```
 
 ## 使用
@@ -74,6 +74,7 @@
  * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
  * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
  * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
  * @param contentContainer 内容的父容器，便于统一管理
@@ -91,34 +92,28 @@
 fun UltraSwipeRefreshSample() {
 
    val state = rememberUltraSwipeRefreshState()
-
    var itemCount by remember { mutableIntStateOf(20) }
-
-   LaunchedEffect(state.isRefreshing) {
-      if (state.isRefreshing) {
-         // TODO 刷新的逻辑处理，此处的延时只是为了演示效果
-         delay(2000)
-         itemCount = 20
-         state.isRefreshing = false
-      }
-   }
-
-   LaunchedEffect(state.isLoading) {
-      if (state.isLoading) {
-         // TODO 加载更多的逻辑处理，此处的延时只是为了演示效果
-         delay(2000)
-         itemCount += 20
-         state.isLoading = false
-      }
-   }
-
+   val coroutineScope = rememberCoroutineScope()
+   
    UltraSwipeRefresh(
       state = state,
       onRefresh = {
-         state.isRefreshing = true
+         coroutineScope.launch {
+            state.isRefreshing = true
+            // TODO 刷新的逻辑处理，此处的延时只是为了演示效果
+            delay(2000)
+            itemCount = 20
+            state.isRefreshing = false
+         }
       },
       onLoadMore = {
-         state.isLoading = true
+         coroutineScope.launch {
+            state.isLoading = true
+            // TODO 加载更多的逻辑处理，此处的延时只是为了演示效果
+            delay(2000)
+            itemCount += 20
+            state.isLoading = false
+         }
       },
       modifier = Modifier.background(color = Color(0x7FEEEEEE)),
       headerScrollMode = NestedScrollMode.Translate,
@@ -200,8 +195,10 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 ## 版本记录
 
-#### 待发布版本（[提前体验](test.md)）
+#### v1.3.0 ：2024-7-20
 * 更新compose至v1.6.0 (v1.5.0 -> v1.6.0) （[#13](https://github.com/jenly1314/UltraSwipeRefresh/issues/13)）
+* 新增参数`alwaysScrollable`：是否始终可以滚动
+* 优化一些细节
 
 #### v1.2.0 ：2024-7-1
 * 新增参数`contentContainer`：内容的父容器，便于统一管理

@@ -1,6 +1,8 @@
 package com.king.ultraswiperefresh.indicator.progress
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.king.ultraswiperefresh.UltraSwipeFooterState
 import com.king.ultraswiperefresh.UltraSwipeHeaderState
 import com.king.ultraswiperefresh.UltraSwipeRefreshState
+import com.king.ultraswiperefresh.indicator.CrossFadeDurationMs
 import com.king.ultraswiperefresh.indicator.LinearProgressIndicator
 
 /**
@@ -34,8 +37,8 @@ internal fun ProgressRefreshIndicator(
     modifier: Modifier = Modifier,
     height: Dp = 60.dp,
     color: Color = Color(0xFF00CCFF),
+    label: String = "Indicator"
 ) {
-
     val progressState = remember {
         derivedStateOf {
             when {
@@ -88,22 +91,27 @@ internal fun ProgressRefreshIndicator(
                 },
             contentAlignment = if (isFooter) Alignment.BottomCenter else Alignment.TopCenter
         ) {
-            if (if (isFooter) {
+            Crossfade(
+                targetState = if (isFooter) {
                     state.footerState == UltraSwipeFooterState.Loading
                 } else {
                     state.headerState == UltraSwipeHeaderState.Refreshing
-                }
+                },
+                animationSpec = tween(durationMillis = CrossFadeDurationMs),
+                label = label
             ) {
-                LinearProgressIndicator(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = color
-                )
-            } else {
-                LinearProgressIndicator(
-                    progress = progressState.value,
-                    modifier = Modifier.fillMaxWidth(),
-                    color = color,
-                )
+                if (it) {
+                    LinearProgressIndicator(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = color
+                    )
+                } else {
+                    LinearProgressIndicator(
+                        progress = progressState.value,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = color,
+                    )
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.king.ultraswiperefresh.indicator.classic
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.king.ultraswiperefresh.UltraSwipeFooterState
 import com.king.ultraswiperefresh.UltraSwipeHeaderState
 import com.king.ultraswiperefresh.UltraSwipeRefreshState
+import com.king.ultraswiperefresh.indicator.CrossFadeDurationMs
 
 /**
  * 经典样式的指示器
@@ -112,37 +114,43 @@ internal fun ClassicRefreshIndicator(
             modifier = Modifier.alpha(alphaState.value),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (if (isFooter) state.isLoading else state.isRefreshing) {
-                val transition = rememberInfiniteTransition(label)
-                val rotate by transition.animateFloat(
-                    initialValue = 0f,
-                    targetValue = 360f,
-                    animationSpec = infiniteRepeatable(
-                        animation = tween(
-                            durationMillis = 1000,
-                            easing = LinearEasing
-                        )
-                    ),
-                    label = label
-                )
-                Image(
-                    painter = loadingIconPainter,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(iconSize)
-                        .rotate(rotate),
-                    colorFilter = iconColorFilter,
-                )
+            Crossfade(
+                targetState = if (isFooter) state.isLoading else state.isRefreshing,
+                animationSpec = tween(durationMillis = CrossFadeDurationMs),
+                label = label
+            ) {
+                if (it) {
+                    val transition = rememberInfiniteTransition(label = "InfiniteTransition")
+                    val rotate by transition.animateFloat(
+                        initialValue = 0f,
+                        targetValue = 360f,
+                        animationSpec = infiniteRepeatable(
+                            animation = tween(
+                                durationMillis = 1000,
+                                easing = LinearEasing
+                            )
+                        ),
+                        label = "RotateAnimation"
+                    )
+                    Image(
+                        painter = loadingIconPainter,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(iconSize)
+                            .rotate(rotate),
+                        colorFilter = iconColorFilter,
+                    )
 
-            } else {
-                Image(
-                    painter = arrowIconPainter,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(iconSize)
-                        .rotate(arrowDegrees.value),
-                    colorFilter = iconColorFilter,
-                )
+                } else {
+                    Image(
+                        painter = arrowIconPainter,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(iconSize)
+                            .rotate(arrowDegrees.value),
+                        colorFilter = iconColorFilter,
+                    )
+                }
             }
             Column(
                 modifier = Modifier.padding(horizontal = 6.dp),
