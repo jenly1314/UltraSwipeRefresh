@@ -90,7 +90,7 @@ internal class UltraSwipeRefreshNestedScrollConnection(
         when {
             refreshEnabled && state.isExceededRefreshTrigger() -> onRefresh()
             loadMoreEnabled && state.isExceededLoadMoreTrigger() -> onLoadMore()
-            state.indicatorOffset != 0f && !state.isSwipeInProgress -> state.animateOffsetTo(0f)
+            state.indicatorOffset != 0f -> state.animateOffsetTo(0f)
         }
         state.isSwipeInProgress = false
         return Velocity.Zero
