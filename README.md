@@ -197,6 +197,9 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 ## 版本日志
 
+#### 待发布版本（[提前体验](test.md)）
+* 修复了一些已知问题
+
 #### v1.3.0 ：2024-7-20
 * 更新compose至v1.6.0 (v1.5.0 -> v1.6.0) （[#13](https://github.com/jenly1314/UltraSwipeRefresh/issues/13)）
 * 新增参数`alwaysScrollable`：是否始终可以滚动
