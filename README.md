@@ -37,14 +37,14 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.3.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.3.1'
 
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.3.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.3.1'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.3.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.3.1'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.3.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.3.1'
     ```
 
 ## 使用
@@ -197,13 +197,9 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 ## 版本日志
 
-#### 待发布版本（[提前体验](test.md)）
-* 修复了一些已知问题
+#### v1.3.1 ：2024-12-23
+* 修复BUG：快速滑动时，出现收起动画不执行的问题。 （[#21](https://github.com/jenly1314/UltraSwipeRefresh/issues/21)）
 
-#### v1.3.0 ：2024-7-20
-* 更新compose至v1.6.0 (v1.5.0 -> v1.6.0) （[#13](https://github.com/jenly1314/UltraSwipeRefresh/issues/13)）
-* 新增参数`alwaysScrollable`：是否始终可以滚动
-* 优化一些细节
 
 #### [查看更多版本日志](CHANGELOG.md)
 
