@@ -169,14 +169,14 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 这里罗列一下目前 **UltraSwipeRefresh** 所提供的一些Header和Footer指示器样式，方便快速查找与参考。
 
-| 默认官方样式                                                                                                                          | 经典样式                                                                                                                              |
+| 默认官方样式                                                                                                                    | 经典样式                                                                                                                    |
 |:--------------------------------------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------|
 | SwipeRefreshHeader                                                                                                              | ClassicRefreshHeader                                                                                                              |
 | ![Image](art/SwipeRefreshIndicatorSample.gif)                                                                                   | ![Image](art/ClassicRefreshIndicatorSample.gif)                                                                                   |
 | SwipeRefreshFooter                                                                                                              | ClassicRefreshFooter                                                                                                              |
 | [对应的代码示例](app/src/main/java/com/king/ultraswiperefresh/app/sample/SwipeRefreshIndicatorSample.kt) | [对应的代码示例](app/src/main/java/com/king/ultraswiperefresh/app/sample/ClassicRefreshIndicatorSample.kt) |
 
-| 进度条样式                                                                                                | Lottie动画样式                                                                                                             |
+| 进度条样式                                                                                           | Lottie动画样式                                                                                                             |
 |:-----------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------|
 | ProgressRefreshHeader                                                                                | LottieRefreshHeader                                                                                                                   |
 | ![Image](art/ProgressRefreshIndicatorSample.gif)                                                     | ![Image](art/LottieRefreshIndicatorSample.gif)                                                                                        |
@@ -188,7 +188,7 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 更多使用详情，请查看[app](app)中的源码使用示例或直接查看 [API帮助文档](https://jenly1314.github.io/UltraSwipeRefresh/api/)
 
-### 相关推荐
+## 相关推荐
 
 - [CodeTextField](https://github.com/jenly1314/CodeTextField)一个使用 Compose 实现的验证码输入框。
 - [compose-component](https://github.com/jenly1314/compose-component) 一个Jetpack Compose的组件库；主要提供了一些小组件，便于快速使用。
