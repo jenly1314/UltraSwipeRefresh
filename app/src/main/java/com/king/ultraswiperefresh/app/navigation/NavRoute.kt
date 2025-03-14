@@ -17,6 +17,8 @@ enum class NavRoute {
 
     ClassicRefreshIndicatorSample,
 
+    ClassicRefreshAutoLoadSample,
+
     ProgressRefreshIndicatorSample,
 
     LottieRefreshIndicatorSample,

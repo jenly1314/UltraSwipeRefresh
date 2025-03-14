@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.king.ultraswiperefresh.app.sample.ClassicRefreshAutoLoadSample
 import com.king.ultraswiperefresh.app.sample.ClassicRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.CustomLottieRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.LottieRefreshIndicatorSample
@@ -33,6 +34,9 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
         }
         composable(route = NavRoute.ClassicRefreshIndicatorSample.name) {
             ClassicRefreshIndicatorSample()
+        }
+        composable(route = NavRoute.ClassicRefreshAutoLoadSample.name) {
+            ClassicRefreshAutoLoadSample()
         }
         composable(route = NavRoute.ProgressRefreshIndicatorSample.name) {
             ProgressRefreshIndicatorSample()

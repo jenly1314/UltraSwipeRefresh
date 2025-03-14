@@ -61,6 +61,10 @@ fun UltraSwipeRefreshSample(navController: NavController) {
                 "经典刷新样式示例" to "使用NestedScrollMode.Translate；特点：平移； 即：Header或 Footer与内容一起滑动"
             )
             put(
+                NavRoute.ClassicRefreshAutoLoadSample,
+                "经典刷新自动加载示例" to "使用NestedScrollMode.Translate；特点：平移； 即：Header或 Footer与内容一起滑动，并可自动加载更多"
+            )
+            put(
                 NavRoute.ProgressRefreshIndicatorSample,
                 "进度条刷新样式示例" to "使用NestedScrollMode.FixedFront；特点：固定在前面；即：Header或 Footer和内容都固定，仅改变状态"
             )
