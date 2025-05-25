@@ -9,10 +9,13 @@
 
 **UltraSwipeRefresh**：一个可带来极致体验的 **Compose** 刷新组件；支持下拉刷新和上拉加载，可完美替代官方的 **SwipeRefresh**；并且支持的功能更多，可扩展性更强。
 
-> **UltraSwipeRefresh** 的设计之初，主要参考了谷歌官方的[SwipeRefresh](https://github.com/google/accompanist/tree/main/swiperefresh) 和第三方的[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) ，吸取了其优秀的设计思想；致力于打造一个极致体验的 **Compose** 刷新组件。
+> **UltraSwipeRefresh** 在设计之初，主要参考了谷歌官方的[SwipeRefresh](https://github.com/google/accompanist/tree/v0.36.0/swiperefresh) 和第三方的[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) ，在充分借鉴两者优秀设计理念的基础上，致力于打造一个拥有极致体验的 **Compose** 刷新组件。
 
-> 这里简单的概括下 **UltraSwipeRefresh** 主要的一些功能特色：刷新指示器支持多种滑动方式：平移、固定内容、固定在背后、固定在前面； **headerIndicator** 和 **footerIndicator** 可任意定制，并且 **Header** 和 **Footer** 的样式与滑动模式可随意组合。
+## 功能特色
 
+- 🌀 **多种滑动模式**：提供`Translate`(平移)、`FixedContent`(固定内容)、`FixedBehind`(固定在背后)、`FixedFront`(固定在前面) 等滑动交互模式，适配各类使用场景。
+- 🎨 **可完全定制UI**：支持通过 `headerIndicator`/`footerIndicator` 完全自定义指示器，满足深度定制需求。
+- ✨ **灵活配置方案**：可自由组合任意滑动模式与指示器样式，轻松实现个性化刷新效果。
 
 ## 效果展示
 
@@ -146,7 +149,7 @@ fun UltraSwipeRefreshSample() {
 
 ```
 
-> 使用小提示：**headerIndicator/footerIndicator** 与 **headerScrollMode/footerScrollMode** 组合使用才更配哦。
+> 使用小提示：**headerIndicator/footerIndicator** 与 **headerScrollMode/footerScrollMode** 组合使用，以获得最佳滑动体验！
 
 ### UltraSwipeRefreshTheme（v1.1.0新增）
 
