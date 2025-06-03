@@ -25,7 +25,7 @@ versions.foundation = "1.6.0"
 versions.material3 = "1.2.0"
 versions.lifecycle_runtime_ktx = "2.7.0"
 versions.navigation_compose = "2.7.0"
-versions.lottie_compose = "6.1.0"
+versions.lottie_compose = "6.6.6"
 versions.accompanist = "0.34.0"
 
 // Test
