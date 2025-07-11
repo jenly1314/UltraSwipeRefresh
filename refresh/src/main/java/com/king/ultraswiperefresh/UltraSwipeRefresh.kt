@@ -78,7 +78,7 @@ fun UltraSwipeRefresh(
     dragMultiplier: Float = UltraSwipeRefreshTheme.config.dragMultiplier,
     @IntRange(from = 0, to = 2000)
     finishDelayMillis: Long = UltraSwipeRefreshTheme.config.finishDelayMillis,
-    vibrateEnabled: Boolean = UltraSwipeRefreshTheme.config.vibrateEnabled,
+    vibrateAction: (() -> Unit)? = UltraSwipeRefreshTheme.config.vibrateAction,
     alwaysScrollable: Boolean = UltraSwipeRefreshTheme.config.alwaysScrollable,
     headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
     footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
@@ -88,6 +88,12 @@ fun UltraSwipeRefresh(
     val coroutineScope = rememberCoroutineScope()
     val updatedOnRefresh = rememberUpdatedState(onRefresh)
     val updateOnLoadMore = rememberUpdatedState(onLoadMore)
+
+    val vibrate = if (UltraSwipeRefreshTheme.config.vibrateEnabled && vibrateAction == null) {
+        PullRefreshVibrations.default()
+    } else {
+        vibrateAction
+    }
 
     Box(modifier) {
         RefreshSubComposeLayout(
@@ -148,7 +154,7 @@ fun UltraSwipeRefresh(
                 }
             }
 
-            VibrationLaunchedEffect(vibrateEnabled, state)
+            VibrationLaunchedEffect(vibrate, state)
 
             Box(
                 modifier = Modifier
@@ -187,6 +193,99 @@ fun UltraSwipeRefresh(
         }
     }
 }
+
+
+
+/**
+ * UltraSwipeRefresh：一个可带来极致体验的Compose刷新组件；支持下拉刷新和上拉加载，可完美替代官方的SwipeRefresh；并且支持的功能更多，可扩展性更强。
+ *
+ * @param state 状态：主要用于控制和观察[UltraSwipeRefresh]；比如：控制下拉刷新和上拉加载和观察其状态。
+ * @param onRefresh 在完成滑动刷新手势时触发调用
+ * @param onLoadMore 在完成滑动加载手势时触发调用
+ * @param modifier 修饰符：用于装饰或添加Compose UI元素的行为。具体更详细的说明可查看[Modifier]
+ * @param headerScrollMode 在进行滑动刷新时Header的滑动模式；具体更详细的样式说明可查看[NestedScrollMode]
+ * @param footerScrollMode 在进行滑动加载更多时Footer的滑动模式；具体更详细的样式说明可查看[NestedScrollMode]
+ * @param refreshEnabled 是否启用下拉刷新
+ * @param loadMoreEnabled 是否启用上拉加载
+ * @param refreshTriggerRate 触发滑动刷新的最小滑动比例；比例基于[headerIndicator]的高度；默认为：1
+ * @param loadMoreTriggerRate 触发滑动加载更多最小滑动比例；比例基于[footerIndicator]的高度；默认为：1
+ * @param headerMaxOffsetRate 向下滑动时[headerIndicator]可滑动的最大偏移比例；比例基于[headerIndicator]的高度；默认为：2
+ * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：2
+ * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
+ * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
+ * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
+ * @param headerIndicator 下拉刷新时顶部显示的Header指示器
+ * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
+ * @param contentContainer [content]的父容器，便于统一管理
+ * @param content 可进行刷新或加载更多所包含的内容
+ *
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * <p>
+ * <a href="https://github.com/jenly1314">Follow me</a>
+ */
+@Composable
+@Deprecated(
+    message = "Replaced 'vibrate: Boolean' with 'vibrateAction: (() -> Unit)' for custom pattern support.",
+    level = DeprecationLevel.HIDDEN
+)
+fun UltraSwipeRefresh(
+    state: UltraSwipeRefreshState,
+    onRefresh: () -> Unit,
+    onLoadMore: () -> Unit,
+    modifier: Modifier = Modifier,
+    headerScrollMode: NestedScrollMode = UltraSwipeRefreshTheme.config.headerScrollMode,
+    footerScrollMode: NestedScrollMode = UltraSwipeRefreshTheme.config.footerScrollMode,
+    refreshEnabled: Boolean = UltraSwipeRefreshTheme.config.refreshEnabled,
+    loadMoreEnabled: Boolean = UltraSwipeRefreshTheme.config.loadMoreEnabled,
+    @FloatRange(from = 0.0, fromInclusive = false)
+    refreshTriggerRate: Float = UltraSwipeRefreshTheme.config.refreshTriggerRate,
+    @FloatRange(from = 0.0, fromInclusive = false)
+    loadMoreTriggerRate: Float = UltraSwipeRefreshTheme.config.loadMoreTriggerRate,
+    @FloatRange(from = 1.0)
+    headerMaxOffsetRate: Float = UltraSwipeRefreshTheme.config.headerMaxOffsetRate,
+    @FloatRange(from = 1.0)
+    footerMaxOffsetRate: Float = UltraSwipeRefreshTheme.config.footerMaxOffsetRate,
+    @FloatRange(from = 0.0, to = 1.0, fromInclusive = false)
+    dragMultiplier: Float = UltraSwipeRefreshTheme.config.dragMultiplier,
+    @IntRange(from = 0, to = 2000)
+    finishDelayMillis: Long = UltraSwipeRefreshTheme.config.finishDelayMillis,
+    vibrateEnabled: Boolean = UltraSwipeRefreshTheme.config.vibrateEnabled,
+    alwaysScrollable: Boolean = UltraSwipeRefreshTheme.config.alwaysScrollable,
+    headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
+    footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
+    contentContainer: @Composable (@Composable () -> Unit) -> Unit = UltraSwipeRefreshTheme.config.contentContainer,
+    content: @Composable () -> Unit,
+) {
+    val vibrateAction = if (vibrateEnabled) {
+        PullRefreshVibrations.default()
+    } else {
+        PullRefreshVibrations.none()
+    }
+    UltraSwipeRefresh(
+        state = state,
+        onRefresh = onRefresh,
+        onLoadMore = onLoadMore,
+        modifier = modifier,
+        headerScrollMode = headerScrollMode,
+        footerScrollMode = footerScrollMode,
+        refreshEnabled = refreshEnabled,
+        loadMoreEnabled = loadMoreEnabled,
+        refreshTriggerRate = refreshTriggerRate,
+        loadMoreTriggerRate = loadMoreTriggerRate,
+        headerMaxOffsetRate = headerMaxOffsetRate,
+        footerMaxOffsetRate = footerMaxOffsetRate,
+        dragMultiplier = dragMultiplier,
+        finishDelayMillis = finishDelayMillis,
+        vibrateAction = vibrateAction,
+        alwaysScrollable = alwaysScrollable,
+        headerIndicator = headerIndicator,
+        footerIndicator = footerIndicator,
+        contentContainer = contentContainer,
+        content = content
+    )
+}
+
 
 /**
  * UltraSwipeRefresh：一个可带来极致体验的Compose刷新组件；支持下拉刷新和上拉加载，可完美替代官方的SwipeRefresh；并且支持的功能更多，可扩展性更强。
@@ -236,7 +335,7 @@ fun UltraSwipeRefresh(
     dragMultiplier: Float = UltraSwipeRefreshTheme.config.dragMultiplier,
     @IntRange(from = 0, to = 2000)
     finishDelayMillis: Long = UltraSwipeRefreshTheme.config.finishDelayMillis,
-    vibrateEnabled: Boolean = UltraSwipeRefreshTheme.config.vibrateEnabled,
+    vibrateAction: (() -> Unit)? = UltraSwipeRefreshTheme.config.vibrateAction,
     alwaysScrollable: Boolean = UltraSwipeRefreshTheme.config.alwaysScrollable,
     headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
     footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
@@ -259,7 +358,7 @@ fun UltraSwipeRefresh(
         footerMaxOffsetRate = footerMaxOffsetRate,
         dragMultiplier = dragMultiplier,
         finishDelayMillis = finishDelayMillis,
-        vibrateEnabled = vibrateEnabled,
+        vibrateAction = vibrateAction,
         alwaysScrollable = alwaysScrollable,
         headerIndicator = headerIndicator,
         footerIndicator = footerIndicator,
@@ -369,59 +468,20 @@ private fun RefreshSubComposeLayout(
  * 振动效果反馈
  */
 @Composable
-private fun VibrationLaunchedEffect(vibrateEnabled: Boolean, state: UltraSwipeRefreshState) {
-    if (vibrateEnabled) {
-        val vibrator = rememberVibrator()
-        if (vibrator.hasVibrator()) {
-            val vibrateState = remember {
-                derivedStateOf {
-                    state.headerState == UltraSwipeHeaderState.ReleaseToRefresh || state.footerState == UltraSwipeFooterState.ReleaseToLoad
-                }
-            }
-            LaunchedEffect(vibrateState.value) {
-                if (vibrateState.value) {
-                    vibrator.vibrate()
-                }
-            }
-        } else {
-            Log.w(TAG, "hasVibrator: false")
+private fun VibrationLaunchedEffect(vibrateAction: (() -> Unit)?, state: UltraSwipeRefreshState) {
+    if (vibrateAction == null) {
+        return
+    }
+    val vibrateState = remember {
+        derivedStateOf {
+            state.headerState == UltraSwipeHeaderState.ReleaseToRefresh || state.footerState == UltraSwipeFooterState.ReleaseToLoad
+        }
+    }
+    LaunchedEffect(vibrateState.value) {
+        if (vibrateState.value) {
+            vibrateAction.invoke()
         }
     }
 }
-
-/**
- * Vibrator
- */
-@Suppress("DEPRECATION")
-@Composable
-private fun rememberVibrator(): Vibrator {
-    val context = LocalContext.current
-    return remember("Vibrator") {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            (context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
-        } else {
-            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        }
-    }
-}
-
-/**
- * 振动
- */
-@Suppress("DEPRECATION")
-private fun Vibrator.vibrate() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        vibrate(
-            VibrationEffect.createOneShot(
-                VibrationDurationMs,
-                VibrationEffect.DEFAULT_AMPLITUDE
-            )
-        )
-    } else {
-        vibrate(VibrationDurationMs)
-    }
-}
-
-private const val VibrationDurationMs = 40L
 
 internal const val TAG = "UltraSwipeRefresh"

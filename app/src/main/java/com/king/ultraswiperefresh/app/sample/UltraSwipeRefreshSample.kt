@@ -1,5 +1,6 @@
 package com.king.ultraswiperefresh.app.sample
 
+import android.os.VibrationEffect
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -7,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -17,6 +19,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.king.ultraswiperefresh.NestedScrollMode
+import com.king.ultraswiperefresh.PullRefreshVibrations.default
+import com.king.ultraswiperefresh.PullRefreshVibrations.hapticFeedback
+import com.king.ultraswiperefresh.PullRefreshVibrations.none
+import com.king.ultraswiperefresh.PullRefreshVibrations.vibrationEffect
 import com.king.ultraswiperefresh.UltraSwipeRefresh
 import com.king.ultraswiperefresh.app.component.ColumnItem
 import com.king.ultraswiperefresh.app.ext.showToast
@@ -47,6 +53,16 @@ fun UltraSwipeRefreshSample(navController: NavController) {
     var footerScrollMode by remember {
         mutableStateOf(NestedScrollMode.FixedContent)
     }
+
+    var vibrateActionIndex by remember { mutableIntStateOf(0) }
+    val vibrateActionList = listOf(
+        default(),
+        hapticFeedback(),
+        vibrationEffect(200, VibrationEffect.EFFECT_DOUBLE_CLICK),
+        vibrationEffect(40, VibrationEffect.EFFECT_HEAVY_CLICK),
+        vibrationEffect(40, VibrationEffect.EFFECT_CLICK),
+        none()
+    )
 
     val context = LocalContext.current
 
@@ -135,6 +151,21 @@ fun UltraSwipeRefreshSample(navController: NavController) {
                     } else {
                         context.showToast("已全局关闭振动效果")
                     }
+                }
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    color = Color(0xFFF2F3F6)
+                )
+            }
+
+            item {
+                ColumnItem(
+                    title = "切换全局震动效果",
+                    content = "当前震动效果:${vibrateActionIndex}"
+                ) {
+                    vibrateActionIndex = vibrateActionIndex.inc() % vibrateActionList.size
+                    UltraSwipeRefreshTheme.config =
+                        UltraSwipeRefreshTheme.config.copy(vibrateAction = vibrateActionList[vibrateActionIndex])
                 }
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = 16.dp),

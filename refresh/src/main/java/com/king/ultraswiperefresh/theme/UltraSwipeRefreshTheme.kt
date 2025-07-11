@@ -63,6 +63,7 @@ data class UltraSwipeRefreshConfig(
     @FloatRange(from = 0.0, to = 1.0, fromInclusive = false) val dragMultiplier: Float = 0.5f,
     @IntRange(from = 0, to = 2000) val finishDelayMillis: Long = 500,
     val vibrateEnabled: Boolean = false,
+    val vibrateAction: (() -> Unit)?  = null,
     val alwaysScrollable: Boolean = false,
     val headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = {
         SwipeRefreshHeader(it)
