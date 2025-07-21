@@ -43,12 +43,12 @@ internal fun LottieRefreshIndicator(
 ) {
     val composition by rememberLottieComposition(spec = spec)
 
-    val isPlaying by remember {
+    val isPlaying by remember(isFooter) {
         derivedStateOf {
             if (isFooter) {
-                state.footerState == UltraSwipeFooterState.Loading
+                state.footerState == UltraSwipeFooterState.Loading && !state.isFinishing
             } else {
-                state.headerState == UltraSwipeHeaderState.Refreshing
+                state.headerState == UltraSwipeHeaderState.Refreshing && !state.isFinishing
             }
         }
     }
@@ -62,7 +62,7 @@ internal fun LottieRefreshIndicator(
         cancellationBehavior = LottieCancellationBehavior.OnIterationFinish,
     )
 
-    val alphaState = remember {
+    val alpha by remember(isFooter) {
         derivedStateOf {
             if ((!isFooter && state.indicatorOffset > 0f) || (isFooter && state.indicatorOffset < 0f)) {
                 1f
@@ -74,7 +74,7 @@ internal fun LottieRefreshIndicator(
 
     Box(
         modifier = Modifier
-            .alpha(alphaState.value)
+            .alpha(alpha)
             .fillMaxWidth()
             .height(height),
         contentAlignment = alignment,

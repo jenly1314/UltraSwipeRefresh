@@ -1,5 +1,14 @@
 ## 版本日志
 
+#### v1.4.0 ：2025-7-21
+* 迁移发布至 **Central Portal** [相关公告](https://central.sonatype.org/pages/ossrh-eol/#logging-in-to-central-portal)
+* 更新compose至v1.7.0 (v1.6.0 -> v1.7.0)
+* 更新lottie至v6.6.0 (v6.1.0 -> v6.6.0)
+* 更新Gradle至v8.5
+* 参数名变更：将原 `vibrateEnabled` 修改为：`vibrationEnabled`
+* 新增参数`vibrationMillis`: 振动时长
+* 优化一些细节
+
 #### v1.3.1 ：2024-12-23
 * 修复BUG：快速滑动时，出现收起动画不执行的问题。 （[#21](https://github.com/jenly1314/UltraSwipeRefresh/issues/21)）
 

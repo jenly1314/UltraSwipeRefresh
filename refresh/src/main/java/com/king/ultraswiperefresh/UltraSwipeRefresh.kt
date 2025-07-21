@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
@@ -45,7 +46,8 @@ import kotlinx.coroutines.delay
  * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：2
  * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
  * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
- * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param vibrationEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param vibrationMillis 触发刷新或触发加载更多时的振动时长（毫秒）默认：25毫秒
  * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
@@ -78,7 +80,9 @@ fun UltraSwipeRefresh(
     dragMultiplier: Float = UltraSwipeRefreshTheme.config.dragMultiplier,
     @IntRange(from = 0, to = 2000)
     finishDelayMillis: Long = UltraSwipeRefreshTheme.config.finishDelayMillis,
-    vibrateEnabled: Boolean = UltraSwipeRefreshTheme.config.vibrateEnabled,
+    vibrationEnabled: Boolean = UltraSwipeRefreshTheme.config.vibrationEnabled,
+    @IntRange(from = 1, to = 50)
+    vibrationMillis: Long = UltraSwipeRefreshTheme.config.vibrationMillis,
     alwaysScrollable: Boolean = UltraSwipeRefreshTheme.config.alwaysScrollable,
     headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
     footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
@@ -102,7 +106,8 @@ fun UltraSwipeRefresh(
         ) { headerHeight, footerHeight ->
 
             val nestedScrollConnection = remember(state, coroutineScope) {
-                UltraSwipeRefreshNestedScrollConnection(state = state,
+                UltraSwipeRefreshNestedScrollConnection(
+                    state = state,
                     coroutineScope = coroutineScope,
                     onRefresh = {
                         updatedOnRefresh.value.invoke()
@@ -148,31 +153,34 @@ fun UltraSwipeRefresh(
                 }
             }
 
-            VibrationLaunchedEffect(vibrateEnabled, state)
+            if (vibrationEnabled) {
+                VibrationLaunchedEffect(vibrationMillis, state)
+            }
 
             Box(
                 modifier = Modifier
                     .nestedScroll(nestedScrollConnection)
                     .clipToBounds()
             ) {
-                Box(modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .graphicsLayer {
-                        translationY = obtainHeaderOffset(state, headerScrollMode, headerHeight)
-                    }
-                    .zIndex(obtainZIndex(headerScrollMode))
-
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .graphicsLayer {
+                            translationY = obtainHeaderOffset(state, headerScrollMode, headerHeight)
+                        }
+                        .zIndex(obtainZIndex(headerScrollMode))
                 ) {
                     if (refreshEnabled) {
                         headerIndicator(state)
                     }
                 }
-                Box(modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .graphicsLayer {
-                        translationY = obtainFooterOffset(state, footerScrollMode, footerHeight)
-                    }
-                    .zIndex(obtainZIndex(footerScrollMode))
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .graphicsLayer {
+                            translationY = obtainFooterOffset(state, footerScrollMode, footerHeight)
+                        }
+                        .zIndex(obtainZIndex(footerScrollMode))
                 ) {
                     if (loadMoreEnabled) {
                         footerIndicator(state)
@@ -206,7 +214,8 @@ fun UltraSwipeRefresh(
  * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：2
  * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
  * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
- * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param vibrationEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param vibrationMillis 触发刷新或触发加载更多时的振动时长（毫秒）默认：25毫秒
  * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
@@ -236,7 +245,9 @@ fun UltraSwipeRefresh(
     dragMultiplier: Float = UltraSwipeRefreshTheme.config.dragMultiplier,
     @IntRange(from = 0, to = 2000)
     finishDelayMillis: Long = UltraSwipeRefreshTheme.config.finishDelayMillis,
-    vibrateEnabled: Boolean = UltraSwipeRefreshTheme.config.vibrateEnabled,
+    vibrationEnabled: Boolean = UltraSwipeRefreshTheme.config.vibrationEnabled,
+    @IntRange(from = 1, to = 50)
+    vibrationMillis: Long = UltraSwipeRefreshTheme.config.vibrationMillis,
     alwaysScrollable: Boolean = UltraSwipeRefreshTheme.config.alwaysScrollable,
     headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
     footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
@@ -259,7 +270,8 @@ fun UltraSwipeRefresh(
         footerMaxOffsetRate = footerMaxOffsetRate,
         dragMultiplier = dragMultiplier,
         finishDelayMillis = finishDelayMillis,
-        vibrateEnabled = vibrateEnabled,
+        vibrationEnabled = vibrationEnabled,
+        vibrationMillis = vibrationMillis,
         alwaysScrollable = alwaysScrollable,
         headerIndicator = headerIndicator,
         footerIndicator = footerIndicator,
@@ -340,22 +352,27 @@ private fun RefreshSubComposeLayout(
     content: @Composable (headerHeight: Int, footerHeight: Int) -> Unit
 ) {
     SubcomposeLayout { constraints: Constraints ->
-        val headerMeasurable = subcompose(
-            slotId = "headerIndicator",
-            content = headerIndicator
-        ).firstOrNull()?.measure(constraints)
 
-        val footerMeasurable = subcompose(
-            slotId = "footerIndicator",
-            content = footerIndicator
-        ).firstOrNull()?.measure(constraints)
+        val headerMeasurable = if (refreshEnabled) {
+            subcompose(
+                slotId = "headerIndicator",
+                content = headerIndicator
+            ).firstOrNull()?.measure(constraints)
+        } else null
+
+        val footerMeasurable = if (loadMoreEnabled) {
+            subcompose(
+                slotId = "footerIndicator",
+                content = footerIndicator
+            ).firstOrNull()?.measure(constraints)
+        } else null
 
         val contentMeasurable = subcompose(
             slotId = "content",
             content = {
                 content(
-                    headerMeasurable?.height?.takeIf { refreshEnabled } ?: 0,
-                    footerMeasurable?.height?.takeIf { loadMoreEnabled } ?: 0
+                    headerMeasurable?.height ?: 0,
+                    footerMeasurable?.height ?: 0
                 )
             }).map { it.measure(constraints) }.first()
 
@@ -368,23 +385,34 @@ private fun RefreshSubComposeLayout(
 /**
  * 振动效果反馈
  */
+@Suppress("DEPRECATION")
 @Composable
-private fun VibrationLaunchedEffect(vibrateEnabled: Boolean, state: UltraSwipeRefreshState) {
-    if (vibrateEnabled) {
-        val vibrator = rememberVibrator()
-        if (vibrator.hasVibrator()) {
-            val vibrateState = remember {
-                derivedStateOf {
-                    state.headerState == UltraSwipeHeaderState.ReleaseToRefresh || state.footerState == UltraSwipeFooterState.ReleaseToLoad
-                }
+private fun VibrationLaunchedEffect(vibrationMillis: Long, state: UltraSwipeRefreshState) {
+    val vibrator = rememberVibrator()
+
+    if (!vibrator.hasVibrator()) {
+        Log.w(TAG, "Device has no vibrator.")
+        return
+    }
+
+    val shouldVibrate by remember(state) {
+        derivedStateOf {
+            state.headerState == UltraSwipeHeaderState.ReleaseToRefresh || state.footerState == UltraSwipeFooterState.ReleaseToLoad
+        }
+    }
+
+    LaunchedEffect(shouldVibrate) {
+        if (shouldVibrate) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(
+                    VibrationEffect.createOneShot(
+                        vibrationMillis,
+                        VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+                )
+            } else {
+                vibrator.vibrate(vibrationMillis)
             }
-            LaunchedEffect(vibrateState.value) {
-                if (vibrateState.value) {
-                    vibrator.vibrate()
-                }
-            }
-        } else {
-            Log.w(TAG, "hasVibrator: false")
         }
     }
 }
@@ -404,24 +432,5 @@ private fun rememberVibrator(): Vibrator {
         }
     }
 }
-
-/**
- * 振动
- */
-@Suppress("DEPRECATION")
-private fun Vibrator.vibrate() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        vibrate(
-            VibrationEffect.createOneShot(
-                VibrationDurationMs,
-                VibrationEffect.DEFAULT_AMPLITUDE
-            )
-        )
-    } else {
-        vibrate(VibrationDurationMs)
-    }
-}
-
-private const val VibrationDurationMs = 40L
 
 internal const val TAG = "UltraSwipeRefresh"

@@ -45,7 +45,8 @@ object UltraSwipeRefreshTheme {
  * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：2
  * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
  * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
- * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param vibrationEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param vibrationMillis 触发刷新或触发加载更多时的振动时长（毫秒）默认：25毫秒
  * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
@@ -62,7 +63,8 @@ data class UltraSwipeRefreshConfig(
     @FloatRange(from = 1.0) val footerMaxOffsetRate: Float = 2f,
     @FloatRange(from = 0.0, to = 1.0, fromInclusive = false) val dragMultiplier: Float = 0.5f,
     @IntRange(from = 0, to = 2000) val finishDelayMillis: Long = 500,
-    val vibrateEnabled: Boolean = false,
+    val vibrationEnabled: Boolean = false,
+    @IntRange(from = 1, to = 50) val vibrationMillis: Long = 25,
     val alwaysScrollable: Boolean = false,
     val headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = {
         SwipeRefreshHeader(it)

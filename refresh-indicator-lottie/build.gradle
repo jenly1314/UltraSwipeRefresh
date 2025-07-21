@@ -51,5 +51,11 @@ dependencies {
     api "com.airbnb.android:lottie-compose:$versions.lottie_compose"
 
     compileOnly project(':refresh')
+}
 
+afterEvaluate {
+    // https://github.com/Kotlin/dokka/issues/2956
+    tasks.named("javaDocReleaseGeneration").configure {
+        enabled = false
+    }
 }

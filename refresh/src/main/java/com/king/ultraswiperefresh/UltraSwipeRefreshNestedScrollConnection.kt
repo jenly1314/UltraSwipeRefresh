@@ -35,7 +35,7 @@ internal class UltraSwipeRefreshNestedScrollConnection(
         // 当都Header和Footer都未显示时，则直接返回：Offset.Zero
         state.indicatorOffset == 0f -> Offset.Zero
         // 当正在滑动时，则进行处理
-        source == NestedScrollSource.Drag -> onScroll(available)
+        source == NestedScrollSource.UserInput -> onScroll(available)
         else -> Offset.Zero
     }
 
@@ -49,7 +49,7 @@ internal class UltraSwipeRefreshNestedScrollConnection(
         // 当正在刷新或正在加载或处理正在完成时，交由 [obtainAvailable] 处理
         state.isRefreshing || state.isLoading || state.isFinishing -> obtainAvailable(available)
         // 当正在滑动时，则进行处理
-        source == NestedScrollSource.Drag -> onScroll(available)
+        source == NestedScrollSource.UserInput -> onScroll(available)
         else -> Offset.Zero
     }
 

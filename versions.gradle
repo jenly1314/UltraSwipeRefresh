@@ -1,7 +1,7 @@
 // App
 def app_version = [:]
-app_version.versionName = "1.3.1"
-app_version.versionCode = 8
+app_version.versionName = "1.4.0"
+app_version.versionCode = 9
 ext.app_version = app_version
 
 // build version
@@ -17,16 +17,16 @@ ext.deps = [:]
 // App dependencies
 def versions = [:]
 // AndroidX
-versions.core_ktx = "1.12.0"
-versions.compose_compiler = "1.5.2"
-versions.compose_bom = "2024.01.00"
-versions.activity_compose = "1.8.2"
-versions.foundation = "1.6.0"
-versions.material3 = "1.2.0"
-versions.lifecycle_runtime_ktx = "2.7.0"
-versions.navigation_compose = "2.7.0"
-versions.lottie_compose = "6.1.0"
-versions.accompanist = "0.34.0"
+versions.core_ktx = "1.13.1"
+versions.compose_compiler = "1.5.5"
+versions.compose_bom = "2024.09.00"
+versions.activity_compose = "1.9.3"
+versions.foundation = "1.7.0"
+versions.material3 = "1.3.0"
+versions.lifecycle_runtime_ktx = "2.8.7"
+versions.navigation_compose = "2.8.0"
+versions.lottie_compose = "6.6.0"
+versions.accompanist = "0.36.0"
 
 // Test
 versions.junit = "4.13.2"

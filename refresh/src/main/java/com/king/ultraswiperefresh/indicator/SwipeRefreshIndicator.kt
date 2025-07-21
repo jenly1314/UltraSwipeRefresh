@@ -17,7 +17,6 @@ package com.king.ultraswiperefresh.indicator
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -127,7 +126,7 @@ internal fun SwipeRefreshIndicator(
 ) {
     val showElevation by remember(isFooter, state) {
         derivedStateOf {
-            if(isFooter) {
+            if (isFooter) {
                 state.isLoading || state.indicatorOffset < 0f
             } else {
                 state.isRefreshing || state.indicatorOffset > 0f
@@ -151,7 +150,7 @@ internal fun SwipeRefreshIndicator(
         )
     }
 
-    val alphaState = remember {
+    val alpha by remember(isFooter) {
         derivedStateOf {
             if ((!isFooter && state.indicatorOffset > 0f) || (isFooter && state.indicatorOffset < 0f)) {
                 1f
@@ -169,7 +168,7 @@ internal fun SwipeRefreshIndicator(
     ) {
         Surface(
             modifier = Modifier
-                .alpha(alphaState.value)
+                .alpha(alpha)
                 .size(size = sizes.size)
                 .graphicsLayer {
                     val scaleFraction = when {
@@ -198,7 +197,7 @@ internal fun SwipeRefreshIndicator(
                 },
             shape = shape,
             color = backgroundColor,
-            elevation = if(showElevation) elevation else 0.dp
+            elevation = if (showElevation) elevation else 0.dp
         ) {
             val painter = remember { CircularProgressPainter() }
             painter.arcRadius = sizes.arcRadius
@@ -209,21 +208,21 @@ internal fun SwipeRefreshIndicator(
             if (isFooter) {
                 painter.arrowEnabled =
                     arrowEnabled && state.footerState != UltraSwipeFooterState.Loading
-                val alpha = if (fade) {
+
+                painter.alpha = if (fade) {
                     (state.indicatorOffset / state.loadMoreTrigger).coerceIn(0f, 1f)
                 } else {
                     1f
                 }
-                painter.alpha = alpha
             } else {
                 painter.arrowEnabled =
                     arrowEnabled && state.headerState != UltraSwipeHeaderState.Refreshing
-                val alpha = if (fade) {
+
+                painter.alpha = if (fade) {
                     (state.indicatorOffset / state.refreshTrigger).coerceIn(0f, 1f)
                 } else {
                     1f
                 }
-                painter.alpha = alpha
             }
 
             painter.startTrim = slingshot.startTrim
@@ -239,7 +238,7 @@ internal fun SwipeRefreshIndicator(
                 } else {
                     state.headerState == UltraSwipeHeaderState.Refreshing
                 },
-                animationSpec = tween(durationMillis = CrossFadeDurationMs),
+                animationSpec = animationSpec,
                 label = label
             ) { refreshing ->
                 Box(
@@ -298,4 +297,3 @@ private fun Modifier.surface(
     .background(color = backgroundColor, shape = shape)
     .clip(shape)
 
-const val CrossFadeDurationMs = 100

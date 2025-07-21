@@ -26,7 +26,7 @@ fun ColumnItem(title: String, content: String, click: () -> Unit = {}) {
             .clickable {
                 click()
             }
-            .padding(horizontal = 16.dp, vertical = 10.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         Text(
             text = title,

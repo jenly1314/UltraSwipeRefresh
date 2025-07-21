@@ -1,5 +1,6 @@
 package com.king.ultraswiperefresh.indicator.classic
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
@@ -7,6 +8,11 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +23,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,7 +45,7 @@ import androidx.compose.ui.unit.sp
 import com.king.ultraswiperefresh.UltraSwipeFooterState
 import com.king.ultraswiperefresh.UltraSwipeHeaderState
 import com.king.ultraswiperefresh.UltraSwipeRefreshState
-import com.king.ultraswiperefresh.indicator.CrossFadeDurationMs
+import com.king.ultraswiperefresh.indicator.animationSpec
 
 /**
  * 经典样式的指示器
@@ -65,41 +72,53 @@ internal fun ClassicRefreshIndicator(
     tipTimeVisible: Boolean = true,
     paddingValues: PaddingValues = PaddingValues(12.dp),
     arrowIconPainter: Painter = painterResource(id = R.drawable.usr_classic_arrow),
-    loadingIconPainter: Painter = painterResource(id = R.drawable.usr_classic_refreshing),
+    loadingIconPainter: Painter = painterResource(id = R.drawable.usr_classic_spinner),
+    tipMinWidth: Dp = 96.dp,
     iconSize: Dp = 24.dp,
     iconColorFilter: ColorFilter? = null,
     label: String = "Indicator"
 ) {
-    val arrowDegrees = remember { Animatable(0f) }
+
+    val arrowDegrees = remember { Animatable(initialValue = 0f) }
 
     if (isFooter) {
         LaunchedEffect(state.footerState) {
             when (state.footerState) {
                 UltraSwipeFooterState.ReleaseToLoad -> {
-                    arrowDegrees.animateTo(0f)
+                    arrowDegrees.animateTo(targetValue = 0f, animationSpec = animationSpec)
                 }
 
-                else -> arrowDegrees.animateTo(180f)
+                else -> arrowDegrees.animateTo(targetValue = 180f, animationSpec = animationSpec)
             }
         }
     } else {
         LaunchedEffect(state.headerState) {
             when (state.headerState) {
                 UltraSwipeHeaderState.ReleaseToRefresh -> {
-                    arrowDegrees.animateTo(180f)
+                    arrowDegrees.animateTo(targetValue = 180f, animationSpec = animationSpec)
                 }
 
-                else -> arrowDegrees.animateTo(0f)
+                else -> arrowDegrees.animateTo(targetValue = 0f, animationSpec = animationSpec)
             }
         }
     }
 
-    val alphaState = remember {
+    val alpha by remember(isFooter) {
         derivedStateOf {
             if ((!isFooter && state.indicatorOffset > 0f) || (isFooter && state.indicatorOffset < 0f)) {
                 1f
             } else {
                 0f
+            }
+        }
+    }
+
+    val isInProgress by remember(isFooter) {
+        derivedStateOf {
+            if (isFooter) {
+                state.footerState == UltraSwipeFooterState.Loading && !state.isFinishing
+            } else {
+                state.headerState == UltraSwipeHeaderState.Refreshing && !state.isFinishing
             }
         }
     }
@@ -111,13 +130,17 @@ internal fun ClassicRefreshIndicator(
         contentAlignment = Alignment.Center
     ) {
         Row(
-            modifier = Modifier.alpha(alphaState.value),
+            modifier = Modifier.alpha(alpha),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Crossfade(
-                targetState = if (isFooter) state.isLoading else state.isRefreshing,
-                animationSpec = tween(durationMillis = CrossFadeDurationMs),
-                label = label
+            AnimatedContent(
+                targetState = isInProgress,
+                transitionSpec = {
+                    (fadeIn(animationSpec) + scaleIn(animationSpec)).togetherWith(
+                        fadeOut(animationSpec) + scaleOut(animationSpec)
+                    )
+                },
+                label = label,
             ) {
                 if (it) {
                     val transition = rememberInfiniteTransition(label = "InfiniteTransition")
@@ -125,10 +148,7 @@ internal fun ClassicRefreshIndicator(
                         initialValue = 0f,
                         targetValue = 360f,
                         animationSpec = infiniteRepeatable(
-                            animation = tween(
-                                durationMillis = 1000,
-                                easing = LinearEasing
-                            )
+                            animation = tween(durationMillis = 1000, easing = LinearEasing)
                         ),
                         label = "RotateAnimation"
                     )
@@ -153,19 +173,26 @@ internal fun ClassicRefreshIndicator(
                 }
             }
             Column(
-                modifier = Modifier.padding(horizontal = 6.dp),
+                modifier = Modifier
+                    .padding(horizontal = 6.dp)
+                    .widthIn(min = tipMinWidth),
                 verticalArrangement = Arrangement.Center
             ) {
-                BasicText(
-                    text = tipContent,
-                    style = tipContentStyle,
-                )
+                Crossfade(
+                    targetState = tipContent,
+                    animationSpec = animationSpec,
+                ) {
+                    BasicText(text = it, style = tipContentStyle)
+                }
+
                 if (tipTimeVisible) {
                     Spacer(modifier = Modifier.size(2.dp))
-                    BasicText(
-                        text = tipTime,
-                        style = tipTimeStyle,
-                    )
+                    Crossfade(
+                        targetState = tipTime,
+                        animationSpec = animationSpec,
+                    ) {
+                        BasicText(text = it, style = tipTimeStyle)
+                    }
                 }
             }
         }

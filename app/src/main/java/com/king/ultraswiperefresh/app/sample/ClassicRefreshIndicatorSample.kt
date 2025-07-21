@@ -62,21 +62,33 @@ fun ClassicRefreshIndicatorSample() {
             }
         },
         onLoadMore = {
-            coroutineScope.launch {
-                state.isLoading = true
-                // TODO 加载更多的逻辑处理，此处的延时只是为了演示效果
-                delay(2000)
-                itemCount += 20
-                state.isLoading = false
+            if (hasMoreData) {
+                coroutineScope.launch {
+                    state.isLoading = true
+                    // TODO 加载更多的逻辑处理，此处的延时只是为了演示效果
+                    delay(2000)
+                    itemCount += 20
+                    state.isLoading = false
+                }
             }
         },
         modifier = Modifier.background(color = Color(0x7FEEEEEE)),
-        loadMoreEnabled = hasMoreData,
         headerIndicator = {
             ClassicRefreshHeader(it)
         },
         footerIndicator = {
-            ClassicRefreshFooter(it)
+            if (hasMoreData) {
+                ClassicRefreshFooter(it)
+            } else {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "没有更多数据了",
+                        color = Color(0xFF999999),
+                        fontSize = 15.sp,
+                        modifier = Modifier.padding(vertical = 16.dp)
+                    )
+                }
+            }
         }
     ) {
         LazyColumn(Modifier.background(color = Color.White)) {
@@ -89,19 +101,6 @@ fun ClassicRefreshIndicatorSample() {
                         modifier = Modifier.padding(horizontal = 16.dp),
                         color = Color(0xFFF2F3F6)
                     )
-                }
-            }
-
-            if (!hasMoreData) {
-                item {
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        Text(
-                            text = "没有更多数据了",
-                            color = Color(0xFF999999),
-                            fontSize = 15.sp,
-                            modifier = Modifier.padding(vertical = 16.dp)
-                        )
-                    }
                 }
             }
         }

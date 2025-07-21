@@ -51,7 +51,8 @@ fun ClassicRefreshHeader(
     tipTimeVisible: Boolean = true,
     paddingValues: PaddingValues = PaddingValues(12.dp),
     arrowIconPainter: Painter = painterResource(id = R.drawable.usr_classic_arrow),
-    loadingIconPainter: Painter = painterResource(id = R.drawable.usr_classic_refreshing),
+    loadingIconPainter: Painter = painterResource(id = R.drawable.usr_classic_spinner),
+    tipMinWidth: Dp = 96.dp,
     iconSize: Dp = 24.dp,
     iconColorFilter: ColorFilter? = null,
 ) {
@@ -67,6 +68,7 @@ fun ClassicRefreshHeader(
         paddingValues = paddingValues,
         arrowIconPainter = arrowIconPainter,
         loadingIconPainter = loadingIconPainter,
+        tipMinWidth = tipMinWidth,
         iconSize = iconSize,
         iconColorFilter = iconColorFilter,
         label = "HeaderIndicator"

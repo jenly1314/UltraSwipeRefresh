@@ -624,3 +624,7 @@ private const val HeadAndTailDelayDuration = HeadAndTailAnimationDuration
 
 // The easing for the head and tail jump
 private val CircularEasing = CubicBezierEasing(0.4f, 0f, 0.2f, 1f)
+
+const val AnimationDurationMs = 150
+
+val animationSpec = tween<Float>(durationMillis = AnimationDurationMs)

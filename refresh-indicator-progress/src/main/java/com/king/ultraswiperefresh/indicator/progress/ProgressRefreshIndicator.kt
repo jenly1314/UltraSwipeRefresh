@@ -2,12 +2,12 @@ package com.king.ultraswiperefresh.indicator.progress
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.king.ultraswiperefresh.UltraSwipeFooterState
 import com.king.ultraswiperefresh.UltraSwipeHeaderState
 import com.king.ultraswiperefresh.UltraSwipeRefreshState
-import com.king.ultraswiperefresh.indicator.CrossFadeDurationMs
 import com.king.ultraswiperefresh.indicator.LinearProgressIndicator
+import com.king.ultraswiperefresh.indicator.animationSpec
 
 /**
  * 进度条样式的指示器
@@ -39,7 +39,7 @@ internal fun ProgressRefreshIndicator(
     color: Color = Color(0xFF00CCFF),
     label: String = "Indicator"
 ) {
-    val progressState = remember {
+    val progress by remember(isFooter) {
         derivedStateOf {
             when {
                 !isFooter && state.indicatorOffset > 0f -> {
@@ -58,7 +58,8 @@ internal fun ProgressRefreshIndicator(
             }
         }
     }
-    val brushState = remember {
+
+    val brush by remember(isFooter) {
         derivedStateOf {
             if (isFooter) {
                 Brush.verticalGradient(
@@ -73,18 +74,29 @@ internal fun ProgressRefreshIndicator(
             }
         }
     }
+
+    val isInProgress by remember(isFooter) {
+        derivedStateOf {
+            if (isFooter) {
+                state.footerState == UltraSwipeFooterState.Loading && !state.isFinishing
+            } else {
+                state.headerState == UltraSwipeHeaderState.Refreshing && !state.isFinishing
+            }
+        }
+    }
+
     Box(modifier = modifier) {
         Box(
             Modifier
-                .alpha(if (progressState.value > 0f) 1f else 0f)
+                .alpha(if (progress > 0f) 1f else 0f)
                 .fillMaxWidth()
                 .height(height)
                 .drawWithCache {
                     onDrawBehind {
                         if (state.isSwipeInProgress) {
                             drawRect(
-                                brush = brushState.value,
-                                alpha = FastOutSlowInEasing.transform(progressState.value)
+                                brush = brush,
+                                alpha = FastOutSlowInEasing.transform(progress)
                             )
                         }
                     }
@@ -92,12 +104,8 @@ internal fun ProgressRefreshIndicator(
             contentAlignment = if (isFooter) Alignment.BottomCenter else Alignment.TopCenter
         ) {
             Crossfade(
-                targetState = if (isFooter) {
-                    state.footerState == UltraSwipeFooterState.Loading
-                } else {
-                    state.headerState == UltraSwipeHeaderState.Refreshing
-                },
-                animationSpec = tween(durationMillis = CrossFadeDurationMs),
+                targetState = isInProgress,
+                animationSpec = animationSpec,
                 label = label
             ) {
                 if (it) {
@@ -107,7 +115,7 @@ internal fun ProgressRefreshIndicator(
                     )
                 } else {
                     LinearProgressIndicator(
-                        progress = progressState.value,
+                        progress = progress,
                         modifier = Modifier.fillMaxWidth(),
                         color = color,
                     )

@@ -9,7 +9,7 @@
 
 **UltraSwipeRefresh**：一个可带来极致体验的 **Compose** 刷新组件；支持下拉刷新和上拉加载，可完美替代官方的 **SwipeRefresh**；并且支持的功能更多，可扩展性更强。
 
-> **UltraSwipeRefresh** 在设计之初，主要参考了谷歌官方的[SwipeRefresh](https://github.com/google/accompanist/tree/v0.36.0/swiperefresh) 和第三方的[SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) ，在充分借鉴两者优秀设计理念的基础上，致力于打造一个拥有极致体验的 **Compose** 刷新组件。
+> **UltraSwipeRefresh** 在设计之初，主要参考了谷歌官方的 [SwipeRefresh](https://github.com/google/accompanist/tree/v0.36.0/swiperefresh) 和第三方的 [SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) ，在充分借鉴两者优秀设计理念的基础上，致力于打造一个拥有极致体验的 **Compose** 刷新组件。
 
 ## 功能特色
 
@@ -40,14 +40,14 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.3.1'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.4.0'
 
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.3.1'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.4.0'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.3.1'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.4.0'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.3.1'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.4.0'
     ```
 
 ## 使用
@@ -76,7 +76,8 @@
  * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：2
  * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
  * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
- * @param vibrateEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param vibrationEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param vibrationMillis 触发刷新或触发加载更多时的振动时长（毫秒）默认：25毫秒
  * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
@@ -87,7 +88,7 @@
 
 #### UltraSwipeRefresh使用示例
 
-比如：使用`UltraSwipeRefresh`实现一个经典样式的刷新与加载示例：
+使用`UltraSwipeRefresh`实现一个经典样式的刷新与加载示例：
 
 ```kotlin
 
@@ -128,7 +129,7 @@ fun UltraSwipeRefreshSample() {
          ClassicRefreshFooter(it)
       }
    ) {
-      LazyColumn(Modifier.background(color = Color.White)) {
+      LazyColumn(Modifier.fillMaxSize().background(color = Color.White)) {
          repeat(itemCount) {
             item {
                Text(
@@ -186,8 +187,7 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 | ProgressRefreshFooter                                                                                | LottieRefreshFooter                                                                                                                   |
 | [进度条刷新样式示例](app/src/main/java/com/king/ultraswiperefresh/app/sample/ProgressRefreshIndicatorSample.kt) | [Lottie动画刷新样式示例](app/src/main/java/com/king/ultraswiperefresh/app/sample/LottieRefreshIndicatorSample.kt)                                    |
 
-
-> 如果以上的指示器效果都不满足你的需求，你可以自定义去实现Header和Footer的指示器，也可以直接使用Lottie动画样式的指示器，来快速接入任何Lottie动画。
+> 如果以上的指示器效果都不满足你的需求，你可以自定义去实现Header和Footer对应的指示器，也可以直接使用Lottie动画样式的指示器，来快速接入任何Lottie动画。
 
 更多使用详情，请查看[app](app)中的源码使用示例或直接查看 [API帮助文档](https://jenly1314.github.io/UltraSwipeRefresh/api/)
 
@@ -211,8 +211,14 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 ## 版本日志
 
-#### v1.3.1 ：2024-12-23
-* 修复BUG：快速滑动时，出现收起动画不执行的问题。 （[#21](https://github.com/jenly1314/UltraSwipeRefresh/issues/21)）
+#### v1.4.0 ：2025-7-21
+* 迁移发布至 **Central Portal** [相关公告](https://central.sonatype.org/pages/ossrh-eol/#logging-in-to-central-portal)
+* 更新compose至v1.7.0 (v1.6.0 -> v1.7.0)
+* 更新lottie至v6.6.0 (v6.1.0 -> v6.6.0)
+* 更新Gradle至v8.5
+* 参数名变更：将原 `vibrateEnabled` 修改为：`vibrationEnabled`
+* 新增参数`vibrationMillis`: 振动时长
+* 优化一些细节
 
 #### [查看更多版本日志](CHANGELOG.md)
 

@@ -20,7 +20,7 @@ import com.king.ultraswiperefresh.UltraSwipeRefreshState
 fun LottieRefreshHeader(
     state: UltraSwipeRefreshState,
     modifier: Modifier = Modifier,
-    spec: LottieCompositionSpec = LottieCompositionSpec.RawRes(R.raw.usr_lottie_default_refreshing),
+    spec: LottieCompositionSpec = LottieCompositionSpec.RawRes(R.raw.usr_default_lottie_animation),
     height: Dp = 60.dp,
     alignment: Alignment = Alignment.Center,
     speed: Float = 1f,

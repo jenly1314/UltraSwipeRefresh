@@ -63,8 +63,6 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$versions.navigation_compose"
     implementation "com.google.accompanist:accompanist-swiperefresh:$versions.accompanist"
 
-    implementation "com.airbnb.android:lottie-compose:$versions.lottie_compose"
-
     testImplementation "junit:junit:$versions.junit"
     androidTestImplementation "androidx.test.ext:junit:$versions.android_ext_junit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
