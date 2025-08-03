@@ -211,6 +211,9 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 ## 版本日志
 
+#### 待发布版本（[提前体验](test.md)）
+* 新增参数`onCollapseScroll`：可选回调，当Header/Footer收起时需要同步调整列表位置以消除视觉回弹时使用
+
 #### v1.4.0 ：2025-7-21
 * 迁移发布至 **Central Portal** [相关公告](https://central.sonatype.org/pages/ossrh-eol/#logging-in-to-central-portal)
 * 更新compose至v1.7.0 (v1.6.0 -> v1.7.0)

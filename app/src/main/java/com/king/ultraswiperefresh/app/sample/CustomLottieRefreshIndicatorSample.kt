@@ -107,8 +107,8 @@ fun CustomLottieRefreshIndicatorSample() {
                 ColumnItem(
                     title = "点击此项可随机切换滑动模式",
                     content = "当前所选的滑动模式\n" +
-                            "headerScrollMode = NestedScrollMode.${headerScrollMode.name}\n" +
-                            "footerScrollMode = NestedScrollMode.${footerScrollMode.name}"
+                        "headerScrollMode = NestedScrollMode.${headerScrollMode.name}\n" +
+                        "footerScrollMode = NestedScrollMode.${footerScrollMode.name}"
                 ) {
                     headerScrollMode = nestedScrollModes.random()
                     footerScrollMode = nestedScrollModes.random()

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.zIndex
 import com.king.ultraswiperefresh.theme.UltraSwipeRefreshTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * UltraSwipeRefresh：一个可带来极致体验的Compose刷新组件；支持下拉刷新和上拉加载，可完美替代官方的SwipeRefresh；并且支持的功能更多，可扩展性更强。
@@ -49,6 +50,7 @@ import kotlinx.coroutines.delay
  * @param vibrationEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param vibrationMillis 触发刷新或触发加载更多时的振动时长（毫秒）默认：25毫秒
  * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
+ * @param onCollapseScroll 可选回调，当Header/Footer收起时需要同步调整列表位置以消除视觉回弹时使用
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
  * @param contentContainer [content]的父容器，便于统一管理
@@ -84,6 +86,7 @@ fun UltraSwipeRefresh(
     @IntRange(from = 1, to = 50)
     vibrationMillis: Long = UltraSwipeRefreshTheme.config.vibrationMillis,
     alwaysScrollable: Boolean = UltraSwipeRefreshTheme.config.alwaysScrollable,
+    onCollapseScroll: (suspend (Float) -> Unit)? = UltraSwipeRefreshTheme.config.onCollapseScroll,
     headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
     footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
     contentContainer: @Composable (@Composable () -> Unit) -> Unit = UltraSwipeRefreshTheme.config.contentContainer,
@@ -138,14 +141,21 @@ fun UltraSwipeRefresh(
                         state.isRefreshing -> state.animateOffsetTo(headerHeight.toFloat())
                         state.isLoading -> state.animateOffsetTo(-footerHeight.toFloat())
                         state.headerState == UltraSwipeHeaderState.Refreshing || state.footerState == UltraSwipeFooterState.Loading -> {
-                            state.isFinishing = true
-                            if (state.indicatorOffset > headerHeight) {
-                                state.animateOffsetTo(headerHeight.toFloat())
-                            } else if (state.indicatorOffset < -footerHeight) {
-                                state.animateOffsetTo(-footerHeight.toFloat())
+                            coroutineScope.launch {
+                                state.isFinishing = true
+                                if (state.indicatorOffset > headerHeight) {
+                                    state.animateOffsetTo(headerHeight.toFloat())
+                                } else if (state.indicatorOffset < -footerHeight) {
+                                    state.animateOffsetTo(-footerHeight.toFloat())
+                                }
+                                delay(finishDelayMillis)
+                                onCollapseScroll?.also {
+                                    coroutineScope.launch {
+                                        it.invoke(-state.indicatorOffset)
+                                    }
+                                }
+                                state.animateOffsetTo(0f, MutatePriority.PreventUserInput)
                             }
-                            delay(finishDelayMillis)
-                            state.animateOffsetTo(0f, MutatePriority.PreventUserInput)
                         }
 
                         else -> state.animateOffsetTo(0f)
@@ -217,6 +227,7 @@ fun UltraSwipeRefresh(
  * @param vibrationEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param vibrationMillis 触发刷新或触发加载更多时的振动时长（毫秒）默认：25毫秒
  * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
+ * @param onCollapseScroll 可选回调，当Header/Footer收起时需要同步调整列表位置以消除视觉回弹时使用
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
  * @param contentContainer [content]的父容器，便于统一管理
@@ -249,6 +260,7 @@ fun UltraSwipeRefresh(
     @IntRange(from = 1, to = 50)
     vibrationMillis: Long = UltraSwipeRefreshTheme.config.vibrationMillis,
     alwaysScrollable: Boolean = UltraSwipeRefreshTheme.config.alwaysScrollable,
+    onCollapseScroll: (suspend (Float) -> Unit)? = UltraSwipeRefreshTheme.config.onCollapseScroll,
     headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
     footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
     contentContainer: @Composable (@Composable () -> Unit) -> Unit = UltraSwipeRefreshTheme.config.contentContainer,
@@ -273,6 +285,7 @@ fun UltraSwipeRefresh(
         vibrationEnabled = vibrationEnabled,
         vibrationMillis = vibrationMillis,
         alwaysScrollable = alwaysScrollable,
+        onCollapseScroll = onCollapseScroll,
         headerIndicator = headerIndicator,
         footerIndicator = footerIndicator,
         contentContainer = contentContainer,

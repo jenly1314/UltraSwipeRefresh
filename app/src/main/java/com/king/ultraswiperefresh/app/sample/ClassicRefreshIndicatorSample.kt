@@ -1,10 +1,12 @@
 package com.king.ultraswiperefresh.app.sample
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.king.ultraswiperefresh.UltraSwipeFooterState
 import com.king.ultraswiperefresh.UltraSwipeRefresh
 import com.king.ultraswiperefresh.app.component.ColumnItem
 import com.king.ultraswiperefresh.indicator.classic.ClassicRefreshFooter
@@ -42,6 +45,7 @@ fun ClassicRefreshIndicatorSample() {
     var itemCount by remember { mutableIntStateOf(20) }
     var hasMoreData by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
+    val lazyListState = rememberLazyListState()
 
     LaunchedEffect(state.isFinishing) {
         if (itemCount >= 60 && !state.isFinishing) {
@@ -73,6 +77,12 @@ fun ClassicRefreshIndicatorSample() {
             }
         },
         modifier = Modifier.background(color = Color(0x7FEEEEEE)),
+        onCollapseScroll = {
+            if(state.footerState == UltraSwipeFooterState.Loading) {
+                // 同步滚动列表位置，消除视觉回弹
+                lazyListState.animateScrollBy(it)
+            }
+        },
         headerIndicator = {
             ClassicRefreshHeader(it)
         },
@@ -91,7 +101,10 @@ fun ClassicRefreshIndicatorSample() {
             }
         }
     ) {
-        LazyColumn(Modifier.background(color = Color.White)) {
+        LazyColumn(
+            modifier = Modifier.background(color = Color.White),
+            state = lazyListState,
+        ) {
             repeat(itemCount) {
                 item {
                     val title = "UltraSwipeRefresh列表标题${it + 1}"

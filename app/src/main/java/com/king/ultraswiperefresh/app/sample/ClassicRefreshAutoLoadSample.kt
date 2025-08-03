@@ -1,6 +1,7 @@
 package com.king.ultraswiperefresh.app.sample
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.king.ultraswiperefresh.UltraSwipeFooterState
 import com.king.ultraswiperefresh.UltraSwipeRefresh
 import com.king.ultraswiperefresh.app.component.ColumnItem
 import com.king.ultraswiperefresh.indicator.classic.ClassicRefreshFooter
@@ -54,7 +56,7 @@ fun ClassicRefreshAutoLoadSample() {
             // 此处的 lazyListItemInfo.index > itemCount - 5 只是举个触发自动加载的条件示例；想要什么时候触发自动加载，可结合item高度和偏移量自行决定。
             lazyListItemInfo != null && lazyListItemInfo.index > itemCount - 5
         }.distinctUntilChanged().collect {
-            if (!autoLoading && it) {
+            if (!autoLoading && !state.isLoading && it) {
                 if (itemCount >= 60) {
                     hasMoreData = false
                 } else {
@@ -100,8 +102,14 @@ fun ClassicRefreshAutoLoadSample() {
             }
         },
         modifier = Modifier.background(color = Color(0x7FEEEEEE)),
-        loadMoreTriggerRate = 0.01f,
+        loadMoreTriggerRate = 0.1f,
         loadMoreEnabled = hasMoreData,
+        onCollapseScroll = {
+            if(state.footerState == UltraSwipeFooterState.Loading) {
+                // 同步滚动列表位置，消除视觉回弹
+                lazyListState.animateScrollBy(it)
+            }
+        },
         headerIndicator = {
             ClassicRefreshHeader(it)
         },
