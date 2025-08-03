@@ -105,7 +105,8 @@ fun ClassicRefreshAutoLoadSample() {
         loadMoreTriggerRate = 0.1f,
         loadMoreEnabled = hasMoreData,
         onCollapseScroll = {
-            if(state.footerState == UltraSwipeFooterState.Loading) {
+            // 小于0时表示：由下拉刷新收起时触发的，大于0时表示：由上拉加载收起时触发的
+            if(it > 0f) {
                 // 同步滚动列表位置，消除视觉回弹
                 lazyListState.animateScrollBy(it)
             }

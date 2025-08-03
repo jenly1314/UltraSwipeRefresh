@@ -1,5 +1,6 @@
 package com.king.ultraswiperefresh.app.sample
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
@@ -78,7 +79,8 @@ fun ClassicRefreshIndicatorSample() {
         },
         modifier = Modifier.background(color = Color(0x7FEEEEEE)),
         onCollapseScroll = {
-            if(state.footerState == UltraSwipeFooterState.Loading) {
+            // 小于0时表示：由下拉刷新收起时触发的，大于0时表示：由上拉加载收起时触发的
+            if(it > 0f) {
                 // 同步滚动列表位置，消除视觉回弹
                 lazyListState.animateScrollBy(it)
             }
