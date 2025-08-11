@@ -106,8 +106,8 @@ fun ClassicRefreshAutoLoadSample() {
         loadMoreEnabled = hasMoreData,
         onCollapseScroll = {
             // 小于0时表示：由下拉刷新收起时触发的，大于0时表示：由上拉加载收起时触发的
-            if(it > 0f) {
-                // 同步滚动列表位置，消除视觉回弹
+            if (it > 0) {
+                // 指示器收起时滚动列表位置，消除视觉回弹
                 lazyListState.animateScrollBy(it)
             }
         },
@@ -149,3 +149,4 @@ fun ClassicRefreshAutoLoadSample() {
         }
     }
 }
+

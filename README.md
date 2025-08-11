@@ -40,14 +40,14 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.4.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.4.1'
 
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.4.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.4.1'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.4.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.4.1'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.4.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.4.1'
     ```
 
 ## 使用
@@ -79,6 +79,7 @@
  * @param vibrationEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param vibrationMillis 触发刷新或触发加载更多时的振动时长（毫秒）默认：25毫秒
  * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
+ * @param onCollapseScroll 可选回调，当Header/Footer收起时需要同步调整列表位置以消除视觉回弹时使用
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
  * @param contentContainer 内容的父容器，便于统一管理
@@ -91,61 +92,71 @@
 使用`UltraSwipeRefresh`实现一个经典样式的刷新与加载示例：
 
 ```kotlin
-
 @Composable
 fun UltraSwipeRefreshSample() {
 
-   val state = rememberUltraSwipeRefreshState()
-   var itemCount by remember { mutableIntStateOf(20) }
-   val coroutineScope = rememberCoroutineScope()
+    val state = rememberUltraSwipeRefreshState()
+    var itemCount by remember { mutableIntStateOf(20) }
+    val coroutineScope = rememberCoroutineScope()
+    val lazyListState = rememberLazyListState()
 
-   UltraSwipeRefresh(
-      state = state,
-      onRefresh = {
-         coroutineScope.launch {
-            state.isRefreshing = true
-            // TODO 刷新的逻辑处理，此处的延时只是为了演示效果
-            delay(2000)
-            itemCount = 20
-            state.isRefreshing = false
-         }
-      },
-      onLoadMore = {
-         coroutineScope.launch {
-            state.isLoading = true
-            // TODO 加载更多的逻辑处理，此处的延时只是为了演示效果
-            delay(2000)
-            itemCount += 20
-            state.isLoading = false
-         }
-      },
-      modifier = Modifier.background(color = Color(0x7FEEEEEE)),
-      headerScrollMode = NestedScrollMode.Translate,
-      footerScrollMode = NestedScrollMode.Translate,
-      headerIndicator = {
-         ClassicRefreshHeader(it)
-      },
-      footerIndicator = {
-         ClassicRefreshFooter(it)
-      }
-   ) {
-      LazyColumn(Modifier.fillMaxSize().background(color = Color.White)) {
-         repeat(itemCount) {
-            item {
-               Text(
-                  text = "UltraSwipeRefresh列表Item${it + 1}",
-                  modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-                  color = Color(0xFF333333),
-                  fontSize = 16.sp
-               )
-               Divider(
-                  modifier = Modifier.padding(horizontal = 16.dp),
-                  color = Color(0xFFF2F3F6)
-               )
+    UltraSwipeRefresh(
+        state = state,
+        onRefresh = {
+            coroutineScope.launch {
+                state.isRefreshing = true
+                // TODO 刷新的逻辑处理，此处的延时只是为了演示效果
+                delay(2000)
+                itemCount = 20
+                state.isRefreshing = false
             }
-         }
-      }
-   }
+        },
+        onLoadMore = {
+            coroutineScope.launch {
+                state.isLoading = true
+                // TODO 加载更多的逻辑处理，此处的延时只是为了演示效果
+                delay(2000)
+                itemCount += 20
+                state.isLoading = false
+            }
+        },
+        modifier = Modifier.background(color = Color(0x7FEEEEEE)),
+        headerScrollMode = NestedScrollMode.Translate,
+        footerScrollMode = NestedScrollMode.Translate,
+        onCollapseScroll = {
+            // 小于0时表示：由下拉刷新收起时触发的，大于0时表示：由上拉加载收起时触发的
+            if (it > 0) {
+                // 指示器收起时滚动列表位置，消除视觉回弹
+                lazyListState.animateScrollBy(it)
+            }
+        },
+        headerIndicator = {
+            ClassicRefreshHeader(it)
+        },
+        footerIndicator = {
+            ClassicRefreshFooter(it)
+        }
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().background(color = Color.White),
+            state = lazyListState,
+        ) {
+            repeat(itemCount) {
+                item {
+                    Text(
+                        text = "UltraSwipeRefresh列表Item${it + 1}",
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                        color = Color(0xFF333333),
+                        fontSize = 16.sp
+                    )
+                    Divider(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        color = Color(0xFFF2F3F6)
+                    )
+                }
+            }
+        }
+    }
 }
 
 ```
@@ -211,17 +222,8 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 ## 版本日志
 
-#### 待发布版本（[提前体验](test.md)）
+#### v1.4.1 ：2025-8-11
 * 新增参数`onCollapseScroll`：可选回调，当Header/Footer收起时需要同步调整列表位置以消除视觉回弹时使用
-
-#### v1.4.0 ：2025-7-21
-* 迁移发布至 **Central Portal** [相关公告](https://central.sonatype.org/pages/ossrh-eol/#logging-in-to-central-portal)
-* 更新compose至v1.7.0 (v1.6.0 -> v1.7.0)
-* 更新lottie至v6.6.0 (v6.1.0 -> v6.6.0)
-* 更新Gradle至v8.5
-* 参数名变更：将原 `vibrateEnabled` 修改为：`vibrationEnabled`
-* 新增参数`vibrationMillis`: 振动时长
-* 优化一些细节
 
 #### [查看更多版本日志](CHANGELOG.md)
 

@@ -86,7 +86,7 @@ fun UltraSwipeRefresh(
     @IntRange(from = 1, to = 50)
     vibrationMillis: Long = UltraSwipeRefreshTheme.config.vibrationMillis,
     alwaysScrollable: Boolean = UltraSwipeRefreshTheme.config.alwaysScrollable,
-    onCollapseScroll: (suspend (Float) -> Unit)? = UltraSwipeRefreshTheme.config.onCollapseScroll,
+    onCollapseScroll: (suspend (Float) -> Unit)? = null,
     headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
     footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
     contentContainer: @Composable (@Composable () -> Unit) -> Unit = UltraSwipeRefreshTheme.config.contentContainer,
@@ -260,7 +260,7 @@ fun UltraSwipeRefresh(
     @IntRange(from = 1, to = 50)
     vibrationMillis: Long = UltraSwipeRefreshTheme.config.vibrationMillis,
     alwaysScrollable: Boolean = UltraSwipeRefreshTheme.config.alwaysScrollable,
-    onCollapseScroll: (suspend (Float) -> Unit)? = UltraSwipeRefreshTheme.config.onCollapseScroll,
+    onCollapseScroll: (suspend (Float) -> Unit)? = null,
     headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.headerIndicator,
     footerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = UltraSwipeRefreshTheme.config.footerIndicator,
     contentContainer: @Composable (@Composable () -> Unit) -> Unit = UltraSwipeRefreshTheme.config.contentContainer,

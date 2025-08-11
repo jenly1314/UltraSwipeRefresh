@@ -48,7 +48,6 @@ object UltraSwipeRefreshTheme {
  * @param vibrationEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
  * @param vibrationMillis 触发刷新或触发加载更多时的振动时长（毫秒）默认：25毫秒
  * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
- * @param onCollapseScroll 可选回调，当Header/Footer收起时需要同步调整列表位置以消除视觉回弹时使用
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
  * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
  * @param contentContainer 内容的父容器，便于统一管理
@@ -67,7 +66,6 @@ data class UltraSwipeRefreshConfig(
     val vibrationEnabled: Boolean = false,
     @IntRange(from = 1, to = 50) val vibrationMillis: Long = 25,
     val alwaysScrollable: Boolean = false,
-    val onCollapseScroll: (suspend (Float) -> Unit)? = null,
     val headerIndicator: @Composable (UltraSwipeRefreshState) -> Unit = {
         SwipeRefreshHeader(it)
     },
