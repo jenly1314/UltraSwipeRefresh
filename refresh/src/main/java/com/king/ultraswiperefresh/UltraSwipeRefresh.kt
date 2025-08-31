@@ -348,7 +348,7 @@ private fun obtainZIndex(style: NestedScrollMode): Float {
 }
 
 /**
- * 通过[SubcomposeLayout]测量子组合[headerIndicator]和[footerIndicator]的高度
+ * 通过[SubcomposeLayout]测量子布局[headerIndicator]和[footerIndicator]的高度
  */
 @Composable
 private fun RefreshSubComposeLayout(
