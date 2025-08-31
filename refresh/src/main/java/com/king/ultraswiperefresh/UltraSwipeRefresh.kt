@@ -98,8 +98,6 @@ fun UltraSwipeRefresh(
 
     Box(modifier) {
         RefreshSubComposeLayout(
-            refreshEnabled = refreshEnabled,
-            loadMoreEnabled = loadMoreEnabled,
             headerIndicator = {
                 headerIndicator(state)
             },
@@ -143,9 +141,9 @@ fun UltraSwipeRefresh(
                         state.headerState == UltraSwipeHeaderState.Refreshing || state.footerState == UltraSwipeFooterState.Loading -> {
                             coroutineScope.launch {
                                 state.isFinishing = true
-                                if (state.indicatorOffset > headerHeight) {
+                                if (state.headerState == UltraSwipeHeaderState.Refreshing) {
                                     state.animateOffsetTo(headerHeight.toFloat())
-                                } else if (state.indicatorOffset < -footerHeight) {
+                                } else if (state.footerState == UltraSwipeFooterState.Loading) {
                                     state.animateOffsetTo(-footerHeight.toFloat())
                                 }
                                 delay(finishDelayMillis)
@@ -180,9 +178,7 @@ fun UltraSwipeRefresh(
                         }
                         .zIndex(obtainZIndex(headerScrollMode))
                 ) {
-                    if (refreshEnabled) {
-                        headerIndicator(state)
-                    }
+                    headerIndicator(state)
                 }
                 Box(
                     modifier = Modifier
@@ -192,9 +188,7 @@ fun UltraSwipeRefresh(
                         }
                         .zIndex(obtainZIndex(footerScrollMode))
                 ) {
-                    if (loadMoreEnabled) {
-                        footerIndicator(state)
-                    }
+                    footerIndicator(state)
                 }
                 Box(modifier = Modifier.graphicsLayer {
                     translationY = obtainContentOffset(state, headerScrollMode, footerScrollMode)
@@ -358,27 +352,21 @@ private fun obtainZIndex(style: NestedScrollMode): Float {
  */
 @Composable
 private fun RefreshSubComposeLayout(
-    refreshEnabled: Boolean,
-    loadMoreEnabled: Boolean,
     headerIndicator: @Composable () -> Unit,
     footerIndicator: @Composable () -> Unit,
     content: @Composable (headerHeight: Int, footerHeight: Int) -> Unit
 ) {
     SubcomposeLayout { constraints: Constraints ->
 
-        val headerMeasurable = if (refreshEnabled) {
-            subcompose(
-                slotId = "headerIndicator",
-                content = headerIndicator
-            ).firstOrNull()?.measure(constraints)
-        } else null
+        val headerMeasurable = subcompose(
+            slotId = "headerIndicator",
+            content = headerIndicator
+        ).firstOrNull()?.measure(constraints)
 
-        val footerMeasurable = if (loadMoreEnabled) {
-            subcompose(
-                slotId = "footerIndicator",
-                content = footerIndicator
-            ).firstOrNull()?.measure(constraints)
-        } else null
+        val footerMeasurable = subcompose(
+            slotId = "footerIndicator",
+            content = footerIndicator
+        ).firstOrNull()?.measure(constraints)
 
         val contentMeasurable = subcompose(
             slotId = "content",
