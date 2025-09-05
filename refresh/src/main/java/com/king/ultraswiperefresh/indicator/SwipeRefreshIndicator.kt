@@ -17,6 +17,7 @@ package com.king.ultraswiperefresh.indicator
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -150,7 +151,7 @@ internal fun SwipeRefreshIndicator(
         )
     }
 
-    val alpha by remember(isFooter) {
+    val targetAlpha by remember(isFooter) {
         derivedStateOf {
             if ((!isFooter && state.indicatorOffset > 0f) || (isFooter && state.indicatorOffset < 0f)) {
                 1f
@@ -159,6 +160,8 @@ internal fun SwipeRefreshIndicator(
             }
         }
     }
+
+    val alpha by animateFloatAsState(targetValue = targetAlpha, animationSpec = animationSpec)
 
     Box(
         modifier = modifier

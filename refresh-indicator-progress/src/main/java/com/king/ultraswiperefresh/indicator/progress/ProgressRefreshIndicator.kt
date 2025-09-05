@@ -2,6 +2,7 @@ package com.king.ultraswiperefresh.indicator.progress
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -85,10 +86,15 @@ internal fun ProgressRefreshIndicator(
         }
     }
 
+    val alpha by animateFloatAsState(
+        targetValue = if (progress > 0f) 1f else 0f,
+        animationSpec = animationSpec
+    )
+
     Box(modifier = modifier) {
         Box(
             Modifier
-                .alpha(if (progress > 0f) 1f else 0f)
+                .alpha(alpha)
                 .fillMaxWidth()
                 .height(height)
                 .drawWithCache {

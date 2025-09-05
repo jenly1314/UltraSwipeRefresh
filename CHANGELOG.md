@@ -1,5 +1,8 @@
 ## 版本日志
 
+#### v1.4.2 ：2025-9-6
+* 优化显示细节（[#38](https://github.com/jenly1314/UltraSwipeRefresh/issues/38)）
+
 #### v1.4.1 ：2025-8-11
 * 新增参数`onCollapseScroll`：可选回调，当Header/Footer收起时需要同步调整列表位置以消除视觉回弹时使用
 

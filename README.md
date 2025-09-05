@@ -40,14 +40,14 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.4.1'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.4.2'
 
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.4.1'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.4.2'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.4.1'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.4.2'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.4.1'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.4.2'
     ```
 
 ## 使用
@@ -163,7 +163,7 @@ fun UltraSwipeRefreshSample() {
 
 > 使用小提示：**headerIndicator/footerIndicator** 与 **headerScrollMode/footerScrollMode** 组合使用，以获得最佳滑动体验！
 
-### UltraSwipeRefreshTheme（v1.1.0新增）
+### UltraSwipeRefreshTheme
 
 UltraSwipeRefreshTheme：主要用于统一管理全局默认配置。
 
@@ -222,14 +222,10 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 ## 版本日志
 
-#### 待发布版本（[提前体验](test.md)）
+#### v1.4.2 ：2025-9-6
 * 优化显示细节（[#38](https://github.com/jenly1314/UltraSwipeRefresh/issues/38)）
 
-#### v1.4.1 ：2025-8-11
-* 新增参数`onCollapseScroll`：可选回调，当Header/Footer收起时需要同步调整列表位置以消除视觉回弹时使用
-
 #### [查看更多版本日志](CHANGELOG.md)
-
 
 ---
 

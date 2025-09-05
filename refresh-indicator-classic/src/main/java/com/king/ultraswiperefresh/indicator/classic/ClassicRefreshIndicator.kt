@@ -5,6 +5,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
@@ -103,7 +104,7 @@ internal fun ClassicRefreshIndicator(
         }
     }
 
-    val alpha by remember(isFooter) {
+    val targetAlpha by remember(isFooter) {
         derivedStateOf {
             if ((!isFooter && state.indicatorOffset > 0f) || (isFooter && state.indicatorOffset < 0f)) {
                 1f
@@ -112,6 +113,8 @@ internal fun ClassicRefreshIndicator(
             }
         }
     }
+
+    val alpha by animateFloatAsState(targetValue = targetAlpha, animationSpec = animationSpec)
 
     val isInProgress by remember(isFooter) {
         derivedStateOf {

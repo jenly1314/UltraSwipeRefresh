@@ -1,5 +1,6 @@
 package com.king.ultraswiperefresh.indicator.lottie
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +23,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.king.ultraswiperefresh.UltraSwipeFooterState
 import com.king.ultraswiperefresh.UltraSwipeHeaderState
 import com.king.ultraswiperefresh.UltraSwipeRefreshState
+import com.king.ultraswiperefresh.indicator.animationSpec
 
 /**
  * Lottie动画指示器
@@ -62,7 +64,7 @@ internal fun LottieRefreshIndicator(
         cancellationBehavior = LottieCancellationBehavior.OnIterationFinish,
     )
 
-    val alpha by remember(isFooter) {
+    val targetAlpha by remember(isFooter) {
         derivedStateOf {
             if ((!isFooter && state.indicatorOffset > 0f) || (isFooter && state.indicatorOffset < 0f)) {
                 1f
@@ -71,6 +73,8 @@ internal fun LottieRefreshIndicator(
             }
         }
     }
+
+    val alpha by animateFloatAsState(targetValue = targetAlpha, animationSpec = animationSpec)
 
     Box(
         modifier = Modifier
