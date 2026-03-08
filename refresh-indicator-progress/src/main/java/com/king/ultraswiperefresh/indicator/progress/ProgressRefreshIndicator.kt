@@ -13,7 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
@@ -40,7 +40,7 @@ internal fun ProgressRefreshIndicator(
     color: Color = Color(0xFF00CCFF),
     label: String = "Indicator"
 ) {
-    val progress by remember(isFooter) {
+    val progress by remember(isFooter, state) {
         derivedStateOf {
             when {
                 !isFooter && state.indicatorOffset > 0f -> {
@@ -60,23 +60,21 @@ internal fun ProgressRefreshIndicator(
         }
     }
 
-    val brush by remember(isFooter) {
-        derivedStateOf {
-            if (isFooter) {
-                Brush.verticalGradient(
-                    0f to color.copy(alpha = 0f),
-                    1f to color.copy(alpha = 0.5f)
-                )
-            } else {
-                Brush.verticalGradient(
-                    0f to color.copy(alpha = 0.5f),
-                    1f to color.copy(alpha = 0f)
-                )
-            }
+    val brush = remember(isFooter, color) {
+        if (isFooter) {
+            Brush.verticalGradient(
+                0f to color.copy(alpha = 0f),
+                1f to color.copy(alpha = 0.5f)
+            )
+        } else {
+            Brush.verticalGradient(
+                0f to color.copy(alpha = 0.5f),
+                1f to color.copy(alpha = 0f)
+            )
         }
     }
 
-    val isInProgress by remember(isFooter) {
+    val isInProgress by remember(isFooter, state) {
         derivedStateOf {
             if (isFooter) {
                 state.footerState == UltraSwipeFooterState.Loading && !state.isFinishing
@@ -97,14 +95,9 @@ internal fun ProgressRefreshIndicator(
                 .alpha(alpha)
                 .fillMaxWidth()
                 .height(height)
-                .drawWithCache {
-                    onDrawBehind {
-                        if (state.isSwipeInProgress) {
-                            drawRect(
-                                brush = brush,
-                                alpha = FastOutSlowInEasing.transform(progress)
-                            )
-                        }
+                .drawBehind {
+                    if (state.isSwipeInProgress) {
+                        drawRect(brush = brush, alpha = FastOutSlowInEasing.transform(progress))
                     }
                 },
             contentAlignment = if (isFooter) Alignment.BottomCenter else Alignment.TopCenter

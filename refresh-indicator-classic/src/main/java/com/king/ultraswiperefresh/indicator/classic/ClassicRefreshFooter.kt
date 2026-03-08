@@ -99,9 +99,7 @@ private fun obtainFooterTipContent(state: UltraSwipeRefreshState): String {
  */
 @Composable
 private fun obtainLastLoadTime(state: UltraSwipeRefreshState): String {
-    var lastLoadTime by remember("lastLoadTime") {
-        mutableLongStateOf(System.currentTimeMillis())
-    }
+    var lastLoadTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
     LaunchedEffect(state.footerState) {
         if (state.footerState == UltraSwipeFooterState.Loading) {
             lastLoadTime = System.currentTimeMillis()
@@ -114,5 +112,7 @@ private fun obtainLastLoadTime(state: UltraSwipeRefreshState): String {
             Locale.getDefault()
         )
     }
-    return "${context.getString(R.string.usr_last_load_time)}${dateFormat.format(lastLoadTime)}"
+    return remember(lastLoadTime) {
+        "${context.getString(R.string.usr_last_load_time)}${dateFormat.format(lastLoadTime)}"
+    }
 }

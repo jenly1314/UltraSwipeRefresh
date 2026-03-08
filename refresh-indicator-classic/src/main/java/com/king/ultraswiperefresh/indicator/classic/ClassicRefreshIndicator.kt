@@ -82,29 +82,16 @@ internal fun ClassicRefreshIndicator(
 
     val arrowDegrees = remember { Animatable(initialValue = 0f) }
 
-    if (isFooter) {
-        LaunchedEffect(state.footerState) {
-            when (state.footerState) {
-                UltraSwipeFooterState.ReleaseToLoad -> {
-                    arrowDegrees.animateTo(targetValue = 0f, animationSpec = animationSpec)
-                }
-
-                else -> arrowDegrees.animateTo(targetValue = 180f, animationSpec = animationSpec)
-            }
-        }
+    val arrowTargetDegrees = if (isFooter) {
+        if (state.footerState == UltraSwipeFooterState.ReleaseToLoad) 0f else 180f
     } else {
-        LaunchedEffect(state.headerState) {
-            when (state.headerState) {
-                UltraSwipeHeaderState.ReleaseToRefresh -> {
-                    arrowDegrees.animateTo(targetValue = 180f, animationSpec = animationSpec)
-                }
-
-                else -> arrowDegrees.animateTo(targetValue = 0f, animationSpec = animationSpec)
-            }
-        }
+        if (state.headerState == UltraSwipeHeaderState.ReleaseToRefresh) 180f else 0f
+    }
+    LaunchedEffect(arrowTargetDegrees) {
+        arrowDegrees.animateTo(targetValue = arrowTargetDegrees, animationSpec = animationSpec)
     }
 
-    val targetAlpha by remember(isFooter) {
+    val targetAlpha by remember(isFooter, state) {
         derivedStateOf {
             if ((!isFooter && state.indicatorOffset > 0f) || (isFooter && state.indicatorOffset < 0f)) {
                 1f
@@ -116,7 +103,7 @@ internal fun ClassicRefreshIndicator(
 
     val alpha by animateFloatAsState(targetValue = targetAlpha, animationSpec = animationSpec)
 
-    val isInProgress by remember(isFooter) {
+    val isInProgress by remember(isFooter, state) {
         derivedStateOf {
             if (isFooter) {
                 state.footerState == UltraSwipeFooterState.Loading && !state.isFinishing

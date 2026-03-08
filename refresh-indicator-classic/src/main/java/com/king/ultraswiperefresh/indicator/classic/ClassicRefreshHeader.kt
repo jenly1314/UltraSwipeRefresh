@@ -99,9 +99,7 @@ private fun obtainHeaderTipContent(state: UltraSwipeRefreshState): String {
  */
 @Composable
 private fun obtainLastRefreshTime(state: UltraSwipeRefreshState): String {
-    var lastRefreshTime by remember("lastRefreshTime") {
-        mutableLongStateOf(System.currentTimeMillis())
-    }
+    var lastRefreshTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
     LaunchedEffect(state.headerState) {
         if (state.headerState == UltraSwipeHeaderState.Refreshing) {
             lastRefreshTime = System.currentTimeMillis()
@@ -114,5 +112,7 @@ private fun obtainLastRefreshTime(state: UltraSwipeRefreshState): String {
             Locale.getDefault()
         )
     }
-    return "${context.getString(R.string.usr_last_refresh_time)}${dateFormat.format(lastRefreshTime)}"
+    return remember(lastRefreshTime) {
+        "${context.getString(R.string.usr_last_refresh_time)}${dateFormat.format(lastRefreshTime)}"
+    }
 }

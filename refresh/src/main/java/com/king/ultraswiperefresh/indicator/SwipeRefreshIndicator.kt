@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -134,24 +135,16 @@ internal fun SwipeRefreshIndicator(
             }
         }
     }
-    val sizes = if (largeIndication) largeSizes else defaultSizes
-    val indicatorHeight = with(LocalDensity.current) { sizes.size.roundToPx() }
+    val sizes = remember(largeIndication) { if (largeIndication) largeSizes else defaultSizes }
+    val indicatorHeight = with(LocalDensity.current) { remember(sizes) { sizes.size.roundToPx() } }
 
-    val slingshot = if (isFooter) {
-        rememberUpdatedSlingshot(
-            offsetY = -state.indicatorOffset,
-            maxOffsetY = -state.loadMoreTrigger,
-            height = indicatorHeight,
-        )
-    } else {
-        rememberUpdatedSlingshot(
-            offsetY = state.indicatorOffset,
-            maxOffsetY = state.refreshTrigger,
-            height = indicatorHeight,
-        )
-    }
+    val slingshot = rememberUpdatedSlingshot(
+        offsetY = if (isFooter) -state.indicatorOffset else state.indicatorOffset,
+        maxOffsetY = if (isFooter) -state.loadMoreTrigger else state.refreshTrigger,
+        height = indicatorHeight,
+    )
 
-    val targetAlpha by remember(isFooter) {
+    val targetAlpha by remember(isFooter, state) {
         derivedStateOf {
             if ((!isFooter && state.indicatorOffset > 0f) || (isFooter && state.indicatorOffset < 0f)) {
                 1f
@@ -203,11 +196,13 @@ internal fun SwipeRefreshIndicator(
             elevation = if (showElevation) elevation else 0.dp
         ) {
             val painter = remember { CircularProgressPainter() }
-            painter.arcRadius = sizes.arcRadius
-            painter.strokeWidth = sizes.strokeWidth
-            painter.arrowWidth = sizes.arrowWidth
-            painter.arrowHeight = sizes.arrowHeight
-            painter.color = contentColor
+            SideEffect {
+                painter.arcRadius = sizes.arcRadius
+                painter.strokeWidth = sizes.strokeWidth
+                painter.arrowWidth = sizes.arrowWidth
+                painter.arrowHeight = sizes.arrowHeight
+                painter.color = contentColor
+            }
             if (isFooter) {
                 painter.arrowEnabled =
                     arrowEnabled && state.footerState != UltraSwipeFooterState.Loading
@@ -233,14 +228,16 @@ internal fun SwipeRefreshIndicator(
             painter.rotation = slingshot.rotation
             painter.arrowScale = slingshot.arrowScale
 
+            val isRefreshing by remember(isFooter, state) {
+                derivedStateOf {
+                    if (isFooter) state.footerState == UltraSwipeFooterState.Loading
+                    else state.headerState == UltraSwipeHeaderState.Refreshing
+                }
+            }
             // This shows either an Image with CircularProgressPainter or a CircularProgressIndicator,
             // depending on refresh state
             Crossfade(
-                targetState = if (isFooter) {
-                    state.footerState == UltraSwipeFooterState.Loading
-                } else {
-                    state.headerState == UltraSwipeHeaderState.Refreshing
-                },
+                targetState = isRefreshing,
                 animationSpec = animationSpec,
                 label = label
             ) { refreshing ->
