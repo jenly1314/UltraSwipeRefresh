@@ -26,6 +26,8 @@ internal class UltraSwipeRefreshNestedScrollConnection(
     internal var refreshEnabled: Boolean = false
     internal var loadMoreEnabled: Boolean = false
     internal var alwaysScrollable: Boolean = false
+    internal var headerSecondaryEnabled: Boolean = false
+    internal var footerSecondaryEnabled: Boolean = false
 
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset = when {
         // 当下拉刷新和上拉加载都未启用时，则直接返回：Offset.Zero
@@ -88,6 +90,12 @@ internal class UltraSwipeRefreshNestedScrollConnection(
             return obtainAvailable(available)
         }
         when {
+            headerSecondaryEnabled && state.isExceededHeaderSecondaryTrigger() -> {
+                state.isHeaderSecondary = true
+            }
+            footerSecondaryEnabled && state.isExceededFooterSecondaryTrigger() -> {
+                state.isFooterSecondary = true
+            }
             refreshEnabled && state.isExceededRefreshTrigger() -> onRefresh()
             loadMoreEnabled && state.isExceededLoadMoreTrigger() -> onLoadMore()
             state.indicatorOffset != 0f -> state.animateOffsetTo(0f)

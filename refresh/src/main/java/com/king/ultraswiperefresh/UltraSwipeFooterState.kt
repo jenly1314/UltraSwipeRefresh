@@ -22,4 +22,14 @@ enum class UltraSwipeFooterState {
      * 加载中
      */
     Loading,
+
+    /**
+     * 释放进入二级
+     */
+    ReleaseToSecondary,
+
+    /**
+     * 处于二级状态
+     */
+    Secondary,
 }

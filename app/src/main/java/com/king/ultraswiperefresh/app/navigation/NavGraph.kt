@@ -10,6 +10,7 @@ import com.king.ultraswiperefresh.app.sample.CustomLottieRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.LottieRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.ProgressRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.PullRefreshSample
+import com.king.ultraswiperefresh.app.sample.SecondaryContentSample
 import com.king.ultraswiperefresh.app.sample.SwipeRefreshIndicatorSample
 import com.king.ultraswiperefresh.app.sample.SwipeRefreshSample
 import com.king.ultraswiperefresh.app.sample.UltraSwipeRefreshSample
@@ -46,6 +47,9 @@ fun NavGraphBuilder.noteNavGraph(navController: NavController) {
         }
         composable(route = NavRoute.CustomLottieRefreshIndicatorSample.name) {
             CustomLottieRefreshIndicatorSample()
+        }
+        composable(route = NavRoute.SecondaryContentSample.name) {
+            SecondaryContentSample()
         }
         composable(route = NavRoute.SwipeRefreshSample.name) {
             SwipeRefreshSample()

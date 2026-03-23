@@ -222,8 +222,12 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 ## 版本日志
 
+#### 待发布版本 [提前体验](test.md)
+- 新增：支持Header/Footer二级内容（增加一堆相关配置参数，正式发版时再细化）
+- 为新增的Header/Footer二级内容功能做一些适配与优化
+
 #### v1.4.2 ：2025-9-6
-* 优化显示细节（[#38](https://github.com/jenly1314/UltraSwipeRefresh/issues/38)）
+- 优化显示细节（[#38](https://github.com/jenly1314/UltraSwipeRefresh/issues/38)）
 
 #### [查看更多版本日志](CHANGELOG.md)
 

@@ -5,9 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.TopAppBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,7 +55,7 @@ private fun MainScreen() {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = NavRoute.Root.name
+                    startDestination = NavRoute.Root.name,
                 ) {
                     noteNavGraph(navController)
                 }

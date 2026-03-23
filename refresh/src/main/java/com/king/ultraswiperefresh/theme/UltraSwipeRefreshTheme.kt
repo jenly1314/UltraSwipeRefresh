@@ -10,6 +10,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.king.ultraswiperefresh.NestedScrollMode
+import com.king.ultraswiperefresh.SecondaryBehavior
+import com.king.ultraswiperefresh.UltraSwipeFooterState
+import com.king.ultraswiperefresh.UltraSwipeHeaderState
 import com.king.ultraswiperefresh.UltraSwipeRefresh
 import com.king.ultraswiperefresh.UltraSwipeRefreshState
 import com.king.ultraswiperefresh.indicator.SwipeRefreshFooter
@@ -41,11 +44,19 @@ object UltraSwipeRefreshTheme {
  * @param loadMoreEnabled 是否启用上拉加载
  * @param refreshTriggerRate 触发滑动刷新的最小滑动比例；比例基于[headerIndicator]的高度；默认为：1
  * @param loadMoreTriggerRate 触发滑动加载更多最小滑动比例；比例基于[footerIndicator]的高度；默认为：1
- * @param headerMaxOffsetRate 向下滑动时[headerIndicator]可滑动的最大偏移比例；比例基于[headerIndicator]的高度；默认为：2
- * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：2
+ * @param headerSecondaryEnabled 是否启用Header二级功能
+ * @param footerSecondaryEnabled 是否启用Footer二级功能
+ * @param headerSecondaryBehavior Header二级内容的行为交互模式；具体更详细的说明可查看[SecondaryBehavior]
+ * @param footerSecondaryBehavior Footer二级内容的行为交互模式；具体更详细的说明可查看[SecondaryBehavior]
+ * @param headerSecondaryPreview 在 [UltraSwipeHeaderState.ReleaseToSecondary] 状态下是否可提前预览Header的二级内容
+ * @param footerSecondaryPreview 在 [UltraSwipeFooterState.ReleaseToSecondary] 状态下是否可提前预览Footer的二级内容
+ * @param headerSecondaryTriggerRate 触发Header二级的最小滑动比例；比例基于[headerIndicator]的高度；默认为：2
+ * @param footerSecondaryTriggerRate 触发Footer二级的最小滑动比例；比例基于[footerIndicator]的高度；默认为：2
+ * @param headerMaxOffsetRate 向下滑动时[headerIndicator]可滑动的最大偏移比例；比例基于[headerIndicator]的高度；默认为：3
+ * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：3
  * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
  * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
- * @param vibrationEnabled 是否启用振动，如果启用则当滑动偏移量满足触发刷新或触发加载更多时，会有振动效果；默认为：false
+ * @param vibrationEnabled 是否启用振动反馈。启用后，滑动偏移量达到阈值时将触发振动效果；默认为：false
  * @param vibrationMillis 触发刷新或触发加载更多时的振动时长（毫秒）默认：25毫秒
  * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
  * @param headerIndicator 下拉刷新时顶部显示的Header指示器
@@ -59,8 +70,16 @@ data class UltraSwipeRefreshConfig(
     val loadMoreEnabled: Boolean = true,
     @param:FloatRange(from = 0.0, fromInclusive = false) val refreshTriggerRate: Float = 1f,
     @param:FloatRange(from = 0.0, fromInclusive = false) val loadMoreTriggerRate: Float = 1f,
-    @param:FloatRange(from = 1.0) val headerMaxOffsetRate: Float = 2f,
-    @param:FloatRange(from = 1.0) val footerMaxOffsetRate: Float = 2f,
+    val headerSecondaryEnabled: Boolean = false,
+    val footerSecondaryEnabled: Boolean = false,
+    val headerSecondaryBehavior: SecondaryBehavior = SecondaryBehavior.Slide,
+    val footerSecondaryBehavior: SecondaryBehavior = SecondaryBehavior.Slide,
+    val headerSecondaryPreview: Boolean = false,
+    val footerSecondaryPreview: Boolean = false,
+    @param:FloatRange(from = 1.0, fromInclusive = false) val headerSecondaryTriggerRate: Float = 2f,
+    @param:FloatRange(from = 1.0, fromInclusive = false) val footerSecondaryTriggerRate: Float = 2f,
+    @param:FloatRange(from = 1.0) val headerMaxOffsetRate: Float = 3f,
+    @param:FloatRange(from = 1.0) val footerMaxOffsetRate: Float = 3f,
     @param:FloatRange(from = 0.0, to = 2.0, fromInclusive = false) val dragMultiplier: Float = 0.5f,
     @param:IntRange(from = 0, to = 2000) val finishDelayMillis: Long = 500,
     val vibrationEnabled: Boolean = false,

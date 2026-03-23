@@ -74,7 +74,7 @@ internal fun ClassicRefreshIndicator(
     paddingValues: PaddingValues = PaddingValues(12.dp),
     arrowIconPainter: Painter = painterResource(id = R.drawable.usr_classic_arrow),
     loadingIconPainter: Painter = painterResource(id = R.drawable.usr_classic_spinner),
-    tipMinWidth: Dp = 96.dp,
+    tipMinWidth: Dp = 100.dp,
     iconSize: Dp = 24.dp,
     iconColorFilter: ColorFilter? = null,
     label: String = "Indicator"

@@ -95,7 +95,7 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
     /**
      * 触发加载更多的最小距离
      */
-    var loadMoreTrigger: Float by mutableFloatStateOf(Float.MIN_VALUE)
+    var loadMoreTrigger: Float by mutableFloatStateOf(Float.NEGATIVE_INFINITY)
         internal set
 
     /**
@@ -109,6 +109,38 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
      */
     var footerMinOffset by mutableFloatStateOf(0f)
         internal set
+
+    /**
+     * 触发Header二级的最小距离
+     */
+    var headerSecondaryTrigger: Float by mutableFloatStateOf(Float.MAX_VALUE)
+        internal set
+
+    /**
+     * 触发Footer二级的最小距离
+     */
+    var footerSecondaryTrigger: Float by mutableFloatStateOf(Float.NEGATIVE_INFINITY)
+        internal set
+
+    /**
+     * 是否正在Header二级状态
+     */
+    var isHeaderSecondary by mutableStateOf(false)
+        internal set
+
+    /**
+     * 是否正在Footer二级状态
+     */
+    var isFooterSecondary by mutableStateOf(false)
+        internal set
+
+    /**
+     * 关闭二级内容（Header或Footer）
+     */
+    fun closeSecondary() {
+        isHeaderSecondary = false
+        isFooterSecondary = false
+    }
 
     /**
      * 指示器偏移量
@@ -133,6 +165,28 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
                 updateFooterState()
             }
             _indicatorOffset.animateTo(offset)
+
+            if (isFinishing && indicatorOffset == 0f) {
+                isFinishing = false
+                updateHeaderState()
+                updateFooterState()
+            }
+        }
+    }
+
+    /**
+     * 更新指示器的偏移量
+     */
+    internal suspend fun snapTo(
+        offset: Float,
+        priority: MutatePriority = MutatePriority.Default
+    ) {
+        mutatorMutex.mutate(priority) {
+            if (!isFinishing) {
+                updateHeaderState()
+                updateFooterState()
+            }
+            _indicatorOffset.snapTo(offset)
 
             if (isFinishing && indicatorOffset == 0f) {
                 isFinishing = false
@@ -175,11 +229,23 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
     internal fun isExceededLoadMoreTrigger() = indicatorOffset <= loadMoreTrigger
 
     /**
+     * 是否达到触发Header二级的条件
+     */
+    internal fun isExceededHeaderSecondaryTrigger() = indicatorOffset >= headerSecondaryTrigger
+
+    /**
+     * 是否达到触发Footer二级的条件
+     */
+    internal fun isExceededFooterSecondaryTrigger() = indicatorOffset <= footerSecondaryTrigger
+
+    /**
      * 更新Header状态
      */
-    private fun updateHeaderState() {
+    internal fun updateHeaderState() {
         headerState = when {
+            isHeaderSecondary -> UltraSwipeHeaderState.Secondary
             isRefreshing -> UltraSwipeHeaderState.Refreshing
+            isSwipeInProgress && isExceededHeaderSecondaryTrigger() -> UltraSwipeHeaderState.ReleaseToSecondary
             isSwipeInProgress && isExceededRefreshTrigger() -> UltraSwipeHeaderState.ReleaseToRefresh
             else -> UltraSwipeHeaderState.PullDownToRefresh
         }
@@ -188,9 +254,11 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
     /**
      * 更新Footer状态
      */
-    private fun updateFooterState() {
+    internal fun updateFooterState() {
         footerState = when {
+            isFooterSecondary -> UltraSwipeFooterState.Secondary
             isLoading -> UltraSwipeFooterState.Loading
+            isSwipeInProgress && isExceededFooterSecondaryTrigger() -> UltraSwipeFooterState.ReleaseToSecondary
             isSwipeInProgress && isExceededLoadMoreTrigger() -> UltraSwipeFooterState.ReleaseToLoad
             else -> UltraSwipeFooterState.PullUpToLoad
         }

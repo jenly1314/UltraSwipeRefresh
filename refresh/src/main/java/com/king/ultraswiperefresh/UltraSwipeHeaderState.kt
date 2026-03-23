@@ -22,4 +22,14 @@ enum class UltraSwipeHeaderState {
      * 刷新中
      */
     Refreshing,
+
+    /**
+     * 释放进入二级
+     */
+    ReleaseToSecondary,
+
+    /**
+     * 处于二级状态
+     */
+    Secondary,
 }

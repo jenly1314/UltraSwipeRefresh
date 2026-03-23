@@ -52,7 +52,7 @@ fun ClassicRefreshFooter(
     paddingValues: PaddingValues = PaddingValues(12.dp),
     arrowIconPainter: Painter = painterResource(id = R.drawable.usr_classic_arrow),
     loadingIconPainter: Painter = painterResource(id = R.drawable.usr_classic_spinner),
-    tipMinWidth: Dp = 96.dp,
+    tipMinWidth: Dp = 100.dp,
     iconSize: Dp = 24.dp,
     iconColorFilter: ColorFilter? = null,
 ) {
@@ -90,6 +90,8 @@ private fun obtainFooterTipContent(state: UltraSwipeRefreshState): String {
                 R.string.usr_loading
             }
         }
+        UltraSwipeFooterState.ReleaseToSecondary -> R.string.usr_release_to_secondary_footer
+        UltraSwipeFooterState.Secondary -> R.string.usr_secondary_footer
     }
     return stringResource(id = textRes)
 }
