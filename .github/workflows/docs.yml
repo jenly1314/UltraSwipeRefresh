@@ -1,8 +1,10 @@
 name: Docs
 
 on:
-  push:
-    branches: [ master ]
+  release:
+    types: [ published ]
+  workflow_dispatch:
+  workflow_call:
 
 jobs:
   docs:
