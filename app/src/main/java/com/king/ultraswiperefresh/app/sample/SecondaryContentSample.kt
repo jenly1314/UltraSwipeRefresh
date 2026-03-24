@@ -67,7 +67,7 @@ fun SecondaryContentSample() {
     }
 
     var secondaryPreview by remember {
-        mutableStateOf(false)
+        mutableStateOf(true)
     }
 
     LaunchedEffect(state.isFinishing) {

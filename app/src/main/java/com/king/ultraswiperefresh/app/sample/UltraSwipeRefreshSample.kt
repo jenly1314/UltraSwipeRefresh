@@ -128,7 +128,7 @@ fun UltraSwipeRefreshSample(navController: NavController) {
 
             item {
                 ColumnItem(
-                    title = "UltraSwipeRefresh：一个可带来极致体验的Compose刷新组件；支持下拉刷新和上拉加载，可完美替代官方的SwipeRefresh；并且支持的功能更多，可扩展性更强。",
+                    title = "UltraSwipeRefresh：一个可带来极致体验的Compose刷新组件；支持下拉刷新和上拉加载，可完美替代官方的SwipeRefresh；功能更丰富，扩展性更强。",
                     content = "[headerIndicator] 和 [footerIndicator]可随意定制，并且[Header]和[Footer]样式与滑动模式可随意组合。"
                 ) {
                     val vibrateEnabled = !UltraSwipeRefreshTheme.config.vibrationEnabled

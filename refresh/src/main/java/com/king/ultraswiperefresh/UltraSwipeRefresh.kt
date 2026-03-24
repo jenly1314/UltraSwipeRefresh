@@ -37,40 +37,41 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * UltraSwipeRefresh：一个可带来极致体验的Compose刷新组件；支持下拉刷新和上拉加载，可完美替代官方的SwipeRefresh；并且支持的功能更多，可扩展性更强。
+ * UltraSwipeRefresh：一个可带来极致体验的 Compose 刷新组件，支持下拉刷新和上拉加载，
+ * 可完美替代官方的 SwipeRefresh，功能更丰富，扩展性更强。
  *
- * @param state 状态：主要用于控制和观察[UltraSwipeRefresh]；比如：控制下拉刷新和上拉加载和观察其状态。
- * @param onRefresh 在完成滑动刷新手势时触发调用
- * @param onLoadMore 在完成滑动加载手势时触发调用
- * @param modifier 修饰符：用于装饰或添加Compose UI元素的行为。具体更详细的说明可查看[Modifier]
- * @param headerScrollMode 在进行滑动刷新时Header的滑动模式；具体更详细的样式说明可查看[NestedScrollMode]
- * @param footerScrollMode 在进行滑动加载更多时Footer的滑动模式；具体更详细的样式说明可查看[NestedScrollMode]
+ * @param state 状态对象，用于控制和观察 [UltraSwipeRefresh] 的状态，如下拉刷新和上拉加载的触发与控制
+ * @param onRefresh 下拉刷新手势触发完成时的回调
+ * @param onLoadMore 上拉加载手势触发完成时的回调
+ * @param modifier 修饰符，用于装饰或扩展 Compose UI 元素的行为；详细说明见 [Modifier]
+ * @param headerScrollMode 下拉刷新时 Header 的滑动模式；详细说明见 [NestedScrollMode]
+ * @param footerScrollMode 上拉加载时 Footer 的滑动模式；详细说明见 [NestedScrollMode]
  * @param refreshEnabled 是否启用下拉刷新
  * @param loadMoreEnabled 是否启用上拉加载
- * @param refreshTriggerRate 触发滑动刷新的最小滑动比例；比例基于[headerIndicator]的高度；默认为：1
- * @param loadMoreTriggerRate 触发滑动加载更多最小滑动比例；比例基于[footerIndicator]的高度；默认为：1
- * @param headerSecondaryEnabled 是否启用Header二级功能
- * @param footerSecondaryEnabled 是否启用Footer二级功能
- * @param headerSecondaryBehavior Header二级内容的行为交互模式；具体更详细的说明可查看[SecondaryBehavior]
- * @param footerSecondaryBehavior Footer二级内容的行为交互模式；具体更详细的说明可查看[SecondaryBehavior]
- * @param headerSecondaryPreview 在 [UltraSwipeHeaderState.ReleaseToSecondary] 状态下是否可提前预览Header的二级内容
- * @param footerSecondaryPreview 在 [UltraSwipeFooterState.ReleaseToSecondary] 状态下是否可提前预览Footer的二级内容
- * @param headerSecondaryTriggerRate 触发Header二级的最小滑动比例；比例基于[headerIndicator]的高度；默认为：2
- * @param footerSecondaryTriggerRate 触发Footer二级的最小滑动比例；比例基于[footerIndicator]的高度；默认为：2
- * @param headerMaxOffsetRate 向下滑动时[headerIndicator]可滑动的最大偏移比例；比例基于[headerIndicator]的高度；默认为：3
- * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：3
- * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
- * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
- * @param vibrationEnabled 是否启用振动反馈。启用后，滑动偏移量达到阈值时将触发振动效果；默认为：false
- * @param vibrationMillis 触发刷新或触发加载更多时的振动时长（毫秒）默认：25毫秒
- * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
- * @param onCollapseScroll 可选回调，当Header/Footer收起时需要同步调整列表位置以消除视觉回弹时使用
- * @param headerIndicator 下拉刷新时顶部显示的Header指示器
- * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
- * @param headerSecondaryContent Header二级内容；可选
- * @param footerSecondaryContent Footer二级内容；可选
- * @param contentContainer [content]的父容器，便于统一管理
- * @param content 可进行刷新或加载更多所包含的内容
+ * @param refreshTriggerRate 触发下拉刷新的最小滑动比例，基于 [headerIndicator] 的高度；默认值：1
+ * @param loadMoreTriggerRate 触发上拉加载的最小滑动比例，基于 [footerIndicator] 的高度；默认值：1
+ * @param headerSecondaryEnabled 是否启用 Header 二级内容功能
+ * @param footerSecondaryEnabled 是否启用 Footer 二级内容功能
+ * @param headerSecondaryBehavior Header 二级内容交互行为模式；详细说明见 [SecondaryBehavior]
+ * @param footerSecondaryBehavior Footer 二级内容交互行为模式；详细说明见 [SecondaryBehavior]
+ * @param headerSecondaryPreview 在 [UltraSwipeHeaderState.ReleaseToSecondary] 状态下是否可提前预览 Header 二级内容
+ * @param footerSecondaryPreview 在 [UltraSwipeFooterState.ReleaseToSecondary] 状态下是否可提前预览 Footer 二级内容
+ * @param headerSecondaryTriggerRate 触发 Header 二级内容的最小滑动比例，基于 [headerIndicator] 的高度；默认值：2
+ * @param footerSecondaryTriggerRate 触发 Footer 二级内容的最小滑动比例，基于 [footerIndicator] 的高度；默认值：2
+ * @param headerMaxOffsetRate 下拉时 [headerIndicator] 的最大滑动偏移比例，基于其自身高度；默认值：3
+ * @param footerMaxOffsetRate 上拉时 [footerIndicator] 的最大滑动偏移比例，基于其自身高度；默认值：3
+ * @param dragMultiplier 滑动时的阻力系数，值越小阻力越大；默认值：0.5
+ * @param finishDelayMillis 完成状态的停留时长（毫秒），便于展示提示内容；默认值：500
+ * @param vibrationEnabled 是否启用振动反馈。启用后，滑动偏移量达到阈值时将触发振动；默认值：false
+ * @param vibrationMillis 触发刷新或加载时的振动时长（毫秒）；默认值：25
+ * @param alwaysScrollable 是否始终允许滚动。设为 true 时，不受刷新/加载状态限制，始终可滚动；默认值：false
+ * @param onCollapseScroll 可选回调，当 Header/Footer 收起时用于同步调整列表位置，消除视觉回弹
+ * @param headerIndicator 下拉刷新时顶部显示的 Header 指示器
+ * @param footerIndicator 上拉加载时底部显示的 Footer 指示器
+ * @param headerSecondaryContent Header 二级内容（可选）
+ * @param footerSecondaryContent Footer 二级内容（可选）
+ * @param contentContainer [content] 的父容器，便于统一管理
+ * @param content 可进行刷新或加载所包含的内容区域
  *
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  * <p>
@@ -299,41 +300,46 @@ fun UltraSwipeRefresh(
 }
 
 /**
- * UltraSwipeRefresh：一个可带来极致体验的Compose刷新组件；支持下拉刷新和上拉加载，可完美替代官方的SwipeRefresh；并且支持的功能更多，可扩展性更强。
+ * UltraSwipeRefresh：一个可带来极致体验的 Compose 刷新组件，支持下拉刷新和上拉加载，
+ * 可完美替代官方的 SwipeRefresh，功能更丰富，扩展性更强。
  *
  * @param isRefreshing 是否正在刷新
  * @param isLoading 是否正在加载
- * @param onRefresh 在完成滑动刷新手势时触发调用
- * @param onLoadMore 在完成滑动加载手势时触发调用
- * @param modifier 修饰符：用于装饰或添加Compose UI元素的行为。具体更详细的说明可查看[Modifier]
- * @param headerScrollMode 在进行滑动刷新时Header的滑动模式；具体更详细的样式说明可查看[NestedScrollMode]
- * @param footerScrollMode 在进行滑动加载更多时Footer的滑动模式；具体更详细的样式说明可查看[NestedScrollMode]
+ * @param onRefresh 下拉刷新手势触发完成时的回调
+ * @param onLoadMore 上拉加载手势触发完成时的回调
+ * @param modifier 修饰符，用于装饰或扩展 Compose UI 元素的行为；详细说明见 [Modifier]
+ * @param headerScrollMode 下拉刷新时 Header 的滑动模式；详细说明见 [NestedScrollMode]
+ * @param footerScrollMode 上拉加载时 Footer 的滑动模式；详细说明见 [NestedScrollMode]
  * @param refreshEnabled 是否启用下拉刷新
  * @param loadMoreEnabled 是否启用上拉加载
- * @param refreshTriggerRate 触发滑动刷新的最小滑动比例；比例基于[headerIndicator]的高度；默认为：1
- * @param loadMoreTriggerRate 触发滑动加载更多最小滑动比例；比例基于[footerIndicator]的高度；默认为：1
- * @param headerSecondaryEnabled 是否启用Header二级功能
- * @param footerSecondaryEnabled 是否启用Footer二级功能
- * @param headerSecondaryBehavior Header二级内容的行为交互模式；具体更详细的说明可查看[SecondaryBehavior]
- * @param footerSecondaryBehavior Footer二级内容的行为交互模式；具体更详细的说明可查看[SecondaryBehavior]
- * @param headerSecondaryPreview 在 [UltraSwipeHeaderState.ReleaseToSecondary] 状态下是否可提前预览Header的二级内容
- * @param footerSecondaryPreview 在 [UltraSwipeFooterState.ReleaseToSecondary] 状态下是否可提前预览Footer的二级内容
- * @param headerSecondaryTriggerRate 触发Header二级的最小滑动比例；比例基于[headerIndicator]的高度；默认为：2
- * @param footerSecondaryTriggerRate 触发Footer二级的最小滑动比例；比例基于[footerIndicator]的高度；默认为：2
- * @param headerMaxOffsetRate 向下滑动时[headerIndicator]可滑动的最大偏移比例；比例基于[headerIndicator]的高度；默认为：3
- * @param footerMaxOffsetRate 向上滑动时[footerIndicator]可滑动的最大偏移比例；比例基于[footerIndicator]的高度；默认为：3
- * @param dragMultiplier 触发下拉刷新或上拉加载时的阻力系数；值越小，阻力越大；默认为：0.5
- * @param finishDelayMillis 完成时延时时间；让完成时的中间状态[UltraSwipeRefreshState.isFinishing]停留一会儿，定格的展示提示内容；默认：500毫秒
- * @param vibrationEnabled 是否启用振动反馈。启用后，滑动偏移量达到阈值时将触发振动效果；默认为：false
- * @param vibrationMillis 触发刷新或触发加载更多时的振动时长（毫秒）默认：25毫秒
- * @param alwaysScrollable 是否始终可以滚动；当为true时，则会忽略刷新中或加载中的状态限制，始终可以进行滚动；默认为：false
- * @param onCollapseScroll 可选回调，当Header/Footer收起时需要同步调整列表位置以消除视觉回弹时使用
- * @param headerIndicator 下拉刷新时顶部显示的Header指示器
- * @param footerIndicator 上拉加载更多时底部显示的Footer指示器
- * @param headerSecondaryContent Header二级内容；可选
- * @param footerSecondaryContent Footer二级内容；可选
- * @param contentContainer [content]的父容器，便于统一管理
- * @param content 可进行刷新或加载更多所包含的内容
+ * @param refreshTriggerRate 触发下拉刷新的最小滑动比例，基于 [headerIndicator] 的高度；默认值：1
+ * @param loadMoreTriggerRate 触发上拉加载的最小滑动比例，基于 [footerIndicator] 的高度；默认值：1
+ * @param headerSecondaryEnabled 是否启用 Header 二级内容功能
+ * @param footerSecondaryEnabled 是否启用 Footer 二级内容功能
+ * @param headerSecondaryBehavior Header 二级内容交互行为模式；详细说明见 [SecondaryBehavior]
+ * @param footerSecondaryBehavior Footer 二级内容交互行为模式；详细说明见 [SecondaryBehavior]
+ * @param headerSecondaryPreview 在 [UltraSwipeHeaderState.ReleaseToSecondary] 状态下是否可提前预览 Header 二级内容
+ * @param footerSecondaryPreview 在 [UltraSwipeFooterState.ReleaseToSecondary] 状态下是否可提前预览 Footer 二级内容
+ * @param headerSecondaryTriggerRate 触发 Header 二级内容的最小滑动比例，基于 [headerIndicator] 的高度；默认值：2
+ * @param footerSecondaryTriggerRate 触发 Footer 二级内容的最小滑动比例，基于 [footerIndicator] 的高度；默认值：2
+ * @param headerMaxOffsetRate 下拉时 [headerIndicator] 的最大滑动偏移比例，基于其自身高度；默认值：3
+ * @param footerMaxOffsetRate 上拉时 [footerIndicator] 的最大滑动偏移比例，基于其自身高度；默认值：3
+ * @param dragMultiplier 滑动时的阻力系数，值越小阻力越大；默认值：0.5
+ * @param finishDelayMillis 完成状态的停留时长（毫秒），便于展示提示内容；默认值：500
+ * @param vibrationEnabled 是否启用振动反馈。启用后，滑动偏移量达到阈值时将触发振动；默认值：false
+ * @param vibrationMillis 触发刷新或加载时的振动时长（毫秒）；默认值：25
+ * @param alwaysScrollable 是否始终允许滚动。设为 true 时，不受刷新/加载状态限制，始终可滚动；默认值：false
+ * @param onCollapseScroll 可选回调，当 Header/Footer 收起时用于同步调整列表位置，消除视觉回弹
+ * @param headerIndicator 下拉刷新时顶部显示的 Header 指示器
+ * @param footerIndicator 上拉加载时底部显示的 Footer 指示器
+ * @param headerSecondaryContent Header 二级内容（可选）
+ * @param footerSecondaryContent Footer 二级内容（可选）
+ * @param contentContainer [content] 的父容器，便于统一管理
+ * @param content 可进行刷新或加载所包含的内容区域
+ *
+ * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
+ * <p>
+ * <a href="https://github.com/jenly1314">Follow me</a>
  */
 @Composable
 fun UltraSwipeRefresh(
