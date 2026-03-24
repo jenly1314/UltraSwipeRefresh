@@ -161,16 +161,20 @@ fun UltraSwipeRefresh(
 
                 // 二级触发阈值
                 if (headerSecondaryEnabled) {
-                    state.headerSecondaryTrigger = headerHeight.times(headerSecondaryTriggerRate).coerceAtLeast(1f)
+                    state.headerSecondaryTrigger =
+                        headerHeight.times(headerSecondaryTriggerRate).coerceAtLeast(1f)
                     // 确保 headerMaxOffset 能超过二级触发点
-                    state.headerMaxOffset = maxOf(state.headerMaxOffset, state.headerSecondaryTrigger)
+                    state.headerMaxOffset =
+                        maxOf(state.headerMaxOffset, state.headerSecondaryTrigger)
                 } else {
                     state.headerSecondaryTrigger = Float.MAX_VALUE
                 }
                 if (footerSecondaryEnabled) {
-                    state.footerSecondaryTrigger = -(footerHeight.times(footerSecondaryTriggerRate).coerceAtLeast(1f))
+                    state.footerSecondaryTrigger =
+                        -(footerHeight.times(footerSecondaryTriggerRate).coerceAtLeast(1f))
                     // 确保 footerMinOffset 能超过二级触发点
-                    state.footerMinOffset = minOf(state.footerMinOffset, state.footerSecondaryTrigger)
+                    state.footerMinOffset =
+                        minOf(state.footerMinOffset, state.footerSecondaryTrigger)
                 } else {
                     state.footerSecondaryTrigger = Float.NEGATIVE_INFINITY
                 }
@@ -459,7 +463,7 @@ private fun HeaderSecondaryContent(
                     else -> Unit
                 }
             }
-            .zIndex(if (headerSecondaryBehavior == SecondaryBehavior.Behind) 0f else 1f)
+            .zIndex(if (state.headerState == UltraSwipeHeaderState.Secondary) 1f else 0f)
     ) {
         headerTransaction.AnimatedVisibility(
             visible = { it },
@@ -517,7 +521,7 @@ private fun FooterSecondaryContent(
                     else -> Unit
                 }
             }
-            .zIndex(if (footerSecondaryBehavior == SecondaryBehavior.Behind) 0f else 1f)
+            .zIndex(if (state.footerState == UltraSwipeFooterState.Secondary) 1f else 0f)
     ) {
         footerTransaction.AnimatedVisibility(
             visible = { it },
@@ -583,8 +587,8 @@ private fun obtainFooterOffset(
 /**
  * 获取Header或Footer的层级
  */
-private fun obtainZIndex(style: NestedScrollMode): Float {
-    return when (style) {
+private fun obtainZIndex(nestedScrollMode: NestedScrollMode): Float {
+    return when (nestedScrollMode) {
         NestedScrollMode.FixedContent, NestedScrollMode.FixedFront -> 1f
         NestedScrollMode.Translate, NestedScrollMode.FixedBehind -> 0f
     }
@@ -638,19 +642,14 @@ private fun VibrationLaunchedEffect(
 ) {
     val vibrator = rememberVibrator()
 
-    val shouldVibrate by remember(state) {
-        derivedStateOf {
-            vibrationEnabled && (
-                state.headerState == UltraSwipeHeaderState.ReleaseToRefresh ||
-                state.footerState == UltraSwipeFooterState.ReleaseToLoad ||
-                state.headerState == UltraSwipeHeaderState.ReleaseToSecondary ||
-                state.footerState == UltraSwipeFooterState.ReleaseToSecondary
-            )
-        }
-    }
+    if (!vibrationEnabled || !vibrator.hasVibrator()) return
 
-    LaunchedEffect(shouldVibrate) {
-        if (shouldVibrate && vibrator.hasVibrator()) {
+    LaunchedEffect(state.headerState, state.footerState) {
+        if (state.headerState == UltraSwipeHeaderState.ReleaseToRefresh ||
+            state.footerState == UltraSwipeFooterState.ReleaseToLoad ||
+            state.headerState == UltraSwipeHeaderState.ReleaseToSecondary ||
+            state.footerState == UltraSwipeFooterState.ReleaseToSecondary
+        ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(
                     VibrationEffect.createOneShot(
