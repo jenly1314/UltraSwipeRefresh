@@ -20,17 +20,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.zIndex
 import com.king.ultraswiperefresh.theme.UltraSwipeRefreshTheme
 import kotlinx.coroutines.delay
@@ -222,15 +226,19 @@ fun UltraSwipeRefresh(
             val headerZIndex = remember(headerScrollMode) { obtainZIndex(headerScrollMode) }
             val footerZIndex = remember(footerScrollMode) { obtainZIndex(footerScrollMode) }
 
+            var boxSize by remember { mutableStateOf(IntSize.Zero) }
+
             Box(
                 modifier = Modifier
                     .nestedScroll(nestedScrollConnection)
                     .clipToBounds()
+                    .onSizeChanged { boxSize = it }
             ) {
 
                 // Header 二级内容
                 HeaderSecondaryContent(
                     state = state,
+                    size = boxSize,
                     headerSecondaryEnabled = headerSecondaryEnabled,
                     headerSecondaryBehavior = headerSecondaryBehavior,
                     headerSecondaryPreview = headerSecondaryPreview,
@@ -240,6 +248,7 @@ fun UltraSwipeRefresh(
                 // Footer 二级内容
                 FooterSecondaryContent(
                     state = state,
+                    size = boxSize,
                     footerSecondaryEnabled = footerSecondaryEnabled,
                     footerSecondaryBehavior = footerSecondaryBehavior,
                     footerSecondaryPreview = footerSecondaryPreview,
@@ -426,6 +435,7 @@ fun UltraSwipeRefresh(
 @Composable
 private fun HeaderSecondaryContent(
     state: UltraSwipeRefreshState,
+    size: IntSize,
     headerSecondaryEnabled: Boolean,
     headerSecondaryBehavior: SecondaryBehavior,
     headerSecondaryPreview: Boolean,
@@ -449,30 +459,27 @@ private fun HeaderSecondaryContent(
         }
     }
 
-    val headerTransaction = updateTransition(showHeaderSecondary)
-    val headerVisibilityProgress by headerTransaction.animateFloat { if (it) 1f else 0f }
+    val headerTransaction = updateTransition(state.headerState == UltraSwipeHeaderState.Secondary)
+    val headerOffset by headerTransaction.animateFloat { if (it) 0f else -size.height.toFloat() }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .graphicsLayer {
-                when (headerSecondaryBehavior) {
-                    SecondaryBehavior.Slide -> {
-                        translationY =
-                            if (state.headerState == UltraSwipeHeaderState.Secondary) {
-                                -size.height * (1f - headerVisibilityProgress)
-                            } else {
-                                -size.height + state.indicatorOffset
-                            }
+                translationY = if (headerSecondaryBehavior == SecondaryBehavior.Slide) {
+                    if (state.headerState == UltraSwipeHeaderState.ReleaseToSecondary) {
+                        -size.height + state.indicatorOffset
+                    } else {
+                        headerOffset
                     }
-
-                    else -> Unit
+                } else {
+                    0f
                 }
             }
             .zIndex(if (state.headerState == UltraSwipeHeaderState.Secondary) 1f else 0f)
     ) {
-        headerTransaction.AnimatedVisibility(
-            visible = { it },
+        AnimatedVisibility(
+            visible = showHeaderSecondary,
             enter = fadeIn(),
             exit = fadeOut()
         ) {
@@ -484,6 +491,7 @@ private fun HeaderSecondaryContent(
 @Composable
 private fun FooterSecondaryContent(
     state: UltraSwipeRefreshState,
+    size: IntSize,
     footerSecondaryEnabled: Boolean,
     footerSecondaryBehavior: SecondaryBehavior,
     footerSecondaryPreview: Boolean,
@@ -507,30 +515,27 @@ private fun FooterSecondaryContent(
         }
     }
 
-    val footerTransaction = updateTransition(showFooterSecondary)
-    val footerVisibilityProgress by footerTransaction.animateFloat { if (it) 1f else 0f }
+    val footerTransaction = updateTransition(state.footerState == UltraSwipeFooterState.Secondary)
+    val footerOffset by footerTransaction.animateFloat { if (it) 0f else size.height + state.indicatorOffset }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .graphicsLayer {
-                when (footerSecondaryBehavior) {
-                    SecondaryBehavior.Slide -> {
-                        translationY =
-                            if (state.footerState == UltraSwipeFooterState.Secondary) {
-                                size.height * (1f - footerVisibilityProgress)
-                            } else {
-                                size.height + state.indicatorOffset
-                            }
+                translationY = if (footerSecondaryBehavior == SecondaryBehavior.Slide) {
+                    if (state.footerState == UltraSwipeFooterState.ReleaseToSecondary) {
+                        size.height + state.indicatorOffset
+                    } else {
+                        footerOffset
                     }
-
-                    else -> Unit
+                } else {
+                    0f
                 }
             }
             .zIndex(if (state.footerState == UltraSwipeFooterState.Secondary) 1f else 0f)
     ) {
-        footerTransaction.AnimatedVisibility(
-            visible = { it },
+        AnimatedVisibility(
+            visible = showFooterSecondary,
             enter = fadeIn(),
             exit = fadeOut()
         ) {
