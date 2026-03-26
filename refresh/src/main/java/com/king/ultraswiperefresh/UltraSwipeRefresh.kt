@@ -230,15 +230,14 @@ fun UltraSwipeRefresh(
 
             Box(
                 modifier = Modifier
-                    .nestedScroll(nestedScrollConnection)
-                    .clipToBounds()
+                    .fillMaxSize()
                     .onSizeChanged { boxSize = it }
+                    .clipToBounds()
             ) {
-
                 // Header 二级内容
                 HeaderSecondaryContent(
                     state = state,
-                    size = boxSize,
+                    boxSize = boxSize,
                     headerSecondaryEnabled = headerSecondaryEnabled,
                     headerSecondaryBehavior = headerSecondaryBehavior,
                     headerSecondaryPreview = headerSecondaryPreview,
@@ -248,7 +247,7 @@ fun UltraSwipeRefresh(
                 // Footer 二级内容
                 FooterSecondaryContent(
                     state = state,
-                    size = boxSize,
+                    boxSize = boxSize,
                     footerSecondaryEnabled = footerSecondaryEnabled,
                     footerSecondaryBehavior = footerSecondaryBehavior,
                     footerSecondaryPreview = footerSecondaryPreview,
@@ -270,38 +269,44 @@ fun UltraSwipeRefresh(
                     }
                 }
 
-                // Header 指示器
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .graphicsLayer {
-                            translationY = obtainHeaderOffset(state, headerScrollMode, headerHeight)
-                            alpha = if (contentOffsetProgress != 0f) 0f else 1f
-                        }
-                        .zIndex(headerZIndex)
-                ) {
-                    headerIndicator(state)
-                }
+                Box(modifier = Modifier.nestedScroll(nestedScrollConnection)) {
 
-                // Footer 指示器
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .graphicsLayer {
-                            translationY = obtainFooterOffset(state, footerScrollMode, footerHeight)
-                            alpha = if (contentOffsetProgress != 0f) 0f else 1f
-                        }
-                        .zIndex(footerZIndex)
-                ) {
-                    footerIndicator(state)
-                }
+                    // Header 指示器
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .graphicsLayer {
+                                translationY =
+                                    obtainHeaderOffset(state, headerScrollMode, headerHeight)
+                                alpha = if (contentOffsetProgress != 0f) 0f else 1f
+                            }
+                            .zIndex(headerZIndex)
+                    ) {
+                        headerIndicator(state)
+                    }
 
-                // 内容
-                Box(modifier = Modifier.graphicsLayer {
-                    val baseOffset = obtainContentOffset(state, headerScrollMode, footerScrollMode)
-                    translationY = baseOffset + contentOffsetProgress * size.height
-                }) {
-                    contentContainer(content)
+                    // Footer 指示器
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .graphicsLayer {
+                                translationY =
+                                    obtainFooterOffset(state, footerScrollMode, footerHeight)
+                                alpha = if (contentOffsetProgress != 0f) 0f else 1f
+                            }
+                            .zIndex(footerZIndex)
+                    ) {
+                        footerIndicator(state)
+                    }
+
+                    // 内容
+                    Box(modifier = Modifier.graphicsLayer {
+                        val baseOffset =
+                            obtainContentOffset(state, headerScrollMode, footerScrollMode)
+                        translationY = baseOffset + contentOffsetProgress * size.height
+                    }) {
+                        contentContainer(content)
+                    }
                 }
             }
         }
@@ -435,7 +440,7 @@ fun UltraSwipeRefresh(
 @Composable
 private fun HeaderSecondaryContent(
     state: UltraSwipeRefreshState,
-    size: IntSize,
+    boxSize: IntSize,
     headerSecondaryEnabled: Boolean,
     headerSecondaryBehavior: SecondaryBehavior,
     headerSecondaryPreview: Boolean,
@@ -460,15 +465,14 @@ private fun HeaderSecondaryContent(
     }
 
     val headerTransaction = updateTransition(state.headerState == UltraSwipeHeaderState.Secondary)
-    val headerOffset by headerTransaction.animateFloat { if (it) 0f else -size.height.toFloat() }
+    val headerOffset by headerTransaction.animateFloat { if (it) 0f else -boxSize.height.toFloat() }
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
             .graphicsLayer {
                 translationY = if (headerSecondaryBehavior == SecondaryBehavior.Slide) {
                     if (state.headerState == UltraSwipeHeaderState.ReleaseToSecondary) {
-                        -size.height + state.indicatorOffset
+                        -boxSize.height + state.indicatorOffset
                     } else {
                         headerOffset
                     }
@@ -491,7 +495,7 @@ private fun HeaderSecondaryContent(
 @Composable
 private fun FooterSecondaryContent(
     state: UltraSwipeRefreshState,
-    size: IntSize,
+    boxSize: IntSize,
     footerSecondaryEnabled: Boolean,
     footerSecondaryBehavior: SecondaryBehavior,
     footerSecondaryPreview: Boolean,
@@ -516,15 +520,14 @@ private fun FooterSecondaryContent(
     }
 
     val footerTransaction = updateTransition(state.footerState == UltraSwipeFooterState.Secondary)
-    val footerOffset by footerTransaction.animateFloat { if (it) 0f else size.height + state.indicatorOffset }
+    val footerOffset by footerTransaction.animateFloat { if (it) 0f else boxSize.height.toFloat() }
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
             .graphicsLayer {
                 translationY = if (footerSecondaryBehavior == SecondaryBehavior.Slide) {
                     if (state.footerState == UltraSwipeFooterState.ReleaseToSecondary) {
-                        size.height + state.indicatorOffset
+                        boxSize.height + state.indicatorOffset
                     } else {
                         footerOffset
                     }
