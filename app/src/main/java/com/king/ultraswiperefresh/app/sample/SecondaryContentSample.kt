@@ -283,6 +283,7 @@ private fun HeaderSecondaryContent(state: UltraSwipeRefreshState) {
             )
             Button(
                 onClick = {
+                    // 关闭二级内容
                     state.closeSecondary()
                 },
                 modifier = Modifier.padding(top = 32.dp)
@@ -320,6 +321,7 @@ private fun FooterSecondaryContent(state: UltraSwipeRefreshState) {
             )
             Button(
                 onClick = {
+                    // 关闭二级内容
                     state.closeSecondary()
                 },
                 modifier = Modifier.padding(top = 32.dp)

@@ -16,7 +16,7 @@
 - 🌀 **多种滑动模式**：提供`Translate`(平移)、`FixedContent`(固定内容)、`FixedBehind`(固定在背后)、`FixedFront`(固定在前面) 等滑动交互模式，适配各类使用场景。
 - 🎨 **可完全定制UI**：支持通过 `headerIndicator`/`footerIndicator` 完全自定义指示器，满足深度定制需求。
 - ✨ **灵活配置方案**：可自由组合任意滑动模式与指示器样式，轻松实现个性化刷新效果。
-- 🏠 **二级内容支持**：支持 Header/Footer 二级内容（Header 类似“淘宝二楼”，为了对称，Footer 顺带加了个“地下室”），满足多层级交互场景。（ **新版本即将发布** ）
+- 🏠 **二级内容支持**：支持 Header/Footer 二级内容（Header 二级内容类似“淘宝二楼”，为了对称，给 Footer 顺带加了个“地下室”），满足多层级交互场景。
 
 ## 效果展示
 
@@ -41,14 +41,14 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.4.2'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.5.0'
 
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.4.2'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.5.0'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.4.2'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.5.0'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.4.2'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.5.0'
     ```
 
 ## 使用
@@ -234,17 +234,14 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 ## 版本日志
 
-#### 待发布版本 （[提前体验](test.md)）
+#### v1.5.0 ：2026-3-28
 - 新增：支持Header/Footer二级内容，提供完整的配置参数
- - 新增参数`headerSecondaryContent` / `footerSecondaryContent`：Header/Footer二级内容
- - 新增参数`headerSecondaryEnabled` / `footerSecondaryEnabled`：是否启用Header/Footer二级内容功能
- - 新增参数`headerSecondaryBehavior` / `footerSecondaryBehavior`：Header/Footer二级内容交互行为模式
- - 新增参数`headerSecondaryPreview` / `footerSecondaryPreview`：Header/Footer二级内容是否可提前预览
- - 新增参数`headerSecondaryTriggerRate` / `footerSecondaryTriggerRate`：触发Header/Footer二级的最小滑动比例
+- 新增参数`headerSecondaryContent` / `footerSecondaryContent`：Header/Footer二级内容
+- 新增参数`headerSecondaryEnabled` / `footerSecondaryEnabled`：是否启用Header/Footer二级内容功能
+- 新增参数`headerSecondaryBehavior` / `footerSecondaryBehavior`：Header/Footer二级内容交互行为模式
+- 新增参数`headerSecondaryPreview` / `footerSecondaryPreview`：Header/Footer二级内容是否可提前预览
+- 新增参数`headerSecondaryTriggerRate` / `footerSecondaryTriggerRate`：触发Header/Footer二级的最小滑动比例
 - 优化：为新增的 Header/Footer 二级内容功能进行整体适配与交互优化
-
-#### v1.4.2 ：2025-9-6
-- 优化显示细节（[#38](https://github.com/jenly1314/UltraSwipeRefresh/issues/38)）
 
 #### [查看更多版本日志](CHANGELOG.md)
 

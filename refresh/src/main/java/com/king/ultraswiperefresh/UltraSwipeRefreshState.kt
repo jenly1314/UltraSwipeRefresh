@@ -135,14 +135,6 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
         internal set
 
     /**
-     * 关闭二级内容（Header或Footer）
-     */
-    fun closeSecondary() {
-        isHeaderSecondary = false
-        isFooterSecondary = false
-    }
-
-    /**
      * 指示器偏移量
      */
     private val _indicatorOffset = Animatable(0f)
@@ -151,6 +143,14 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
      * 指示器当前偏移量；当indicatorOffset大于0时，表示Header显示，当indicatorOffset小于0时，表示Footer显示
      */
     val indicatorOffset: Float get() = _indicatorOffset.value
+
+    /**
+     * 关闭二级内容（Header或Footer）
+     */
+    fun closeSecondary() {
+        isHeaderSecondary = false
+        isFooterSecondary = false
+    }
 
     /**
      * 动画的方式更新指示器的偏移量
@@ -165,28 +165,6 @@ class UltraSwipeRefreshState(isRefreshing: Boolean, isLoading: Boolean) {
                 updateFooterState()
             }
             _indicatorOffset.animateTo(offset)
-
-            if (isFinishing && indicatorOffset == 0f) {
-                isFinishing = false
-                updateHeaderState()
-                updateFooterState()
-            }
-        }
-    }
-
-    /**
-     * 更新指示器的偏移量
-     */
-    internal suspend fun snapTo(
-        offset: Float,
-        priority: MutatePriority = MutatePriority.Default
-    ) {
-        mutatorMutex.mutate(priority) {
-            if (!isFinishing) {
-                updateHeaderState()
-                updateFooterState()
-            }
-            _indicatorOffset.snapTo(offset)
 
             if (isFinishing && indicatorOffset == 0f) {
                 isFinishing = false

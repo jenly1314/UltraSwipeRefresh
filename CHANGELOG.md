@@ -1,5 +1,14 @@
 ## 版本日志
 
+#### v1.5.0 ：2026-3-28
+- 新增：支持Header/Footer二级内容，提供完整的配置参数
+- 新增参数`headerSecondaryContent` / `footerSecondaryContent`：Header/Footer二级内容
+- 新增参数`headerSecondaryEnabled` / `footerSecondaryEnabled`：是否启用Header/Footer二级内容功能
+- 新增参数`headerSecondaryBehavior` / `footerSecondaryBehavior`：Header/Footer二级内容交互行为模式
+- 新增参数`headerSecondaryPreview` / `footerSecondaryPreview`：Header/Footer二级内容是否可提前预览
+- 新增参数`headerSecondaryTriggerRate` / `footerSecondaryTriggerRate`：触发Header/Footer二级的最小滑动比例
+- 优化：为新增的 Header/Footer 二级内容功能进行整体适配与交互优化
+
 #### v1.4.2 ：2025-9-6
 - 优化显示细节（[#38](https://github.com/jenly1314/UltraSwipeRefresh/issues/38)）
 
