@@ -5,6 +5,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -14,8 +15,10 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "UltraSwipeRefresh"
-include ':app'
-include ':refresh'
-include ':refresh-indicator-classic'
-include ':refresh-indicator-progress'
-include ':refresh-indicator-lottie'
+include(
+    ":app",
+    ":refresh",
+    ":refresh-indicator-classic",
+    ":refresh-indicator-progress",
+    ":refresh-indicator-lottie"
+)
