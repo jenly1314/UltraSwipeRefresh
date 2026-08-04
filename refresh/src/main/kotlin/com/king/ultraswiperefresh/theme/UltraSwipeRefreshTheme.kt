@@ -4,6 +4,7 @@ import androidx.annotation.FloatRange
 import androidx.annotation.IntRange
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.LocalOverscrollFactory
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -103,5 +104,5 @@ data class UltraSwipeRefreshConfig(
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 private fun NoOverscrollEffect(content: @Composable () -> Unit) {
-    CompositionLocalProvider(LocalOverscrollConfiguration provides null, content = content)
+    CompositionLocalProvider(LocalOverscrollFactory provides null, content = content)
 }

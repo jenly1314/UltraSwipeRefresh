@@ -11,7 +11,6 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -41,7 +40,12 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
+    testOptions {
+        targetSdk = libs.versions.targetSdk.get().toInt()
+    }
+
     lint {
+        targetSdk = libs.versions.targetSdk.get().toInt()
         abortOnError = false
     }
 }

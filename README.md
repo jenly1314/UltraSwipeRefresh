@@ -41,14 +41,14 @@
 
     ```gradle
     // 极致体验的Compose刷新组件 (*必须)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.5.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh:1.6.0'
 
     // 经典样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.5.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-classic:1.6.0'
     // Lottie动画指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.5.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-lottie:1.6.0'
     // 进度条样式的指示器 (可选)
-    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.5.0'
+    implementation 'com.github.jenly1314.UltraSwipeRefresh:refresh-indicator-progress:1.6.0'
     ```
 
 ## 使用
@@ -201,14 +201,14 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 | SwipeRefreshHeader                                                                                    | ClassicRefreshHeader                                                                                                                                                                                           |
 | ![Image](art/SwipeRefreshIndicatorSample.gif)                                                         | ![Image](art/ClassicRefreshIndicatorSample.gif)                                                                                                                                                                |
 | SwipeRefreshFooter                                                                                    | ClassicRefreshFooter                                                                                                                                                                                           |
-| [官方默认的刷新样式示例](app/src/main/java/com/king/ultraswiperefresh/app/sample/SwipeRefreshIndicatorSample.kt) | [经典刷新样式示例](app/src/main/java/com/king/ultraswiperefresh/app/sample/ClassicRefreshIndicatorSample.kt)  /  [经典刷新自动加载示例](app/src/main/java/com/king/ultraswiperefresh/app/sample/ClassicRefreshAutoLoadSample.kt) |
+| [官方默认的刷新样式示例](app/src/main/kotlin/com/king/ultraswiperefresh/app/sample/SwipeRefreshIndicatorSample.kt) | [经典刷新样式示例](app/src/main/kotlin/com/king/ultraswiperefresh/app/sample/ClassicRefreshIndicatorSample.kt)  /  [经典刷新自动加载示例](app/src/main/kotlin/com/king/ultraswiperefresh/app/sample/ClassicRefreshAutoLoadSample.kt) |
 
 | 进度条样式                                                                                           | Lottie动画样式                                                                                                                            |
 |:-----------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------|
 | ProgressRefreshHeader                                                                                | LottieRefreshHeader                                                                                                                   |
 | ![Image](art/ProgressRefreshIndicatorSample.gif)                                                     | ![Image](art/LottieRefreshIndicatorSample.gif)                                                                                        |
 | ProgressRefreshFooter                                                                                | LottieRefreshFooter                                                                                                                   |
-| [进度条刷新样式示例](app/src/main/java/com/king/ultraswiperefresh/app/sample/ProgressRefreshIndicatorSample.kt) | [Lottie动画刷新样式示例](app/src/main/java/com/king/ultraswiperefresh/app/sample/LottieRefreshIndicatorSample.kt)                                    |
+| [进度条刷新样式示例](app/src/main/kotlin/com/king/ultraswiperefresh/app/sample/ProgressRefreshIndicatorSample.kt) | [Lottie动画刷新样式示例](app/src/main/kotlin/com/king/ultraswiperefresh/app/sample/LottieRefreshIndicatorSample.kt)                                    |
 
 > 如果以上的指示器效果都不满足你的需求，你可以自定义去实现Header和Footer对应的指示器，也可以直接使用Lottie动画样式的指示器，来快速接入任何Lottie动画。
 
@@ -234,14 +234,11 @@ UltraSwipeRefreshTheme.config = UltraSwipeRefreshTheme.config.copy(
 
 ## 版本日志
 
-#### v1.5.0 ：2026-3-28
-- 新增：支持Header/Footer二级内容，提供完整的配置参数
-- 新增参数`headerSecondaryContent` / `footerSecondaryContent`：Header/Footer二级内容
-- 新增参数`headerSecondaryEnabled` / `footerSecondaryEnabled`：是否启用Header/Footer二级内容功能
-- 新增参数`headerSecondaryBehavior` / `footerSecondaryBehavior`：Header/Footer二级内容交互行为模式
-- 新增参数`headerSecondaryPreview` / `footerSecondaryPreview`：Header/Footer二级内容是否可提前预览
-- 新增参数`headerSecondaryTriggerRate` / `footerSecondaryTriggerRate`：触发Header/Footer二级的最小滑动比例
-- 优化：为新增的 Header/Footer 二级内容功能进行整体适配与交互优化
+#### v1.6.0 ：2026-8-4
+- 更新compileSdk至35
+- 更新compose至v1.8.0 (v1.7.0 -> v1.8.0)
+- 更新Gradle至v8.9
+- 源码目录调整（src/main/java -> src/main/kotlin）
 
 #### [查看更多版本日志](CHANGELOG.md)
 

@@ -1,5 +1,11 @@
 ## 版本日志
 
+#### v1.6.0 ：2026-8-4
+- 更新compileSdk至35
+- 更新compose至v1.8.0 (v1.7.0 -> v1.8.0)
+- 更新Gradle至v8.9
+- 源码目录调整（src/main/java -> src/main/kotlin）
+
 #### v1.5.0 ：2026-3-28
 - 新增：支持Header/Footer二级内容，提供完整的配置参数
 - 新增参数`headerSecondaryContent` / `footerSecondaryContent`：Header/Footer二级内容
